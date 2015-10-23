@@ -1,0 +1,5 @@
+ocelot
+*.o
+*.swp
+*~
+*.diff

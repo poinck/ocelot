@@ -1,0 +1,106 @@
+#!/bin/bash
+
+TMD_URL="192.168.2.101/~ich/tm/tm_720.csv"
+
+# set $obar to your liking
+obar="not set"
+
+bat_now=$(cat /sys/class/power_supply/BAT0/energy_now)
+bat_full=$(cat /sys/class/power_supply/BAT0/energy_full)
+get_bat() {
+    echo "$(( bat_now/10000 ))"
+}
+
+get_bat_graph(){
+    local load=$(( bat_now*10/bat_full ))
+
+    if [[ "$load" -eq 0 ]] ; then
+        echo -n "^gt(#73d216)LOW"
+    else
+        for (( i=1 ; i<load+1 ; i++ )) ; do
+            if [[ "$i" -ge 7 ]] ; then
+                echo -n "^fg(#73d216)"
+            elif [[ "$i" -ge 5 ]] ; then
+                echo -n "^fg(#edd400)"
+            elif [[ "$i" -ge 3 ]] ; then
+                echo -n "^fg(#f57900)"
+            else
+                echo -n "^fg(#cc0000)"
+            fi
+            # echo -n "."
+            echo -n "·"
+        done
+    fi
+    echo -n "^fg()"
+
+    # debug
+    # echo "$load"
+}
+
+format_temp() {
+    local temperature=$1
+    if [[ -z "$temperature" ]] ; then
+        temperature=1
+    fi
+
+    local d=$(( $temperature/1000 ))
+    local e=$(( $temperature-d*1000 ))
+    local e1=0
+    if [[ "$e" -lt 0 ]] ; then
+        e1=$( echo "$e" | cut -b 2 )
+    else
+        e1=$( echo "$e" | cut -b 1 )
+    fi
+    local z=$( echo -n "$e" | wc -c )
+    if [[ "$z" -lt 3 ]] ; then
+        echo -en "$d,0"
+    else
+        echo -en "$d,$e1"
+    fi
+}
+
+current_temp=$( curl -s "$TMD_URL" -m 5 | tail -n 1 )
+outside_t=$( echo "$current_temp" | cut -f 3 -d"," )
+formatted_outside_t=$( format_temp "$outside_t" )
+get_tm_outside() {
+    echo "$formatted_outside_t"
+}
+
+get_tm_outside_graph() {
+    local min=-20
+    local max=45
+    local t=$( echo "$formatted_outside_t" | cut -f 1 -d"," )
+
+    if [[ "$t" -ge 0 ]] ; then
+        min=0
+        max=$t
+    else
+        min=$t
+        max=0
+    fi
+    for (( i=$min ; i<=$max ; i=i+1 )) ; do
+        if [[ "$i" -ge 1 ]] && [[ "$i" -le 4 ]]; then
+            echo -n "^fg(#3465a4)·" # blue
+        elif [[ "$i" -ge 5 ]] && [[ "$i" -le 14 ]] ; then
+            echo -n "^fg(#73d216)·" # green
+        elif [[ "$i" -ge 15 ]] && [[ "$i" -le 24 ]] ; then
+            echo -n "^fg(#edd400)·" # yellow
+        elif [[ "$i" -ge 25 ]] && [[ "$i" -le 34 ]] ; then
+            echo -n "^fg(#f57900)·" # orange
+        elif [[ "$i" -ge 35 ]] ; then
+            echo -n "^fg(#cc0000)·" # red
+        elif [[ "$i" -le -16 ]] ; then
+            echo -n "^fg(#d3d7cf)·" # dark white
+        elif [[ "$i" -ge -15 ]] && [[ "$i" -le -6 ]] ; then
+            echo -n "^fg(#75507b)·" # purple
+        elif [[ "$i" -ge -5 ]] && [[ "$i" -le -1 ]] ; then
+            echo -n "^fg(#3465a4)·" # blue
+        else
+            echo -n "^fg()·" # ¦
+        fi
+    done
+    echo "^fg()"
+}
+
+obar="^fg(#ffffff)$( get_tm_outside )^fg() °C $( get_tm_outside_graph )   "
+obar="${obar}^fg(#ffffff)$( get_bat )^fg() mAh $( get_bat_graph )   "

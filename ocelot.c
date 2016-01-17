@@ -1,6 +1,6 @@
 /**
  * ocelot (changes) by André Klausnitzer, CC0
- * monsterwm (original) by c00kiemon5ter, MIT (see LICENSE-mit)
+ * monsterwm (original) by c00kiemon5ter, MIT (see LICENSE-monsterwm)
  * minimal tiling window manager
  */
 

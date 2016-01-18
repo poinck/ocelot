@@ -68,8 +68,8 @@ static Key keys[] = {
     {  MOD1,             XK_p,          resize_stack,      {.i = +10}}, /* grow     size in px */
     {  MOD4,             XK_Left,       rotate,            {.i = -1}},
     {  MOD4,             XK_Right,      rotate,            {.i = +1}},
-    {  MOD4|SHIFT,       XK_h,          rotate_filled,     {.i = -1}},
-    {  MOD4|SHIFT,       XK_l,          rotate_filled,     {.i = +1}},
+    {  MOD4|SHIFT,       XK_Left,       rotate_filled,     {.i = -1}},
+    {  MOD4|SHIFT,       XK_Right,      rotate_filled,     {.i = +1}},
     {  MOD1,             XK_Tab,        last_desktop,      {NULL}},
     {  MOD1,             XK_Return,     swap_master,       {NULL}},
     {  MOD1|SHIFT,       XK_j,          move_down,         {NULL}},

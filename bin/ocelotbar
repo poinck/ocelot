@@ -15,7 +15,7 @@ get_bat_graph(){
     local load=$(( bat_now*10/bat_full ))
 
     if [[ "$load" -eq 0 ]] ; then
-        echo -n "^gt(#73d216)LOW"
+        echo -n "^fg(#cc0000)LOW"
     else
         for (( i=1 ; i<load+1 ; i++ )) ; do
             if [[ "$i" -ge 7 ]] ; then

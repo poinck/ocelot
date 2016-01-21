@@ -2,7 +2,23 @@
 
 # initial configuration
 SCREEN_WIDTH=1366
-OCELOT_PATH="/home/poinck/gits/ocelot"
+OCELOT_PATH=""
+if [[ -f ~/.ocelotrc ]] ; then
+    . ~/.ocelotrc
+    if [[ -n "$screen_width" ]] ; then
+        SCREEN_WIDTH=$screen_width
+        echo " · SCREEN_WIDTH=$SCREEN_WIDTH"
+    fi
+    if [[ -n "$ocelot_path" ]] ; then
+        OCELOT_PATH="$ocelot_path"
+        echo " · OCELOT_PATH=$OCELOT_PATH"
+    fi
+else
+    echo " · ~/.ocelotrc does not exist"
+fi
+
+# debug
+# echo "${OCELOT_PATH}ocelot"
 
 # create a fifo to send output
 ff="/tmp/ocelot.fifo"
@@ -58,11 +74,12 @@ while read -r; do
     done
 
 	date=$(date "+%H:%M   %a, %d. %b %Y")
-	. $OCELOT_PATH/bin/ocelotbar
+    obar="   $obar not set"
+	source "${OCELOT_PATH}bin/ocelotbar"
 
     # read from fifo and output to dzen2
     printf " %s   %s   %s   %s\n" "$date" "$r" "$i" "$obar" && unset r
-done < "$ff" | dzen2 -h 21 -w $SCREEN_WIDTH -ta l -e -p -fn "xft:Monospace:pixelsize=13" &
+done < "$ff" | dzen2 -h 21 -w "$SCREEN_WIDTH" -ta l -e -p -fn "xft:Monospace:pixelsize=13" &
 
 # output last REPLY from ocelot to refresh dzen2 regularly without interaction
 while true ; do
@@ -71,4 +88,5 @@ while true ; do
 done > "$ff" &
 
 # pass output to fifo
-$OCELOT_PATH/ocelot > "$ff"
+${OCELOT_PATH}ocelot > "$ff"
+

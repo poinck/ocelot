@@ -1,6 +1,17 @@
 #!/bin/bash
 
-TMD_URL="192.168.2.101/~ich/tm/tm_720.csv"
+TMD_URL="~/public_html/tm/tm_720.csv"
+if [[ -f ~/.ocelotbarrc ]] ; then
+    . ~/.ocelotbarrc
+    if [[ -n "$tmd_url" ]] ; then
+        TMD_URL="$tmd_url"
+
+        # echo "   TMD_URL gesetzt"
+    fi
+else
+    :
+    # echo "   ~/.ocelotbarrc existiert nicht"
+fi
 
 # set $obar to your liking
 obar="not set"
@@ -59,7 +70,7 @@ format_temp() {
     fi
 }
 
-current_temp=$( curl -s "$TMD_URL" -m 5 | tail -n 1 )
+current_temp=$( curl -s "$TMD_URL" -m 1 | tail -n 1 )
 outside_t=$( echo "$current_temp" | cut -f 3 -d"," )
 formatted_outside_t=$( format_temp "$outside_t" )
 get_tm_outside() {

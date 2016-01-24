@@ -5,12 +5,7 @@ if [[ -f ~/.ocelotbarrc ]] ; then
     . ~/.ocelotbarrc
     if [[ -n "$tmd_url" ]] ; then
         TMD_URL="$tmd_url"
-
-        # echo "   TMD_URL gesetzt"
     fi
-else
-    :
-    # echo "   ~/.ocelotbarrc existiert nicht"
 fi
 
 # set $obar to your liking
@@ -70,9 +65,38 @@ format_temp() {
     fi
 }
 
-current_temp=$( curl -s "$TMD_URL" -m 1 | tail -n 1 )
-outside_t=$( echo "$current_temp" | cut -f 3 -d"," )
-formatted_outside_t=$( format_temp "$outside_t" )
+fetch_tm() {
+    this_time=$( date +%s )
+
+    if [[ -f /tmp/ocelotbar.fetchedtm ]] ; then
+        fetched_tm=$( cat /tmp/ocelotbar.fetchedtm )
+        scheduled_time=$( echo "$fetched_tm" | cut -f 2 -d":" )
+        if [[ "$this_time" -gt "$scheduled_time" ]] ; then
+            current_temp=$( curl -s "$TMD_URL" -m 1 )
+            outside_t=$( echo "$current_temp" | cut -f 3 -d"," )
+            formatted_outside_t=$( format_temp "$outside_t" )
+            next_time=$(( this_time+600 ))
+            echo "$formatted_outside_t:$next_time" > /tmp/ocelotbar.fetchedtm
+        else
+            formatted_outside_t=$( echo "$fetched_tm" | cut -f 1 -d":" )
+
+            # debug
+            # echo "formatted_outside_t=$formatted_outside_t"
+            # sleep 5
+        fi
+    else
+        echo "0,0:0" > /tmp/ocelotbar.fetchedtm
+    fi
+
+    # debug
+    # echo "scheduled_time=$scheduled_time"
+    # sleep 5
+
+    # next_time=$(( this_time+600 ))
+    # echo "$formatted_outside_t:$next_time" > /tmp/ocelotbar.fetchedtm
+}
+
+fetch_tm
 get_tm_outside() {
     echo "$formatted_outside_t"
 }

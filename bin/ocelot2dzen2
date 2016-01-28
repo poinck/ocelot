@@ -73,7 +73,9 @@ while read -r; do
         #((w)) && r="$s ^fg($f)$d $w^fg()"
     done
 
-	date=$(date "+%H:%M   %a, %d. %b %Y")
+	d_date=$(date "+%a, %d. %b")
+    d_time=$(date "+%H:%M")
+    date="$d_date, ^fg(#ffffff)$d_time^fg()"
     obar="   $obar not set"
 	source "${OCELOT_PATH}bin/ocelotbar"
 

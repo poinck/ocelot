@@ -47,6 +47,7 @@ static const AppRule rules[] = { \
  */
 static const char *termcmd[] = { "urxvt", "+sb", "-fade", "15", "+si", "-uc", "-bg", "#393f3f", "-fg", "white", "-fn", "xft:Monospace:pixelsize=13", NULL };
 static const char *menucmd[] = { "dmenu_run", "-l", "4", "-sf", "#000000", "-sb", "#ffffff", "-fn", "xft:Monospace:pixelsize=13", NULL };
+static const char *lockcmd[] = { "i3lock", "-c", "444444", NULL };
 
 #define DESKTOPCHANGE(K,N) \
     {  MOD4,             K,              change_desktop, {.i = N}}, \
@@ -82,15 +83,16 @@ static Key keys[] = {
     {  MOD1|CONTROL,     XK_r,          quit,              {.i = 0}}, /* quit with exit value 0 */
     {  MOD1|CONTROL,     XK_q,          quit,              {.i = 1}}, /* quit with exit value 1 */
     {  MOD1|SHIFT,       XK_Return,     spawn,             {.com = termcmd}},
-    {  NULL,             XK_Super_L,    spawn,             {.com = menucmd}},
-    {  MOD4,             XK_j,          moveresize,        {.v = (int []){   0,  25,   0,   0 }}}, /* move down  */
-    {  MOD4,             XK_k,          moveresize,        {.v = (int []){   0, -25,   0,   0 }}}, /* move up    */
-    {  MOD4,             XK_l,          moveresize,        {.v = (int []){  25,   0,   0,   0 }}}, /* move right */
-    {  MOD4,             XK_h,          moveresize,        {.v = (int []){ -25,   0,   0,   0 }}}, /* move left  */
-    {  MOD4|SHIFT,       XK_j,          moveresize,        {.v = (int []){   0,   0,   0,  25 }}}, /* height grow   */
-    {  MOD4|SHIFT,       XK_k,          moveresize,        {.v = (int []){   0,   0,   0, -25 }}}, /* height shrink */
-    {  MOD4|SHIFT,       XK_l,          moveresize,        {.v = (int []){   0,   0,  25,   0 }}}, /* width grow    */
-    {  MOD4|SHIFT,       XK_h,          moveresize,        {.v = (int []){   0,   0, -25,   0 }}}, /* width shrink  */
+    {  MOD1,             XK_F2,         spawn,             {.com = menucmd}},
+    {  MOD4,             XK_l,          spawn,             {.com = lockcmd}},
+    {  MOD4,             XK_s,          moveresize,        {.v = (int []){   0,  25,   0,   0 }}}, /* move down  */
+    {  MOD4,             XK_w,          moveresize,        {.v = (int []){   0, -25,   0,   0 }}}, /* move up    */
+    {  MOD4,             XK_d,          moveresize,        {.v = (int []){  25,   0,   0,   0 }}}, /* move right */
+    {  MOD4,             XK_a,          moveresize,        {.v = (int []){ -25,   0,   0,   0 }}}, /* move left  */
+    {  MOD4|SHIFT,       XK_s,          moveresize,        {.v = (int []){   0,   0,   0,  25 }}}, /* height grow   */
+    {  MOD4|SHIFT,       XK_w,          moveresize,        {.v = (int []){   0,   0,   0, -25 }}}, /* height shrink */
+    {  MOD4|SHIFT,       XK_d,          moveresize,        {.v = (int []){   0,   0,  25,   0 }}}, /* width grow    */
+    {  MOD4|SHIFT,       XK_a,          moveresize,        {.v = (int []){   0,   0, -25,   0 }}}, /* width shrink  */
        DESKTOPCHANGE(    XK_1,                             0)
        DESKTOPCHANGE(    XK_2,                             1)
        DESKTOPCHANGE(    XK_3,                             2)
@@ -102,6 +104,8 @@ static Key keys[] = {
        DESKTOPCHANGE(    XK_9,                             8)
        DESKTOPCHANGE(    XK_0,                             9)
 };
+
+/* XK_Super_L */
 
 /**
  * mouse shortcuts

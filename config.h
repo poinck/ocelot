@@ -25,7 +25,7 @@
 #define UNFOCUS         "#444444" /* unfocused window border color  */
 #define MINWSZ          50        /* minimum window size in pixels  */
 #define DEFAULT_DESKTOP 0         /* the desktop to focus initially */
-#define DESKTOPS        10        /* number of desktops - edit DESKTOPCHANGE keys to suit */
+#define DESKTOPS        20        /* number of desktops - edit DESKTOPCHANGE keys to suit */
 #define USELESSGAP      0         /* the size of the useless gap in pixels */
 
 /**

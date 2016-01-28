@@ -38,39 +38,33 @@ while read -r; do
         # c - whether that desktop is the current (1) or not (0)
         # u - whether a window in that desktop has an urgent hint set (1) or not (0)
         IFS=':' read -r d w m c u <<< "$desktop"
-        s="   "
-        # name each desktop
-        case $d in
-            0) d="a" s="" ;;
-            1) d="b" ;;
-            2) d="c" ;;
-            3) d="d" ;;
-            4) d="e" ;;
-            5) d="f" ;;
-            6) d="g" ;;
-            7) d="h" ;;
-            8) d="i" ;;
-            9) d="j" ;;
-        esac
-        # the current desktop color should be #d11783
-        # we will also display the current desktop's tiling layout/mode
-        ((c)) && f="#ffffff" && case $m in
+        s=""
+
+        # for the current desktop
+        ((c)) && f="#ffffff" current_d=$((d+1)) && case $m in
             # name each layout/mode with a symbol
             0) i="T" ;;
             1) i="M" ;;
             2) i="B" ;;
             3) i="G" ;;
             4) i="F" ;;
-        esac  || f="#5e7175"
+        esac  || f=""
 
         # if the desktop has an urgent hint its color should be #ff0000
         ((u)) && f="#ff0000"
 
+        # for every window
+        # ((w)) +& r+="^fg($f)·^fg()"
+        if [[ "$w" -gt 0 ]] ; then
+            for (( ii=0 ; ii<w ; ii=ii+1 )) ; do
+                r+="^fg($f)·^fg()"
+            done
+            r+=" "
+        fi
+
         # if the desktop has windows print that number next to the desktop name
         # else just print the desktop name
-        # ((w)) && r+="$s^fg($f)$d$w^fg()" || r+="$s^fg($f)$d^fg()"
-        ((w)) && r+="$s^fg($f)$d$w^fg()" || r+="$s^fg()"
-        #((w)) && r="$s ^fg($f)$d $w^fg()"
+        # ((w)) && r+="$s^fg($f)$d$w^fg()" || r+="$s^fg()"
     done
 
 	d_date=$(date "+%a, %d. %b")
@@ -80,7 +74,7 @@ while read -r; do
 	source "${OCELOT_PATH}bin/ocelotbar"
 
     # read from fifo and output to dzen2
-    printf " %s   %s   %s   %s\n" "$date" "$r" "$i" "$obar" && unset r
+    printf " %s   %s%s%s   %s\n" "$date" "$r" "$current_d" "$i" "$obar" && unset r
 done < "$ff" | dzen2 -h 21 -w "$SCREEN_WIDTH" -ta l -e -p -fn "xft:Monospace:pixelsize=13" &
 
 # output last REPLY from ocelot to refresh dzen2 regularly without interaction

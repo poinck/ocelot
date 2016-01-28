@@ -52,17 +52,21 @@ format_temp() {
     local d=$(( $temperature/1000 ))
     local e=$(( $temperature-d*1000 ))
     local e1=0
+    local negative=""
     if [[ "$e" -lt 0 ]] ; then
-        e1=$( echo "$e" | cut -b 2 )
+        e1=$( echo "$e" | cut -b 2-4 )
+        if [[ "$temperature" -eq 0 ]] ; then
+            negative="-"
+        fi
     else
-        e1=$( echo "$e" | cut -b 1 )
+        e1=$( echo "$e" | cut -b 1-4 )
     fi
-    local z=$( echo -n "$e" | wc -c )
-    if [[ "$z" -lt 3 ]] ; then
-        echo -en "$d,0"
+    if [[ "$e1" -gt 100 ]] ; then
+        e1=$( echo "$e1" | cut -b 1 )
     else
-        echo -en "$d,$e1"
+        e1=0
     fi
+    echo -en "${negative}$d,$e1"
 }
 
 fetch_tm() {

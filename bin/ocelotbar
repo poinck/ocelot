@@ -12,29 +12,46 @@ fi
 obar="not set"
 
 bat_now=$(cat /sys/class/power_supply/BAT0/energy_now)
+bat_status=$( cat /sys/class/power_supply/BAT0/status )
 bat_full=$(cat /sys/class/power_supply/BAT0/energy_full)
+load=$(( bat_now*10/bat_full ))
 get_bat() {
-    echo "$(( bat_now/10000 ))"
+    if [[ "$load" -eq 0 ]] ; then
+        echo -n "^fg(#ff0000)"
+    fi
+    echo "$(( bat_now/10000 ))^fg()"
 }
 
 get_bat_graph(){
-    local load=$(( bat_now*10/bat_full ))
-
     if [[ "$load" -eq 0 ]] ; then
-        echo -n "^fg(#cc0000)LOW"
+        echo -n "^fg(#ff0000)·"
+        if [[ "$bat_status" == "Charging" ]] ; then
+            echo -n "^fg(#ffffff)·^fg()"
+        fi
     else
-        for (( i=1 ; i<load+1 ; i++ )) ; do
-            if [[ "$i" -ge 7 ]] ; then
-                echo -n "^fg(#73d216)"
-            elif [[ "$i" -ge 5 ]] ; then
-                echo -n "^fg(#edd400)"
-            elif [[ "$i" -ge 3 ]] ; then
-                echo -n "^fg(#f57900)"
+        for (( i=1 ; i<=load ; i++ )) ; do
+            if [[ "$bat_status" == "Unknown" ]] ; then
+                echo -n "^fg()"
             else
-                echo -n "^fg(#cc0000)"
+                if [[ "$i" -ge 7 ]] ; then
+                    echo -n "^fg(#73d216)"
+                elif [[ "$i" -ge 5 ]] ; then
+                    echo -n "^fg(#edd400)"
+                elif [[ "$i" -ge 3 ]] ; then
+                    echo -n "^fg(#f57900)"
+                else
+                    echo -n "^fg(#cc0000)"
+                fi
             fi
-            # echo -n "."
-            echo -n "·"
+            if [[ "$i" -eq "$load" ]] ; then
+                if [[ "$bat_status" == "Charging" ]] ; then
+                    echo -n "^fg(#ffffff)·^fg()"
+                else
+                    echo -n "·"
+                fi
+            else
+                echo -n "·"
+            fi
         done
     fi
     echo -n "^fg()"
@@ -135,11 +152,13 @@ get_tm_outside_graph() {
         elif [[ "$i" -ge -5 ]] && [[ "$i" -le -1 ]] ; then
             echo -n "^fg(#3465a4)·" # blue
         else
-            echo -n "^fg()·" # ¦
+            echo -n "^fg()·"
         fi
     done
     echo "^fg()"
 }
 
-obar="^fg(#ffffff)$( get_tm_outside )^fg() °C $( get_tm_outside_graph )   "
+obar="^p(_CENTER)"
+obar="${obar}^fg(#ffffff)$( get_tm_outside )^fg() °C $( get_tm_outside_graph )   "
 obar="${obar}^fg(#ffffff)$( get_bat )^fg() mAh $( get_bat_graph )   "
+

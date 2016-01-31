@@ -21,7 +21,7 @@
 #define CLICK_TO_FOCUS  True      /* focus an unfocused window when clicked  */
 #define FOCUS_BUTTON    Button3   /* mouse button to be used along with CLICK_TO_FOCUS */
 #define BORDER_WIDTH    4         /* window border width */
-#define FOCUS           "#ffffff" /* "#ff950e" - focused window border color    */
+#define FOCUS           "#bbbbbb" /* "#ff950e" - focused window border color    */
 #define UNFOCUS         "#444444" /* unfocused window border color  */
 #define MINWSZ          50        /* minimum window size in pixels  */
 #define DEFAULT_DESKTOP 0         /* the desktop to focus initially */
@@ -34,8 +34,7 @@
  */
 static const AppRule rules[] = { \
     /*  class     desktop  follow  float */
-    { "MPlayer",     3,    True,   False },
-    { "Gimp",        0,    False,  True  },
+    { "program_that_does_not_exist",     0,    False,  True  },
 };
 
 /* helper for spawning shell commands */
@@ -47,7 +46,7 @@ static const AppRule rules[] = { \
  */
 static const char *termcmd[] = { "urxvt", "+sb", "-fade", "15", "+si", "-uc", "-bg", "#393f3f", "-fg", "white", "-fn", "xft:Monospace:pixelsize=13", NULL };
 static const char *menucmd[] = { "dmenu_run", "-l", "4", "-sf", "#000000", "-sb", "#ffffff", "-fn", "xft:Monospace:pixelsize=13", NULL };
-static const char *lockcmd[] = { "i3lock", "-c", "444444", NULL };
+static const char *lockcmd[] = { "i3lock", "-c", "393f3f", NULL };
 
 #define DESKTOPCHANGE(K,N) \
     {  MOD4,             K,              change_desktop, {.i = N}}, \

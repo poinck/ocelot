@@ -30,7 +30,7 @@ get_bat_graph(){
         fi
     else
         for (( i=1 ; i<=load ; i++ )) ; do
-            if [[ "$bat_status" == "Unknown" ]] ; then
+            if [[ "$bat_status" == "Unknown" ]] || [[ "$bat_status" == "Full" ]] ; then
                 echo -n "^fg()"
             else
                 if [[ "$i" -ge 7 ]] ; then

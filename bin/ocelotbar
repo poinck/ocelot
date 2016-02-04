@@ -86,6 +86,7 @@ format_temp() {
     echo -en "${negative}$d,$e1"
 }
 
+temp_available=1 # default 1=no
 fetch_tm() {
     this_time=$( date +%s )
 
@@ -94,8 +95,15 @@ fetch_tm() {
         scheduled_time=$( echo "$fetched_tm" | cut -f 2 -d":" )
         if [[ "$this_time" -gt "$scheduled_time" ]] ; then
             current_temp=$( curl -s "$TMD_URL" -m 1 )
-            outside_t=$( echo "$current_temp" | cut -f 3 -d"," )
-            formatted_outside_t=$( format_temp "$outside_t" )
+            temp_available=$?
+            if [[ "$temp_available" -eq 0 ]] ; then
+                outside_t=$( echo "$current_temp" | cut -f 3 -d"," )
+                temp_time=$this_time
+                formatted_outside_t=$( format_temp "$outside_t" )
+            else
+                # temperature is out of date
+                formatted_outside_t=$( echo "$fetched_tm" | cut -f 1 -d":" )
+            fi
             next_time=$(( this_time+600 ))
             echo "$formatted_outside_t:$next_time" > /tmp/ocelotbar.fetchedtm
         else
@@ -119,6 +127,11 @@ fetch_tm() {
 
 fetch_tm
 get_tm_outside() {
+    local diff_time=$(( this_time-temp_time ))
+    if [[ "$diff_time" -gt 7200 ]] ; then
+        # older than 2 hours
+        echo -n "^fg(#ff0000)"
+    fi
     echo "$formatted_outside_t"
 }
 
@@ -134,26 +147,32 @@ get_tm_outside_graph() {
         min=$t
         max=0
     fi
+    if [[ "$temp_available" -gt 0 ]] ; then
+        local ta=1
+    fi
+
+    # debug
+    # echo " ta=$ta "
+
     for (( i=$min ; i<=$max ; i=i+1 )) ; do
         if [[ "$i" -ge 1 ]] && [[ "$i" -le 4 ]]; then
-            echo -n "^fg(#3465a4)·" # blue
+            ((ta)) && echo -n "^fg(#3465a4)" # blue
         elif [[ "$i" -ge 5 ]] && [[ "$i" -le 14 ]] ; then
-            echo -n "^fg(#73d216)·" # green
+            ((ta)) && echo -n "^fg(#73d216)" # green
         elif [[ "$i" -ge 15 ]] && [[ "$i" -le 24 ]] ; then
-            echo -n "^fg(#edd400)·" # yellow
+            ((ta)) && echo -n "^fg(#edd400)" # yellow
         elif [[ "$i" -ge 25 ]] && [[ "$i" -le 34 ]] ; then
-            echo -n "^fg(#f57900)·" # orange
+            ((ta)) && echo -n "^fg(#f57900)" # orange
         elif [[ "$i" -ge 35 ]] ; then
-            echo -n "^fg(#cc0000)·" # red
+            ((ta)) && echo -n "^fg(#cc0000)" # red
         elif [[ "$i" -le -16 ]] ; then
-            echo -n "^fg(#d3d7cf)·" # dark white
+            ((ta)) && echo -n "^fg(#d3d7cf)" # dark white
         elif [[ "$i" -ge -15 ]] && [[ "$i" -le -6 ]] ; then
-            echo -n "^fg(#75507b)·" # purple
+            ((ta)) && echo -n "^fg(#75507b)" # purple
         elif [[ "$i" -ge -5 ]] && [[ "$i" -le -1 ]] ; then
-            echo -n "^fg(#3465a4)·" # blue
-        else
-            echo -n "^fg()·"
+            ((ta)) && echo -n "^fg(#3465a4)" # blue
         fi
+        echo -n "·"
     done
     echo "^fg()"
 }

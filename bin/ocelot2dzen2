@@ -49,12 +49,17 @@ while read -r; do
         # for the current desktop
         ((c)) && f="#ffffff" current_d=$((d+1)) && case $m in
             # name each layout/mode with a symbol
+            # 0) i="t" ;; # ·:
             0) i="T" ;;
+            # 1) i="m" ;; # ·
             1) i="M" ;;
+            # 2) i="b" ;; # ...
             2) i="B" ;;
+            # 3) i="g" ;; # :::
             3) i="G" ;;
+            # 4) i="f" ;; # .·:
             4) i="F" ;;
-        esac  || f=""
+        esac  || f="#666666"
 
         # if the desktop has an urgent hint its color should be #ff0000
         ((u)) && f="#ff0000"
@@ -62,11 +67,17 @@ while read -r; do
         # for every window
         # ((w)) +& r+="^fg($f)·^fg()"
         if [[ "$w" -gt 0 ]] ; then
+            r+="^fg($f)$(( d+1 )) "
             for (( ii=0 ; ii<w ; ii=ii+1 )) ; do
-                r+="^fg($f)·^fg()"
+                r+="·"
             done
-            r+=" "
+            r+="   "
+        else
+            if [[ "$c" -gt 0 ]] ; then
+                r+="^fg(#ffffff)$current_d   "
+            fi
         fi
+        # r+="^fg()"
 
         # if the desktop has windows print that number next to the desktop name
         # else just print the desktop name
@@ -80,7 +91,7 @@ while read -r; do
 	source "${OCELOT_PATH}bin/ocelotbar"
 
     # read from fifo and output to dzen2
-    printf " %s   %s%s%s   %s\n" "$date" "$r" "$current_d" "$i" "$obar" && unset r
+    printf " %s   %s^fg()%s   %s\n" "$date" "$r" "$i" "$obar" && unset r
 done < "$ff" | dzen2 -h 21 -w "$SCREEN_WIDTH" -ta l -e -p -fn "xft:Monospace:pixelsize=13" &
 
 # output last REPLY from ocelot to refresh dzen2 regularly without interaction

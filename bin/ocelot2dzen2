@@ -7,11 +7,17 @@ if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
     if [[ -n "$screen_width" ]] ; then
         SCREEN_WIDTH=$screen_width
-        echo " · SCREEN_WIDTH=$SCREEN_WIDTH"
     fi
+    echo " · screen_width=$SCREEN_WIDTH"
     if [[ -n "$ocelot_path" ]] ; then
         OCELOT_PATH="$ocelot_path"
-        echo " · OCELOT_PATH=$OCELOT_PATH"
+    fi
+    echo " · ocelot_path=$OCELOT_PATH"
+    if [[ -n "$wallpaper" ]] ; then
+        xsetbg "$wallpaper"
+        echo " · wallpaper=$wallpaper"
+    else
+        echo " · wallpaper not set"
     fi
 else
     echo " · ~/.ocelotrc does not exist"

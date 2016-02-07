@@ -15,7 +15,7 @@ some functions added and a predefined "config.h" besides the original template
 - `i3lock` to lock your screen
 
 Things to come (order is priority):
-- LCD-brightness control for Thinkpads
+- LCD-brightness control for Thinkpads through `/sys`
 - lock screen on lid-close (provided as systemd.unit-file)
 - lock screen before hibernate or standby
 - `.Xresource`-template to configure colors for `urxvt`
@@ -24,7 +24,7 @@ Things to come (order is priority):
 
 Things *NOT* to come:
 - Powermanagement: please use `systemd` and `UPower` or your existing setup; ocelot should have no impact on it.
-- save session (open application, etc): please use hibernate (suspend to disk) or standby (suspend).
+- save session and restore open application, etc: please use hibernate (suspend to disk) or standby (suspend).
 
 ## Install
 First make sure ocelots bin-folder is in your `$PATH` or symlinked in a folder
@@ -34,7 +34,8 @@ make
 ```
 
 ## Configuration
-"ocelot" has two user config-files:
+"ocelot" has two user config-files; create them if you want to change default
+behavior:
 
 **`~/.ocelotrc` for general settings**
 ```.sh

@@ -13,6 +13,7 @@ some functions added and a predefined "config.h" besides the original template
 - `dmenu` to run stuff
 - `urxvt` to have a terminal
 - `i3lock` to lock your screen
+- `xautolock` to lock screen after some idle time (10 minutes)
 
 Things to come (order is priority):
 - LCD-brightness control for Thinkpads through `/sys`

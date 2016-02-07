@@ -23,6 +23,9 @@ else
     echo " · ~/.ocelotrc does not exist"
 fi
 
+# use autolocks defaults to lock screen (after 10 minutes)
+xautolock -locker "i3lock -c 393f3f" &
+
 # debug
 # echo "${OCELOT_PATH}ocelot"
 

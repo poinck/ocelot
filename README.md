@@ -10,17 +10,21 @@ some functions added and a predefined "config.h" besides the original template
 
 - `xsetbg` (part of xloadimage) to set a wallpaper
 - `dzen2` for ocelotbar
-- `dmenu` to run stuff with Alt+F2
-- `urxvt` to have a terminal with Alt+SHIFT+ENTER
-- `i3lock` to lock your screen with Super_L+l
+- `dmenu` to run stuff
+- `urxvt` to have a terminal
+- `i3lock` to lock your screen
 
-Things to come:
+Things to come (order is priority):
 - LCD-brightness control for Thinkpads
-- speaker-volume control
 - lock screen on lid-close (provided as systemd.unit-file)
+- lock screen before hibernate or standby
+- `.Xresource`-template to configure colors for `urxvt`
+- speaker-volume control (this will be tricky, I suppose)
+- take screenshot, using `scrot`
 
 Things *NOT* to come:
 - Powermanagement: please use `systemd` and `UPower` or your existing setup; ocelot should have no impact on it.
+- save session (open application, etc): please use hibernate (suspend to disk) or standby (suspend).
 
 ## Install
 First make sure ocelots bin-folder is in your `$PATH` or symlinked in a folder
@@ -44,21 +48,25 @@ ocelot_path="/home/poinck/gits/ocelot/"
 wallpaper="/home/user/path/to/desktop-wallpaper.jpg"
 ```
 
-**`~/.ocelotbarrc` for additional setting**
+**`~/.ocelotbarrc` for additional settings**
 ```.sh
 # if you have a tmd running nearby for local outside temperature
 tmd_url="https://yourdomain.tld/path/tm_1.csv"
 ```
 
-Things to come:
+Things to come (order is priority):
 - `glsa-check` notification for Gentoo-users
 - `thunderbird` notifications for new mail
+- support more than just "BAT0" from `/proc/sys`
+- update-indication for `dnf` if you are a Fedora-user
+- update-indication for `pacman` if you are an Arch-user
+- update-indication for `apt` if you are using a Debian based distribution
+- update-indication for `zypper` if you prefer to use `ocelot` with awesome openSUSE (they have chameloens)
 
 ### Start ocelot
-currently I can only describe the option to use startx
+currently I can only describe the option to use `startx`.
 
-**Start with startx**
-Edit `.xinitrc`:
+**`~/.xinitrc`, start with `startx`**
 ```.sh
 exec ocelot2dzen2
 ```
@@ -82,6 +90,18 @@ if you have a decent touchpad with multitouch-support, you will still be able to
 synclient RightButtonAreaTop=0
 synclient RightButtonAreaLeft=0
 ```
+
+## Keys
+How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs recompile and restart):
+
+- **open terminal** ALT+SHIFT+ENTER
+- **open menu** ALT+F2
+- **switch desktop** SUPER-L+LEFT|RIGHT
+- **lock screen** SUPER-L+l
+- **move window** SUPER-L+w|a|s|d
+- **resize window** SUPER-L+SHIFT+w|a|s|d
+- **seelct window** ALT+j|k
+- **change tiling-mode** ALT+SHIFT+f|t|b|g|m
 
 ## FAQ
 

@@ -62,7 +62,7 @@ Things to come (order is priority):
 - update-indication for `dnf` if you are a Fedora-user
 - update-indication for `pacman` if you are an Arch-user
 - update-indication for `apt` if you are using a Debian based distribution
-- update-indication for `zypper` if you prefer to use `ocelot` with awesome openSUSE (they have chameloens)
+- update-indication for `zypper` if you prefer to use `ocelot` with awesome openSUSE (they have chameleons)
 
 ### Start ocelot
 currently I can only describe the option to use `startx`.

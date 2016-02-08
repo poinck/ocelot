@@ -57,6 +57,7 @@ tmd_url="https://yourdomain.tld/path/tm_1.csv"
 ```
 
 Things to come (order is priority):
+- network-indication
 - `glsa-check` notification for Gentoo-users
 - `thunderbird` notifications for new mail
 - support more than just "BAT0" from `/proc/sys`

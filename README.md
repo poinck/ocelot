@@ -16,11 +16,13 @@ some functions added and a predefined "config.h" besides the original template
 - `xautolock` to lock screen after some idle time (10 minutes)
 
 Things to come (order is priority):
+- logging (wrapper-script)
 - LCD-brightness control for Thinkpads through `/sys`
+- speaker-volume control (this will be tricky, I suppose)
 - lock screen on lid-close (provided as systemd.unit-file)
 - lock screen before hibernate or standby
 - `.Xresource`-template to configure colors for `urxvt`
-- speaker-volume control (this will be tricky, I suppose)
+- logging (using journald)
 - take screenshot, using `scrot`
 
 Things *NOT* to come:

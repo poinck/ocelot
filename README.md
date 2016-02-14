@@ -7,6 +7,8 @@
 not yet added functions, but a predefined "config.h" besides the original template
 "config.def.h" and some scripts and resources to feel at home right from the start.
 
+![ocelot](/ocelot/ocelot.png)
+
 ## Dependencies
 
 - `xsetbg` (part of xloadimage) to set a wallpaper

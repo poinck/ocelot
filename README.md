@@ -1,10 +1,11 @@
 # Readme: ocelot
 *forked from [monsterwm](https://github.com/c00kiemon5ter/monsterwm)*
+*I have found out that "monsterwm" is in a way like [catwm](https://github.com/pyknite/catwm), it is a catmonster!*
 
 **ocelot:**
-"ocelot" is a minimal tiling window manager forked from "monsterwm" with
-some functions added and a predefined "config.h" besides the original template
-"config.def.h".
+"ocelot" is a minimal tiling window manager bundle forked from "monsterwm" with
+not yet added functions, but a predefined "config.h" besides the original template
+"config.def.h" and some scripts and resources to feel at home right from the start.
 
 ## Dependencies
 
@@ -14,16 +15,17 @@ some functions added and a predefined "config.h" besides the original template
 - `urxvt` to have a terminal
 - `i3lock` to lock your screen
 - `xautolock` to lock screen after some idle time (10 minutes)
+- *optional* `tmd` to show local temperature, see [tm](https://github.com/poinck/tm)
 
 Things to come (order is priority):
-- logging (wrapper-script)
 - LCD-brightness control for Thinkpads through `/sys`
 - speaker-volume control (this will be tricky, I suppose)
 - lock screen on lid-close (provided as systemd.unit-file)
 - lock screen before hibernate or standby
-- `.Xresource`-template to configure colors for `urxvt`
-- logging (using journald)
 - take screenshot, using `scrot`
+- move current window to another desktop (still figuring out how this could be done, without compromising stability)
+- logging (wrapper-script)
+- logging (using journald)
 
 Things *NOT* to come:
 - Powermanagement: please use `systemd` and `UPower` or your existing setup; ocelot should have no impact on it.
@@ -31,7 +33,7 @@ Things *NOT* to come:
 
 ## Install
 First make sure ocelots bin-folder is in your `$PATH` or symlinked in a folder
-in your `$PATH`. Second compile `ocelot`:
+in your `$PATH`. Second compile `ocelot` if you happy with your changes in "config.h":
 ```.sh
 make
 ```
@@ -41,22 +43,11 @@ make
 behavior:
 
 **`~/.ocelotrc` for general settings**
-```.sh
-# needed for dzen2, default is 1366
-screen_width=1366
-
-# default path is current directory
-ocelot_path="/home/poinck/gits/ocelot/"
-
-# default is no wallpaper
-wallpaper="/home/user/path/to/desktop-wallpaper.jpg"
-```
+see "config/.ocelotrc" for help adjusting the variables.
 
 **`~/.ocelotbarrc` for additional settings**
-```.sh
-# if you have a tmd running nearby for local outside temperature
-tmd_url="https://yourdomain.tld/path/tm_1.csv"
-```
+see "config/.ocelotbarrc" for help adjusting variables specific to ocelotbar:
+- current local temperature
 
 Things to come (order is priority):
 - network-indication
@@ -73,28 +64,32 @@ currently I can only describe the option to use `startx`.
 
 **`~/.xinitrc`, start with `startx`**
 ```.sh
+[[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 exec ocelot2dzen2
 ```
 
+## Security
+This section will describe configurations to enhance security of *ocelot*.
+
+**autostart with login from tty; `~/.bashrc`**
+see [X without display manager](https://wiki.gentoo.org/wiki/X_without_Display_Manager#systemd). `exec` will make sure, that the shell cannot be used after ocelot quit or crashed:
+```.sh
+if [[ ! ${DISPLAY} && ${XDG_VTNR} == 1 ]]; then
+    exec startx
+fi
+```
+
 ## Tweaks
-You can put any command you would put in a bash-script to tweak your desktop in `.ocelotrc`, here are a few examples I use (many thanks go to the ArchWiki):
+Many thanks go to the Gentoo- and Arch-wiki:
 
-**load ICC-Profiles from colord**
-```.sh
-xcalib -d :0 /usr/share/color/icc/colord/Gamma5500K.icc
-```
+**tweaks you can put in `~/.ocelotrc`**
+You can put any command you would put in a bash-script to tweak your desktop in `.ocelotrc`, see "config/.ocelotrc" fo tweaks I use:
+- natural scrolling
+- disable right-click on touchpad
+- load different ICC-profile from colord
 
-**natural scrolling**
-```.sh
-synclient VertScrollDelta=-111
-```
-
-**disable rightclick on touchpad**
-if you have a decent touchpad with multitouch-support, you will still be able to use right-click with two fingers
-```.sh
-synclient RightButtonAreaTop=0
-synclient RightButtonAreaLeft=0
-```
+**better reading with `~/.Xresources`**
+Copy paste from "tweaks/.Xresources": This will lighten font colors in the terminal and adds hinting and antialiasing to all applications.
 
 ## Keys
 How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs recompile and restart):
@@ -111,7 +106,7 @@ How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs 
 ## FAQ
 
 **Will `ocelot` run with wayland?**
-If all dependencies and `monsterwm` will support libwayland then I can maybe adjust the intructions to install and setup `ocelot`. Currently I do not plan to port it to libwayland. If you can do it, that'll be great! *(:*
+If all dependencies and `monsterwm` will support libwayland then I can maybe adjust the instructions to install and setup `ocelot`. Currently I do not plan to port it to libwayland. If you can do it, that'll be great! *(:*
 
 ## License
 Licensed under MIT/X Consortium License, see [LICENSE][law] file for more

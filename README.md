@@ -1,6 +1,6 @@
 # Readme: ocelot
-*forked from [monsterwm](https://github.com/c00kiemon5ter/monsterwm)*
-*I have found out that "monsterwm" is in a way like [catwm](https://github.com/pyknite/catwm), it is a catmonster!*
+- *forked from [monsterwm](https://github.com/c00kiemon5ter/monsterwm)*
+- *I have found out that "monsterwm" is similar to [catwm](https://github.com/pyknite/catwm), it is a catmonster!*
 
 **ocelot:**
 "ocelot" is a minimal tiling window manager bundle forked from "monsterwm" with
@@ -42,11 +42,11 @@ make
 "ocelot" has two user config-files; create them if you want to change default
 behavior:
 
-**`~/.ocelotrc` for general settings**
-see "config/.ocelotrc" for help adjusting the variables.
+**`~/.ocelotrc` for general settings:**
+See "config/.ocelotrc" for help adjusting the variables.
 
-**`~/.ocelotbarrc` for additional settings**
-see "config/.ocelotbarrc" for help adjusting variables specific to ocelotbar:
+**`~/.ocelotbarrc` for additional settings:**
+See "config/.ocelotbarrc" for help adjusting variables specific to ocelotbar:
 - current local temperature
 
 Things to come (order is priority):
@@ -60,9 +60,9 @@ Things to come (order is priority):
 - update-indication for `zypper` if you prefer to use `ocelot` with awesome openSUSE (they have chameleons)
 
 ### Start ocelot
-currently I can only describe the option to use `startx`.
+Currently I can only describe the option to use `startx`.
 
-**`~/.xinitrc`, start with `startx`**
+**`~/.xinitrc`, start with `startx`:**
 ```.sh
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 exec ocelot2dzen2
@@ -71,8 +71,8 @@ exec ocelot2dzen2
 ## Security
 This section will describe configurations to enhance security of *ocelot*.
 
-**autostart with login from tty; `~/.bashrc`**
-see [X without display manager](https://wiki.gentoo.org/wiki/X_without_Display_Manager#systemd). `exec` will make sure, that the shell cannot be used after ocelot quit or crashed:
+**autostart with login from tty; `~/.bashrc`:**
+See [X without display manager](https://wiki.gentoo.org/wiki/X_without_Display_Manager#systemd). `exec` will make sure, that the shell cannot be used after ocelot quit or crashed:
 ```.sh
 if [[ ! ${DISPLAY} && ${XDG_VTNR} == 1 ]]; then
     exec startx
@@ -82,13 +82,13 @@ fi
 ## Tweaks
 Many thanks go to the Gentoo- and Arch-wiki:
 
-**tweaks you can put in `~/.ocelotrc`**
+**tweaks you can put in `~/.ocelotrc`:**
 You can put any command you would put in a bash-script to tweak your desktop in `.ocelotrc`, see "config/.ocelotrc" fo tweaks I use:
 - natural scrolling
 - disable right-click on touchpad
 - load different ICC-profile from colord
 
-**better reading with `~/.Xresources`**
+**better reading with `~/.Xresources`:**
 Copy paste from "tweaks/.Xresources": This will lighten font colors in the terminal and adds hinting and antialiasing to all applications.
 
 ## Keys

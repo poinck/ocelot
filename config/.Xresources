@@ -1,0 +1,55 @@
+!-*-{ Xft settings
+Xft*dpi:       96
+Xft*antialias: True
+Xft*hinting:   Full
+!-*-}
+
+
+!-*- Perl extensions -*-
+URxvt.perl-ext-common:default,clipboard,matcher,keyboard-select
+URxvt.keysym.M-u:     perl:url-select:select_next
+URxvt.url-launcher:   /usr/bin/firefox
+URxvt.underlineURLs:  True
+URxvt.matcher.button: 1
+URxvt.keysym.M-Escape:perl:keyboard-select:activate
+URxvt.keysym.M-c:     perl:clipboard:copy
+URxvt.keysym.M-v:     perl:clipboard:paste
+URxvt.keysym.M-C-v:   perl:clipboard:paste_escaped
+!URxvt.copyCommand:   xsel -ib
+!URxvt.pasteCommand:  xsel -ob
+!Comment this if you dont want copy when text is selected
+URxvt.clipboard.autocopy: true
+
+
+! black
+*color0:  #2E3436
+!*color8:  #555753
+*color8: #7f827c
+! red
+!*color1:  #a40000
+*color1: #ff683d
+*color9:  #EF2929
+! green
+!*color2:  #4E9A06
+*color2: #43d827
+*color10: #8AE234
+! yellow
+!*color3:  #C4A000
+*color3: #d7d827
+*color11: #FCE94F
+! blue
+*color4:  #3465A4
+*color12: #729FCF
+! purple
+*color5:  #75507B
+!*color13: #e34fff
+*color13: #e0a1ff
+!*color13: #AD7FA8
+! orange (replaces cyan)
+!*color6:  #ce5c00
+!*color14: #fcaf3e
+! cyan
+*color6: #00ffff
+! white
+*color7:  #babdb9
+*color15: #EEEEEC

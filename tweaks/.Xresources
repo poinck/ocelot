@@ -28,7 +28,8 @@ URxvt.clipboard.autocopy: true
 ! red
 !*color1:  #a40000
 *color1: #ff683d
-*color9:  #EF2929
+!*color9:  #EF2929
+*color9: #ff2d2d
 ! green
 !*color2:  #4E9A06
 *color2: #43d827
@@ -53,3 +54,4 @@ URxvt.clipboard.autocopy: true
 ! white
 *color7:  #babdb9
 *color15: #EEEEEC
+

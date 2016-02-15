@@ -52,6 +52,13 @@ static const char *lockcmd[] = { "i3lock", "-c", "393f3f", NULL };
     {  MOD4,             K,              change_desktop, {.i = N}}, \
     {  MOD4|ShiftMask,   K,              client_to_desktop, {.i = N}},
 
+/*
+ * TODO  brightness-control: use defines from from
+ * /usr/include/X11/../xkbcommon/xkbcommon-keysyms.h
+ *  - XKB_KEY_XF86MonBrightnessUp   0x1008FF02
+ *  - XKB_KEY_XF86MonBrightnessDown 0x1008FF03
+ **/
+
 /**
  * keyboard shortcuts
  */

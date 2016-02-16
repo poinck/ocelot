@@ -21,6 +21,7 @@ not yet added functions, but a predefined "config.h" besides the original templa
 
 Things to come (order is priority):
 - LCD-brightness control for Thinkpads through `/sys`
+- side-panel, see "./idea" and [THIS](https://poinck.de/screenFetch-2016-02-16_22-45-33.png) awesome screenshot
 - speaker-volume control (this will be tricky, I suppose)
 - lock screen on lid-close (provided as systemd.unit-file)
 - lock screen before hibernate or standby

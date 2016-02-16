@@ -95,7 +95,7 @@ while read -r; do
 
     # read from fifo and output to dzen2
     printf " %s   %s^fg()%s   %s\n" "$date" "$r" "$i" "$obar" && unset r
-done < "$ff" | dzen2 -h 21 -w "$SCREEN_WIDTH" -ta l -e -p -fn "xft:Monospace:pixelsize=13" &
+done < "$ff" | dzen2 -h 21 -w "$SCREEN_WIDTH" -ta l -e -p -fn "monospace:size=9" &
 
 # output last REPLY from ocelot to refresh dzen2 regularly without interaction
 while true ; do

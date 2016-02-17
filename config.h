@@ -45,9 +45,9 @@ static const AppRule rules[] = { \
  * custom commands
  * must always end with ', NULL };'
  */
-static const char *termcmd[] = { "urxvt", "+sb", "-fade", "15", "+si", "-uc", "-bg", "#393f3f", "-fg", "white", "-fn", "xft:Monospace:pixelsize=13", NULL };
+static const char *termcmd[] = { "urxvt", "+sb", "-fade", "15", "+si", "-uc", "-bg", "#3f3f3f", "-fg", "white", "-fn", "xft:Monospace:pixelsize=13", NULL };
 static const char *menucmd[] = { "dmenu_run", "-l", "4", "-sf", "#000000", "-sb", "#ffffff", "-fn", "monospace:size=9", NULL };
-static const char *lockcmd[] = { "i3lock", "-c", "393f3f", NULL };
+static const char *lockcmd[] = { "i3lock", "-c", "3f3f3f", NULL };
 static const char *brupcmd[] = { "./bin/obrightness", "up", NULL };
 static const char *brdocmd[] = { "./bin/obrightness", "down", NULL };
 

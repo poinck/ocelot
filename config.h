@@ -14,6 +14,7 @@
 #define SHOW_PANEL      True      /* show panel by default on exec */
 #define TOP_PANEL       True      /* False means panel is on bottom */
 #define PANEL_HEIGHT    21        /* 0 for no space for panel, thus no panel */
+#define PANEL_WIDTH     75        /* 0 for regular top panel, otherwise space of side panel on the left side */
 #define DEFAULT_MODE    FLOAT     /* initial layout/mode: TILE MONOCLE BSTACK GRID FLOAT */
 #define ATTACH_ASIDE    True      /* False means new window is master */
 #define FOLLOW_WINDOW   False     /* follow the window when moved to a different desktop */
@@ -47,6 +48,8 @@ static const AppRule rules[] = { \
 static const char *termcmd[] = { "urxvt", "+sb", "-fade", "15", "+si", "-uc", "-bg", "#393f3f", "-fg", "white", "-fn", "xft:Monospace:pixelsize=13", NULL };
 static const char *menucmd[] = { "dmenu_run", "-l", "4", "-sf", "#000000", "-sb", "#ffffff", "-fn", "monospace:size=9", NULL };
 static const char *lockcmd[] = { "i3lock", "-c", "393f3f", NULL };
+static const char *brupcmd[] = { "./bin/obrightness", "up", NULL };
+static const char *brdocmd[] = { "./bin/obrightness", "down", NULL };
 
 #define DESKTOPCHANGE(K,N) \
     {  MOD4,             K,              change_desktop, {.i = N}}, \
@@ -109,6 +112,8 @@ static Key keys[] = {
        DESKTOPCHANGE(    XK_8,                             7)
        DESKTOPCHANGE(    XK_9,                             8)
        DESKTOPCHANGE(    XK_0,                             9)
+    {  0,            XF86XK_MonBrightnessUp,    spawn,   {.com = brupcmd}},
+    {  0,            XF86XK_MonBrightnessDown,  spawn,   {.com = brdocmd}},
 };
 
 /* XK_Super_L */

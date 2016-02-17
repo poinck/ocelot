@@ -56,6 +56,8 @@ Things to come (order is priority):
 - network-indication
 - `glsa-check` notification for Gentoo-users
 - `thunderbird` notifications for new mail
+- display brightness indication
+- CAPSLOCK-indication
 - support more than just "BAT0" from `/proc/sys`
 - update-indication for `dnf` if you are a Fedora-user
 - update-indication for `pacman` if you are an Arch-user

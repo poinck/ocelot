@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo "brightness: $1" >> /tmp/obrightness.log

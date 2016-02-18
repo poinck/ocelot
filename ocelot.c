@@ -16,6 +16,7 @@
 #include <X11/XKBlib.h>
 #include <X11/Xproto.h>
 #include <X11/Xatom.h>
+#include <X11/XF86keysym.h> /* grap function keys */
 
 #define LENGTH(x)       (sizeof(x)/sizeof(*x))
 #define CLEANMASK(mask) (mask & ~(numlockmask | LockMask))
@@ -1012,7 +1013,12 @@ void setfullscreen(Client *c, Desktop *d, Bool fullscrn) {
     if (fullscrn != c->isfull) XChangeProperty(dis, c->win,
             netatoms[NET_WM_STATE], XA_ATOM, 32, PropModeReplace, (unsigned char*)
             ((c->isfull = fullscrn) ? &netatoms[NET_FULLSCREEN]:0), fullscrn);
-    if (fullscrn) XMoveResizeWindow(dis, c->win, 0, 0, ww, wh + PANEL_HEIGHT);
+    if (PANEL_WIDTH == 0) {
+        if (fullscrn) XMoveResizeWindow(dis, c->win, 0, 0, ww, wh + PANEL_HEIGHT);
+    }
+    else {
+        if (fullscrn) XMoveResizeWindow(dis, c->win, 0, 0, ww + PANEL_WIDTH, wh);
+    }
     XSetWindowBorderWidth(dis, c->win, (c->isfull || !d->head->next ? 0:BORDER_WIDTH));
 }
 
@@ -1027,8 +1033,13 @@ void setup(void) {
     root = RootWindow(dis, screen);
 
     /* screen width and height */
-    ww = XDisplayWidth(dis,  screen);
-    wh = XDisplayHeight(dis, screen) - PANEL_HEIGHT;
+    ww = XDisplayWidth(dis,  screen) - PANEL_WIDTH;
+    if (PANEL_WIDTH == 0) {
+        wh = XDisplayHeight(dis, screen) - PANEL_HEIGHT;
+    }
+    else {
+        wh = XDisplayHeight(dis, screen);
+    }
 
     /* initialize mode and panel visibility for each desktop */
     for (unsigned int d = 0; d < DESKTOPS; d++)
@@ -1187,8 +1198,13 @@ void switch_mode(const Arg *arg) {
  */
 void tile(Desktop *d) {
     if (!d->head || d->mode == FLOAT) return; /* nothing to arange */
-    layout[d->head->next ? d->mode:MONOCLE](0, TOP_PANEL && d->sbar ? PANEL_HEIGHT:0,
-                                                  ww, wh + (d->sbar ? 0:PANEL_HEIGHT), d);
+    if (PANEL_WIDTH == 0) {
+        layout[d->head->next ? d->mode:MONOCLE](0, TOP_PANEL && d->sbar ? PANEL_HEIGHT:0, ww, wh + (d->sbar ? 0:PANEL_HEIGHT), d);
+    }
+    else {
+        /* tile with side-panel */
+        layout[d->head->next ? d->mode:MONOCLE](d->sbar ? PANEL_WIDTH:0, 0, ww + (d->sbar ? 0:PANEL_WIDTH), wh, d);
+    }
 }
 
 /**

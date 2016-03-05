@@ -1,0 +1,20 @@
+#!/bin/bash
+
+ofifo=/tmp/ocollector.fifo
+[[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
+
+tail -f $ofifo | \
+while read -r reply ; do
+    # parse input from fifo
+    replyType=${reply%%+*} # use first part of reply seperated by +
+    replyContent=${reply#*+} # use last part of reply seperated by +
+
+    if [[ "$replyType" == "otime" ]] ; then
+        otime="$replyType: $replyContent"
+    elif [[ "$replyType" == "odesktops" ]] ; then
+        odesktops="$replyType: $replyContent"
+    fi
+
+    echo "$otime, $odesktops"
+done | dzen2 -p -x 100 -y 700 -w 500
+

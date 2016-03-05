@@ -22,5 +22,5 @@
     echo " 19···"
     echo " 20·"
     sleep 42
-) | dzen2 -l 48 -h 16 -ta l -w 75 -fn "monospace:bold:size=9" -e 'onstart=uncollapse' -bg "#0f0f0f"
+) | dzen2 -l 48 -h 16 -ta l -w 75 -fn "monospace:bold:size=9" -e 'onstart=uncollapse' -bg "#2c2c2c"
 

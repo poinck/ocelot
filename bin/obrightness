@@ -1,3 +1,13 @@
 #!/bin/bash
 
-echo "brightness: $1" >> /tmp/obrightness.log
+if [[ "$1" == "up" ]] ; then
+    xbacklight -inc 5
+elif [[ "$1" == "down" ]] ; then
+    xbacklight -dec 5
+fi
+current_brightness=$( xbacklight -get )
+current_brightness=${current_brightness%%.*}
+    # TODO  show brightness-indication for 2 seconds
+
+# debug
+echo "brightness: $1 $current_brightness" >> /tmp/obrightness.log

@@ -10,18 +10,21 @@ not yet added functions, but a predefined "config.h" besides the original templa
 ![ocelot](/ocelot.png)
 
 ## Dependencies
+- X11-header files to compile ocelot
 
+Following dependencies are required to get the intended look and feel:
 - `xsetbg` (part of xloadimage) to set a wallpaper
 - `dzen2` for ocelotbar
 - `dmenu` to run stuff
 - `urxvt` to have a terminal
 - `i3lock` to lock your screen
 - `xautolock` to lock screen after some idle time (10 minutes)
+- `xbacklight` to control backlight of your notebook screen
 - *optional* `tmd` to show local temperature, see [tm](https://github.com/poinck/tm)
 
 Things to come (order is priority):
-- LCD-brightness control for Thinkpads through `/sys`
-- side-panel, see "./idea" and [THIS](https://poinck.de/screenFetch-2016-02-16_22-45-33.png) awesome screenshot
+- LCD-brightness control .. TESTING
+- side-panel, see "./idea" and [THIS](https://poinck.de/screenFetch-2016-02-16_22-45-33.png) awesome screenshot; will use new ocolletcor multiplexer-script
 - speaker-volume control (this will be tricky, I suppose)
 - lock screen on lid-close (provided as systemd.unit-file)
 - lock screen before hibernate or standby
@@ -35,9 +38,16 @@ Things *NOT* to come:
 - save session and restore open application, etc: please use hibernate (suspend to disk) or standby (suspend).
 
 ## Install
-First make sure ocelots bin-folder is in your `$PATH` or symlinked in a folder
-in your `$PATH`. Second compile `ocelot` if you happy with your changes in "config.h":
+After you checked out ocelot make sure ocelots bin-folder is in your `$PATH`, otherwise you have to create symlinks to all executable ./bin/o\*-scripts from a folder that is in `$PATH`. Second compile `ocelot` if you are happy with your changes in "config.h":
 ```.sh
+cd /home/$USER
+mkdir gits
+cd gits
+git clone https://github.com/poinck/ocelot.git
+cd ocelot
+ln -s /home/$USER/gits/ocelot/bin/obrightness ~/bin/obrightness
+ln -s /home/$USER/gits/ocelot/bin/ocelot2dzen2 ~/bin/ocelot2dzen2
+vim config.h  # look, (change) and :wq
 make
 ```
 
@@ -56,7 +66,7 @@ Things to come (order is priority):
 - network-indication
 - `glsa-check` notification for Gentoo-users
 - `thunderbird` notifications for new mail
-- display brightness indication
+- display brightness indication (wrapper-script for `xbrightness`)
 - CAPSLOCK-indication
 - support more than just "BAT0" from `/proc/sys`
 - update-indication for `dnf` if you are a Fedora-user

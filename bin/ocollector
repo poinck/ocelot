@@ -10,11 +10,12 @@ while read -r reply ; do
     replyContent=${reply#*+} # use last part of reply seperated by +
 
     if [[ "$replyType" == "otime" ]] ; then
-        otime="$replyType: $replyContent"
+        otime="$replyContent"
     elif [[ "$replyType" == "odesktops" ]] ; then
-        odesktops="$replyType: $replyContent"
+        odesktops="$replyContent"
     fi
 
-    echo "$otime, $odesktops"
-done | dzen2 -p -x 100 -y 700 -w 500
-
+    echo -e "^tw()$otime\n$odesktops"
+    # echo -e "$odesktops"
+done | dzen2 -p -l 48 -h 16 -ta l -w 75 -fn "monospace:bold:size=9" -e 'onstart=uncollapse' -bg "#2c2c2c"
+# dzen2 -p -x 100 -y 700 -w 500

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+get_otime() {
+    # clear
+    echo -n "otime+^pa(0;4) ^fg(#ffffff)$(date '+%a,') ^fg()$(date '+W%-W')\n^cs()" # > /tmp/ocollector.fifo # $ofifo
+    echo -n "\n ^fg(#ffffff)$(date '+%-H:%M')\n" # > /tmp/ocollector.fifo # $ofifo
+    echo "^pa(0;4) $(date '+%-d. %b')" # > /tmp/ocollector.fifo
+}
+
+ofifo=/tmp/ocollector.fifo
+while true ; do
+    echo "$( get_otime )" > /tmp/ocollector.fifo
+    sleep 20
+done

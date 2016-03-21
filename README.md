@@ -20,12 +20,12 @@ Following dependencies are required to get the intended look and feel:
 - `i3lock` to lock your screen
 - `xautolock` to lock screen after some idle time (10 minutes)
 - `xbacklight` to control backlight of your notebook screen
+- `pacmd` as part of PulseAudio to control volume (sink with index 0)
 - *optional* `tmd` to show local temperature, see [tm](https://github.com/poinck/tm)
 
 Things to come (order is priority):
-- LCD-brightness control .. TESTING
 - side-panel, see "./idea" and [THIS](https://poinck.de/screenFetch-2016-02-16_22-45-33.png) awesome screenshot; will use new ocolletcor multiplexer-script
-- speaker-volume control (this will be tricky, I suppose)
+- speaker-volume control (can be done with `pacmd sink-volume 0 0x0C000`)
 - lock screen on lid-close (provided as systemd.unit-file)
 - lock screen before hibernate or standby
 - take screenshot, using `scrot`
@@ -115,8 +115,9 @@ How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs 
 - **lock screen** SUPER-L+l
 - **move window** SUPER-L+w|a|s|d
 - **resize window** SUPER-L+SHIFT+w|a|s|d
-- **seelct window** ALT+j|k
+- **select window** ALT+j|k
 - **change tiling-mode** ALT+SHIFT+f|t|b|g|m
+- **change display brightness** XF86MonBrightnessUp|XF86MonBrightnessDown (FN-Keys)
 
 ## FAQ
 

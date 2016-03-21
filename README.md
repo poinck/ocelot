@@ -3,9 +3,9 @@
 - *I have found out that "monsterwm" is similar to [catwm](https://github.com/pyknite/catwm), it is a catmonster!*
 
 **ocelot:**
-"ocelot" is a minimal tiling window manager bundle forked from "monsterwm" with
-not yet added functions, but a predefined "config.h" besides the original template
-"config.def.h" and some scripts and resources to feel at home right from the start.
+"ocelot" is a minimal tiling window manager bundle forked from "monsterwm" with a customized "config.h", side-panel support and a lot of scripts and resources to feel at home right from the start.
+
+*NOTICE: Currently the side-panel is under construction; I recommend to set `PANEL_WIDTH 0` to use top-panel instead.*
 
 ![ocelot](/ocelot.png)
 

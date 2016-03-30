@@ -121,8 +121,19 @@ How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs 
 
 ## FAQ
 
+**Does `ocelot` support multiple monitors?**
+Yes and no. You can at least use `xrandr` to mirror your screen output:
+- if output does not support native resolution of LVDS1
+```.sh
+xrandr --output HDMI2 --mode 1280x720 --fb 1366x768 --panning 1366x768 --same-as LVDS1 # --dryrun
+```
+- if output supports the native resolution of LVDS1
+```.sh
+xrandr --output HDMI2 --mode 1366x768 --same-as LVDS1 # --dryrun
+```
+
 **Will `ocelot` run with wayland?**
-If all dependencies and `monsterwm` will support libwayland then I can maybe adjust the instructions to install and setup `ocelot`. Currently I do not plan to port it to libwayland. If you can do it, that'll be great! *(:*
+If all dependencies and `monsterwm` will support libwayland then I can maybe adjust the instructions to install and setup `ocelot`. Currently I do not plan to port it to libwayland on my own. If you can do it, that'll be great! *(:*
 
 ## License
 Licensed under MIT/X Consortium License, see [LICENSE][law] file for more

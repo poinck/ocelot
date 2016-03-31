@@ -1,0 +1,75 @@
+#!/bin/bash
+
+OCELOT_PATH=""
+if [[ -f ~/.ocelotrc ]] ; then
+    . ~/.ocelotrc
+    if [[ -n "$ocelot_path" ]] ; then
+        OCELOT_PATH="$ocelot_path"
+    fi
+    echo "odesktop.ocelot_path=$OCELOT_PATH"
+fi
+
+odfifo=/tmp/odesktop.fifo
+[[ -p $odfifo ]] || mkfifo -m 600 "$odfifo"
+${OCELOT_PATH}ocelot > "$odfifo" &
+
+ofifo=/tmp/ocollector.fifo
+tail -f $odfifo | \
+while read -r reply ; do
+    # TODO  format output for ocollector
+
+    # filter output to only what we want to match and parse
+    [[ $REPLY =~ ^(([[:digit:]]+:)+[[:digit:]]+ ?)+$ ]] && read -ra desktops <<< "$REPLY" || continue
+    for desktop in "${desktops[@]}"; do
+        # set values for
+        # d - the desktop id
+        # w - number of windows in that desktop
+        # m - tiling layout/mode for that desktop
+        # c - whether that desktop is the current (1) or not (0)
+        # u - whether a window in that desktop has an urgent hint set (1) or not (0)
+        IFS=':' read -r d w m c u <<< "$desktop"
+        s=""
+
+        # for the current desktop
+        ((c)) && f="#ffffff" current_d=$((d+1)) && case $m in
+            # name each layout/mode with a symbol
+            # 0) i="t" ;; # ·:
+            0) i="T" ;;
+            # 1) i="m" ;; # ·
+            1) i="M" ;;
+            # 2) i="b" ;; # ...
+            2) i="B" ;;
+            # 3) i="g" ;; # :::
+            3) i="G" ;;
+            # 4) i="f" ;; # .·:
+            4) i="F" ;;
+        esac  || f="#666666"
+
+        # if the desktop has an urgent hint its color should be #ff0000
+        ((u)) && f="#ff0000"
+
+        # for every window
+        # ((w)) +& r+="^fg($f)·^fg()"
+        if [[ "$w" -gt 0 ]] ; then
+            r+="^fg($f)$(( d+1 )) "
+            for (( ii=0 ; ii<w ; ii=ii+1 )) ; do
+                r+="·"
+            done
+            r+="   "
+        else
+            if [[ "$c" -gt 0 ]] ; then
+                r+="^fg(#ffffff)$current_d   "
+            fi
+        fi
+        # r+="^fg()"
+
+        # if the desktop has windows print that number next to the desktop name
+        # else just print the desktop name
+        # ((w)) && r+="$s^fg($f)$d$w^fg()" || r+="$s^fg()"
+        r+="\n"
+    done
+
+    printf "odesktops+ %s^fg()%s\n" "$r" "$i" > "$ofifo" && unset r
+
+    # echo "$reply" > "odesktops+$ofifo"
+done

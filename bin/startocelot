@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# initial configuration
+OCELOT_PATH=""
+if [[ -f ~/.ocelotrc ]] ; then
+    . ~/.ocelotrc
+    if [[ -n "$screen_width" ]] ; then
+        SCREEN_WIDTH=$screen_width
+    fi
+    echo "screen_width=$SCREEN_WIDTH"
+    if [[ -n "$ocelot_path" ]] ; then
+        OCELOT_PATH="$ocelot_path"
+    fi
+    echo "ocelot_path=$OCELOT_PATH"
+    if [[ -n "$wallpaper" ]] ; then
+        xsetbg "$wallpaper"
+        echo "wallpaper=$wallpaper"
+    else
+        echo "wallpaper not set"
+    fi
+else
+    echo "~/.ocelotrc does not exist"
+fi
+
+# load xresources
+[[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
+
+# use autolocks defaults to lock screen (after 10 minutes)
+# xautolock -locker "i3lock -u -c 393f3f" &
+    # TODO  disabled for testing
+
+# create a fifo to send output
+ofifo=/tmp/ocollector.fifo
+[[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
+
+${OCELOT_PATH}bin/ocollector &
+# sleep 1
+${OCELOT_PATH}bin/otime &
+# sleep 1
+
+${OCELOT_PATH}bin/odesktop
+

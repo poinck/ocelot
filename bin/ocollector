@@ -17,5 +17,6 @@ while read -r reply ; do
 
     echo -e "^tw()$otime\n$odesktops"
     # echo -e "$odesktops"
-done | dzen2 -p -l 48 -h 16 -ta l -w 75 -fn "monospace:bold:size=9" -e 'onstart=uncollapse' -bg "#2c2c2c"
+done | dzen2 -p -l 40 -h 16 -ta l -w 75 -fn "monospace:bold:size=9" -e 'onstart=uncollapse' -bg "#2c2c2c"
 # dzen2 -p -x 100 -y 700 -w 500
+# -l 48

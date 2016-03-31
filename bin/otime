@@ -9,6 +9,6 @@ get_otime() {
 
 ofifo=/tmp/ocollector.fifo
 while true ; do
-    echo "$( get_otime )" > /tmp/ocollector.fifo
+    echo "$( get_otime )" > "$ofifo"
     sleep 20
 done

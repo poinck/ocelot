@@ -113,6 +113,10 @@ static Key keys[] = {
     {  0,            XF86XK_MonBrightnessDown,  spawn,   {.com = brdocmd}},
 };
 
+/* TODO  grab volume-buttons: 0x1008ff11 (down) and 0x1008ff13 (up)
+ * - find out controls for speaker-mute-button
+ * - find out controls for mic-mute-button */
+
 /* XK_Super_L */
 
 /**

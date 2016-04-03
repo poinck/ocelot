@@ -34,6 +34,9 @@ while read -r desktopReply ; do
         IFS=':' read -r d w m c u <<< "$desktop"
         s=""
 
+        outlinec="#bbbbbb"
+        fillc="#666666"
+
         # for the current desktop
         ((c)) && f="#ffffff" current_d=$(( d+1 )) && case $m in
             # name each layout/mode with a symbol
@@ -50,17 +53,10 @@ while read -r desktopReply ; do
         esac  || f="#666666"
 
         # if the desktop has an urgent hint its color should be #ff0000
-        ((u)) && f="#ff0000"
+        ((u)) && f="#ff2d2d" outlinec="#ff2d2d" fillc="#992d2d"
 
         # for every desktop with windows
         if [[ "$w" -gt 0 ]] ; then
-            # r+="^fg($f) $(( d+1 ))"
-            # for (( ii=0 ; ii<w ; ii=ii+1 )) ; do
-            #     r+="."
-            # done
-            # r+="\n"
-
-            # test
             desktopCount=$(( desktopCount+1 ))
             desktopCount_mod=$(( desktopCount%4 ))
             desktopCount_div=$(( desktopCount/4 ))
@@ -69,26 +65,14 @@ while read -r desktopReply ; do
 
             r+="^fg($f)^ib(1)^pa(8;$(( desktopCount_pos*4 )))^r($(( 4*w ))x4)"
             [[ "$desktopCount_mod" -eq "0" ]] && r+="\n"
-
-        # else
-        #     if [[ "$c" -gt 0 ]] ; then
-        #         # [[ "$current_d" -gt 1 ]] && r+="\n"
-        #         r+="^fg(#ffffff) $current_d\n"
-        #     fi
         fi
-        # r+="\n"
-
-        # if the desktop has windows print that number next to the desktop name
-        # else just print the desktop name
-        # ((w)) && r+="$s^fg($f)$d$w^fg()" || r+="$s^fg()"
-        # r+="\n"
     done
 
-    # printf "odesktops+ %s^fg()%s\n" "$r" "$i" > "$ofifo" && unset r
-
     # debug
-    echo "odesktops+^fg()$r" # $i"
+    echo "odesktop:=$current_d: $i;;$outlinec--$fillc"
+    echo "odesktops:=$r" # $i"
 
-    echo "odesktops+^fg()$r" > "$ofifo"
+    echo "odesktop:=$current_d: $i;;$outlinec--$fillc" > "$ofifo"
+    echo "odesktops:=$r" > "$ofifo"
     unset r
 done < "$odfifo"

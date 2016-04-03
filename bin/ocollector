@@ -1,27 +1,58 @@
 #!/bin/bash
 
+get_box() {
+    outline=$1
+    fill=$2
+    content=$3
+
+    box="^pa(;10)^fg($outline)^r(75x8)^fg($fill)^ib(1)^pa(4;14)^r(67x4)\n"
+    box+="^fg($outline)^r(75x16)^fg($fill)^ib(1)^pa(4)^r(67x16)^pa(8;2)^fg(#ffffff)$content\n"
+    box+="^pa(;0)^fg($outline)^r(75x8)^fg($fill)^ib(1)^pa(4;0)^r(67x4)"
+
+    echo "$box"
+}
+
 ofifo=/tmp/ocollector.fifo
 [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
 
 tail -f $ofifo | \
 while read -r reply ; do
     # parse input from fifo
-    replyType=${reply%%+*} # use first part of reply seperated by +
-    replyContent=${reply#*+} # use last part of reply seperated by +
+    replyType=${reply%%:=*} # use first part of reply seperated by :=
+    replyContent=${reply#*:=} # use last part of reply seperated by :=
+    _tmp1=${replyContent%%;;*} # first
+    if [[ -z "$_tmp1" ]] ; then
+        _isBox=false
+    else
+        _box=${replyContent#*;;} # last
+        replyContent="$_tmp1"
+        boxOutline=${_box%%--*} # first
+        boxFill=${_box#*--} # last
+        _isBox=true
+    fi
 
     if [[ "$replyType" == "otime" ]] ; then
         otime="$replyContent"
+    elif [[ "$replyType" == "odesktop" ]] ; then
+        odesktop="$( get_box "$boxOutline" "$boxFill" "$replyContent" )"
     elif [[ "$replyType" == "odesktops" ]] ; then
         odesktops="$replyContent"
     elif [[ "$replyType" == "otest" ]] ; then
-        otest="$replyContent"
+        otest="$( get_box "$boxOutline" "$boxFill" "$replyContent" )"
+        # otest_boxOutline="$boxOutline"
+        # otest_boxFill="$boxFill"
     fi
 
-    # "otime" has to the first replyType, because it clears all lines of
-    # child-window
+    # "otime" has to be the first replyType, because it clears all lines of
+    # the child-window
     echo -e "^tw()$otime"
+    echo -e "$odesktop"
     echo -e "$odesktops"
+
+    # test
     echo -e "$otest"
+    echo -e "$otest_boxOutline\n$otest_boxFill"
+
 done | dzen2 -p -l 40 -h 16 -ta l -w 75 -fn "monospace:bold:size=9" -e 'onstart=uncollapse' -bg "#292929"
 # dzen2 -p -x 100 -y 700 -w 500
 # -l 48

@@ -2,11 +2,7 @@
 
 otime_content=""
 get_otime() {
-    # echo -n "otime+^pa(0;4) ^fg(#ffffff)$(date '+%a,') ^fg()$(date '+W%-W')\n^cs()" # > /tmp/ocollector.fifo # $ofifo
-    # echo -n "\n ^fg(#ffffff)$(date '+%-H:%M')\n" # > /tmp/ocollector.fifo # $ofifo
-    # echo "^pa(0;4) $(date '+%-d. %b')" # > /tmp/ocollector.fifo
-
-    otime_content="otime+^pa(0;4) ^fg(#ffffff)$(date '+%a,') ^fg()$(date '+W%-W')\n^cs()\n ^fg(#ffffff)$(date '+%-H:%M')\n^pa(0;0) $(date '+%-d. %b')"
+    otime_content="otime:=^pa(0;4) ^fg(#ffffff)$(date '+%a,') ^fg()$(date '+W%-W')\n^cs()\n ^fg(#ffffff)$(date '+%-H:%M')\n^pa(0;0) $(date '+%-d. %b')"
 }
 
 ofifo=/tmp/ocollector.fifo

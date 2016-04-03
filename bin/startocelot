@@ -33,10 +33,12 @@ fi
 ofifo=/tmp/ocollector.fifo
 [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
 
+# start side-panel (in backgroud)
 ${OCELOT_PATH}bin/ocollector &
-# sleep 1
-${OCELOT_PATH}bin/otime &
-# sleep 1
 
+# start ocelot side-panel elements (in background)
+${OCELOT_PATH}bin/otime &
+
+# start ocelot desktop
 ${OCELOT_PATH}bin/odesktop
 

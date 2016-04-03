@@ -13,10 +13,16 @@ while read -r reply ; do
         otime="$replyContent"
     elif [[ "$replyType" == "odesktops" ]] ; then
         odesktops="$replyContent"
+    elif [[ "$replyType" == "otest" ]] ; then
+        otest="$replyContent"
     fi
 
-    echo -e "^tw()$otime\n$odesktops"
-    # echo -e "$odesktops"
-done | dzen2 -p -l 40 -h 16 -ta l -w 75 -fn "monospace:bold:size=9" -e 'onstart=uncollapse' -bg "#2c2c2c"
+    # "otime" has to the first replyType, because it clears all lines of
+    # child-window
+    echo -e "^tw()$otime"
+    echo -e "$odesktops"
+    echo -e "$otest"
+done | dzen2 -p -l 40 -h 16 -ta l -w 75 -fn "monospace:bold:size=9" -e 'onstart=uncollapse' -bg "#292929"
 # dzen2 -p -x 100 -y 700 -w 500
 # -l 48
+# -bg "#2c2c2c"

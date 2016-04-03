@@ -1,14 +1,21 @@
 #!/bin/bash
 
+otime_content=""
 get_otime() {
-    # clear
-    echo -n "otime+^pa(0;4) ^fg(#ffffff)$(date '+%a,') ^fg()$(date '+W%-W')\n^cs()" # > /tmp/ocollector.fifo # $ofifo
-    echo -n "\n ^fg(#ffffff)$(date '+%-H:%M')\n" # > /tmp/ocollector.fifo # $ofifo
-    echo "^pa(0;4) $(date '+%-d. %b')" # > /tmp/ocollector.fifo
+    # echo -n "otime+^pa(0;4) ^fg(#ffffff)$(date '+%a,') ^fg()$(date '+W%-W')\n^cs()" # > /tmp/ocollector.fifo # $ofifo
+    # echo -n "\n ^fg(#ffffff)$(date '+%-H:%M')\n" # > /tmp/ocollector.fifo # $ofifo
+    # echo "^pa(0;4) $(date '+%-d. %b')" # > /tmp/ocollector.fifo
+
+    otime_content="otime+^pa(0;4) ^fg(#ffffff)$(date '+%a,') ^fg()$(date '+W%-W')\n^cs()\n ^fg(#ffffff)$(date '+%-H:%M')\n^pa(0;0) $(date '+%-d. %b')"
 }
 
 ofifo=/tmp/ocollector.fifo
 while true ; do
-    echo "$( get_otime )" > "$ofifo"
-    sleep 20
+    get_otime
+
+    # debug
+    # echo "$otime_content"
+
+    echo "$otime_content" > "$ofifo"
+    sleep 15
 done

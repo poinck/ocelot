@@ -14,12 +14,16 @@ odfifo=/tmp/odesktop.fifo
 ${OCELOT_PATH}ocelot > "$odfifo" &
 
 ofifo=/tmp/ocollector.fifo
-tail -f $odfifo | \
-while read -r reply ; do
+# tail -f $odfifo | \
+while read -r desktopReply ; do
     # TODO  format output for ocollector
 
+    # debug
+    # echo "desktopReply = $desktopReply"
+
     # filter output to only what we want to match and parse
-    [[ $REPLY =~ ^(([[:digit:]]+:)+[[:digit:]]+ ?)+$ ]] && read -ra desktops <<< "$REPLY" || continue
+    [[ $desktopReply =~ ^(([[:digit:]]+:)+[[:digit:]]+ ?)+$ ]] && read -ra desktops <<< "$desktopReply" || continue
+    desktopCount=0
     for desktop in "${desktops[@]}"; do
         # set values for
         # d - the desktop id
@@ -31,7 +35,7 @@ while read -r reply ; do
         s=""
 
         # for the current desktop
-        ((c)) && f="#ffffff" current_d=$((d+1)) && case $m in
+        ((c)) && f="#ffffff" current_d=$(( d+1 )) && case $m in
             # name each layout/mode with a symbol
             # 0) i="t" ;; # ·:
             0) i="T" ;;
@@ -48,28 +52,43 @@ while read -r reply ; do
         # if the desktop has an urgent hint its color should be #ff0000
         ((u)) && f="#ff0000"
 
-        # for every window
-        # ((w)) +& r+="^fg($f)·^fg()"
+        # for every desktop with windows
         if [[ "$w" -gt 0 ]] ; then
-            r+="^fg($f)$(( d+1 )) "
-            for (( ii=0 ; ii<w ; ii=ii+1 )) ; do
-                r+="·"
-            done
-            r+="   "
-        else
-            if [[ "$c" -gt 0 ]] ; then
-                r+="^fg(#ffffff)$current_d   "
-            fi
+            # r+="^fg($f) $(( d+1 ))"
+            # for (( ii=0 ; ii<w ; ii=ii+1 )) ; do
+            #     r+="."
+            # done
+            # r+="\n"
+
+            # test
+            desktopCount=$(( desktopCount+1 ))
+            desktopCount_mod=$(( desktopCount%4 ))
+            desktopCount_div=$(( desktopCount/4 ))
+            desktopCount_pos=$(( desktopCount-(desktopCount_div*4)-1 ))
+            [[ "$desktopCount_pos" -eq -1 ]] && desktopCount_pos=3
+
+            r+="^fg($f)^ib(1)^pa(8;$(( desktopCount_pos*4 )))^r($(( 4*w ))x4)"
+            [[ "$desktopCount_mod" -eq "0" ]] && r+="\n"
+
+        # else
+        #     if [[ "$c" -gt 0 ]] ; then
+        #         # [[ "$current_d" -gt 1 ]] && r+="\n"
+        #         r+="^fg(#ffffff) $current_d\n"
+        #     fi
         fi
-        # r+="^fg()"
+        # r+="\n"
 
         # if the desktop has windows print that number next to the desktop name
         # else just print the desktop name
         # ((w)) && r+="$s^fg($f)$d$w^fg()" || r+="$s^fg()"
-        r+="\n"
+        # r+="\n"
     done
 
-    printf "odesktops+ %s^fg()%s\n" "$r" "$i" > "$ofifo" && unset r
+    # printf "odesktops+ %s^fg()%s\n" "$r" "$i" > "$ofifo" && unset r
 
-    # echo "$reply" > "odesktops+$ofifo"
-done
+    # debug
+    echo "odesktops+^fg()$r" # $i"
+
+    echo "odesktops+^fg()$r" > "$ofifo"
+    unset r
+done < "$odfifo"

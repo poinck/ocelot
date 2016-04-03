@@ -54,6 +54,11 @@ while read -r desktopReply ; do
 
         # if the desktop has an urgent hint its color should be #ff0000
         ((u)) && f="#ff2d2d" outlinec="#ff2d2d" fillc="#992d2d"
+            # FIXME box-colors won't work, will be reset for each desktop,
+            # throw this away
+            # TODO  colorize box depending on window-count; if there are not windows
+            # use same colors as unfocused terminal: outlinec="#444444",
+            # fillc="#3f3f3f"
 
         # for every desktop with windows
         if [[ "$w" -gt 0 ]] ; then

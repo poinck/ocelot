@@ -10,13 +10,13 @@
 #define SHIFT           ShiftMask   /* Shift key */
 
 /** generic settings **/
-#define MASTER_SIZE     0.52
+#define MASTER_SIZE     0.60
 #define SHOW_PANEL      True      /* show panel by default on exec */
 #define TOP_PANEL       True      /* False means panel is on bottom */
 #define PANEL_HEIGHT    21        /* 0 for no space for panel, thus no panel */
-#define PANEL_WIDTH     75        /* 0 for regular top panel, otherwise space of side panel on the left side */
+#define PANEL_WIDTH     75        /* 0 for no space for side-panel, thus fallback to top-panel. otherwise space of side-panel on the left and PANEL-HEIGHT will be ignored, thus no space for top-panel */
 #define DEFAULT_MODE    FLOAT     /* initial layout/mode: TILE MONOCLE BSTACK GRID FLOAT */
-#define ATTACH_ASIDE    True      /* False means new window is master */
+#define ATTACH_ASIDE    False     /* False means new window is master */
 #define FOLLOW_WINDOW   False     /* follow the window when moved to a different desktop */
 #define FOLLOW_MOUSE    False     /* focus the window the mouse just entered */
 #define CLICK_TO_FOCUS  True      /* focus an unfocused window when clicked  */

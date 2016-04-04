@@ -35,7 +35,7 @@
  */
 static const AppRule rules[] = { \
     /*  class     desktop  follow  float */
-    { "program_that_does_not_exist",     0,    False,  True  },
+    { "thunderbird",     0,    False,  True  },
 };
 
 /* helper for spawning shell commands */

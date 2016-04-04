@@ -2,7 +2,7 @@
 
 otime_content=""
 get_otime() {
-    otime_content="otime:=^pa(0;4) ^fg(#ffffff)$(date '+%a,') ^fg()$(date '+W%-W')\n^cs()\n ^fg(#ffffff)$(date '+%-H:%M')\n^pa(0;0) $(date '+%-d. %b')"
+    otime_content="otime:=^pa(0;4) ^fg(#ffffff)$(date '+%a,') ^fg()$(date '+W%-W')\n^p1()\n ^fg(#ffffff)$(date '+%-H:%M')\n^pa(0;0) $(date '+%-d. %b')"
 }
 
 ofifo=/tmp/ocollector.fifo

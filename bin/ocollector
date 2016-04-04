@@ -53,7 +53,7 @@ while read -r reply ; do
     echo -e "$otest"
     echo -e "$otest_boxOutline\n$otest_boxFill"
 
-done | dzen2 -p -l 40 -h 16 -ta l -w 75 -fn "monospace:bold:size=9" -e 'onstart=uncollapse' -bg "#292929"
+done | ocelot-dzen -p -l 40 -h 16 -ta l -w 75 -fn "monospace:bold:size=9" -e 'onstart=uncollapse' -bg "#292929"
 # dzen2 -p -x 100 -y 700 -w 500
 # -l 48
 # -bg "#2c2c2c"

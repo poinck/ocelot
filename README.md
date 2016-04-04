@@ -5,7 +5,7 @@
 **ocelot:**
 "ocelot" is a minimal tiling window manager bundle forked from "monsterwm" with a customized "config.h", side-panel support and a lot of scripts and resources to feel at home right from the start.
 
-*NOTICE: Currently the side-panel is under construction; I recommend to set `PANEL_WIDTH 0` to use top-panel instead.*
+*NOTICE: The side-panel is currently under construction; I recommend to set `PANEL_WIDTH 0` to use top-panel instead.*
 
 ![ocelot](/ocelot.png)
 
@@ -14,7 +14,8 @@
 
 Following dependencies are required to get the intended look and feel:
 - `xsetbg` (part of xloadimage) to set a wallpaper
-- `dzen2` for ocelotbar
+- `dzen2` for ocelotbar (will be depricated soon) *or*
+- `ocelot-dzen` for side-panel, see [ocelot-dzen](https://github.com/poinck/ocelot-dzen)
 - `dmenu` to run stuff
 - `urxvt` to have a terminal
 - `i3lock` to lock your screen
@@ -38,19 +39,26 @@ Things *NOT* to come:
 - Powermanagement: please use `systemd` and `UPower` or your existing setup; ocelot should have no impact on it.
 - save session and restore open application, etc: please use hibernate (suspend to disk) or standby (suspend).
 
-## Install
-After you checked out ocelot make sure ocelots bin-folder is in your `$PATH`, otherwise you have to create symlinks to all executable ./bin/o\*-scripts from a folder that is in `$PATH`. Second compile `ocelot` if you are happy with your changes in "config.h":
+## Compile
 ```.sh
 cd /home/$USER
 mkdir gits
 cd gits
 git clone https://github.com/poinck/ocelot.git
 cd ocelot
-ln -s /home/$USER/gits/ocelot/bin/obrightness ~/bin/obrightness
-ln -s /home/$USER/gits/ocelot/bin/ocelot2dzen2 ~/bin/ocelot2dzen2
 vim config.h  # look, (change) and :wq
 make
 ```
+
+If you do not plan to install ocelot system-wide, make sure "/home/$USER/bin" is in your `$PATH` and create at least following symlinks:
+```.sh
+ln -s /home/$USER/gits/ocelot/bin/obrightness ~/bin/obrightness
+ln -s /home/$USER/gits/ocelot/bin/ocelot2dzen2 ~/bin/ocelot2dzen2
+```
+- additionally you can configure `OCELOT_PATH` in "~/.ocelotrc"
+
+## Install
+*.. TODO*
 
 ## Configuration
 "ocelot" has two user config-files; create them if you want to change default

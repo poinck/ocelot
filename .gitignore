@@ -1,5 +1,7 @@
 ocelot
 *.o
 *.swp
+*.swn
+*.swo
 *~
 *.diff

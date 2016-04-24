@@ -35,6 +35,7 @@ ofifo=/tmp/ocollector.fifo
 
 # start side-panel (in backgroud)
 ${OCELOT_PATH}bin/ocollector &
+sleep 1
 
 # start ocelot side-panel elements (in background)
 ${OCELOT_PATH}bin/otime &

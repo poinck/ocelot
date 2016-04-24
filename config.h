@@ -51,6 +51,8 @@ static const char *menucmd[] = { "dmenu_run", "-l", "4", "-sf", "#000000", "-sb"
 static const char *lockcmd[] = { "olock", NULL };
 static const char *brupcmd[] = { "obrightness", "up", NULL };
 static const char *brdocmd[] = { "obrightness", "down", NULL };
+static const char *voupcmd[] = { "ovolume", "up", NULL };
+static const char *vodocmd[] = { "ovolume", "down", NULL };
 
 #define DESKTOPCHANGE(K,N) \
     {  MOD4,             K,              change_desktop, {.i = N}}, \
@@ -112,6 +114,8 @@ static Key keys[] = {
        DESKTOPCHANGE(    XK_0,                             9)
     {  0,            XF86XK_MonBrightnessUp,    spawn,   {.com = brupcmd}},
     {  0,            XF86XK_MonBrightnessDown,  spawn,   {.com = brdocmd}},
+    {  0,            0x1008ff13,        spawn,              {.com = voupcmd}},
+    {  0,            0x1008ff11,        spawn,              {.com = vodocmd}},
 };
 
 /* TODO  grab volume-buttons: 0x1008ff11 (down) and 0x1008ff13 (up)

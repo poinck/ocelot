@@ -53,6 +53,7 @@ make
 If you do not plan to install ocelot system-wide, make sure "/home/$USER/bin" is in your `$PATH` and create at least following symlinks:
 ```.sh
 ln -s /home/$USER/gits/ocelot/bin/obrightness ~/bin/obrightness
+ln -s /home/$USER/gits/ocelot/bin/olock ~/bin/olock
 ln -s /home/$USER/gits/ocelot/bin/ocelot2dzen2 ~/bin/ocelot2dzen2
 ```
 - additionally you can configure `OCELOT_PATH` in "~/.ocelotrc"

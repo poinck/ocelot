@@ -6,6 +6,7 @@ if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
     if [[ -n "$screen_width" ]] ; then
         SCREEN_WIDTH=$screen_width
+            # FIXME remove, this is depricated
     fi
     echo "screen_width=$SCREEN_WIDTH"
     if [[ -n "$ocelot_path" ]] ; then
@@ -16,7 +17,8 @@ if [[ -f ~/.ocelotrc ]] ; then
         xsetbg "$wallpaper"
         echo "wallpaper=$wallpaper"
     else
-        echo "wallpaper not set"
+        echo "wallpaper not set, setting default wallpaper"
+        xsetbg "${OCELOT_PATH}desktop.png"
     fi
 else
     echo "~/.ocelotrc does not exist"
@@ -26,7 +28,7 @@ fi
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 
 # use autolocks defaults to lock screen (after 10 minutes)
-# xautolock -locker "i3lock -u -c 393f3f" &
+# xautolock -locker "olock" &
     # TODO  disabled for testing
 
 # create a fifo to send output

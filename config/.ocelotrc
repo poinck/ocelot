@@ -1,14 +1,19 @@
-# set screen_width, this is still required for dzen2
-screen_width=1366
+# set screen_width, this is still required for dzen2, depricated
+#screen_width=1366
 
 # setting the ocelot_path is required if you do not install executables of
 # "ocelot" in a directory inside $PATH
 ocelot_path="/home/username/gits/ocelot/"
 
-# we love wallpapers, even if we cant see them all the time
-wallpaper="/home/username/path/to/desktop.jpg"
+# we love wallpapers, even if we cant see them all the time,
+# default: "${ocelot_path}/desktop.png"
+#wallpaper="/home/username/path/to/desktop.jpg"
 
-# nattural scrolling on touchpad, recommended if you are used to
+# lockscreen pictures are also a good thing,
+# default: "${ocelot_path}/desktop-light.png"
+#lockscreen="/home/username/path/to/lockscreen.jpg"
+
+# natural scrolling on touchpad, recommended if you are used to it
 synclient VertScrollDelta=-111
 
 # disable standard rightclick on touchpad, not recommended if you don't own a

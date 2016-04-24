@@ -4,11 +4,6 @@
 OCELOT_PATH=""
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
-    if [[ -n "$screen_width" ]] ; then
-        SCREEN_WIDTH=$screen_width
-            # FIXME remove, this is depricated
-    fi
-    echo "screen_width=$SCREEN_WIDTH"
     if [[ -n "$ocelot_path" ]] ; then
         OCELOT_PATH="$ocelot_path"
     fi

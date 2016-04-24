@@ -68,6 +68,7 @@ See "config/.ocelotrc" for help adjusting the variables.
 **`~/.ocelotbarrc` for additional settings:**
 See "config/.ocelotbarrc" for help adjusting variables specific to ocelotbar:
 - current local temperature
+- *XXX*   will be depricated, tmd-settings can be sourced from `~/.ocelotrc` or `~/.otmdrc` in the near future
 
 Things to come (order is priority):
 - network-indication

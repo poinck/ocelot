@@ -74,10 +74,10 @@ while read -r desktopReply ; do
     done
 
     # debug
-    echo "odesktop:=$current_d: $i;;$outlinec--$fillc"
-    echo "odesktops:=$r" # $i"
+    #echo "odesktop:=^fg(#ffffff)$current_d: $i;;$outlinec--$fillc"
+    #echo "odesktops:=$r" # $i"
 
-    echo "odesktop:=$current_d: $i;;$outlinec--$fillc" > "$ofifo"
+    echo "odesktop:=^fg(#ffffff)$current_d: $i;;$outlinec--$fillc" > "$ofifo"
     echo "odesktops:=$r" > "$ofifo"
     unset r
 done < "$odfifo"

@@ -6,7 +6,7 @@ get_box() {
     content=$3
 
     box="^pa(;10)^fg($outline)^r(75x8)^fg($fill)^ib(1)^pa(4;14)^r(67x4)\n"
-    box+="^fg($outline)^r(75x16)^fg($fill)^ib(1)^pa(4)^r(67x16)^pa(8;2)^fg(#ffffff)$content\n"
+    box+="^fg($outline)^r(75x16)^fg($fill)^ib(1)^pa(4)^r(67x16)^pa(8;2)$content\n"
     box+="^pa(;0)^fg($outline)^r(75x8)^fg($fill)^ib(1)^pa(4;0)^r(67x4)"
 
     echo "$box"

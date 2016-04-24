@@ -34,8 +34,8 @@ while read -r desktopReply ; do
         IFS=':' read -r d w m c u <<< "$desktop"
         s=""
 
-        outlinec="#bbbbbb"
-        fillc="#666666"
+        outlinec="#808080"
+        fillc="#3f3f3f"
 
         # for the current desktop
         ((c)) && f="#ffffff" current_d=$(( d+1 )) && case $m in

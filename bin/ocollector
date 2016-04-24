@@ -58,6 +58,8 @@ while read -r reply ; do
         otest="$( get_box "$boxOutline" "$boxFill" "$replyContent" )"
         # otest_boxOutline="$boxOutline"
         # otest_boxFill="$boxFill"
+    elif [[ "$replyType" == "obattery" ]] ; then
+        obattery="$( get_box "$boxOutline" "$boxFill" "$replyContent" )"
     fi
 
     # "otime" has to be the first replyType, because it clears all lines of
@@ -65,6 +67,7 @@ while read -r reply ; do
     echo -e "^tw()$otime"
     echo -e "$odesktop"
     echo -e "$odesktops"
+    echo -e "$obattery"
 
     # test
     echo -e "$otest"

@@ -1,0 +1,58 @@
+#!/bin/bash
+
+outline[0]="#ff0000"
+outline[1]="#ff6500"
+outline[2]="#ff9600"
+outline[3]="#ffc200"
+outline[4]="#ffeb00"
+outline[5]="#e6f100"
+outline[6]="#b5d400"
+outline[7]="#85b800"
+outline[8]="#529c00"
+outline[9]="#008000"
+outline[10]="#008000"
+fill[0]="#800000"
+fill[1]="#803300"
+fill[2]="#804800"
+fill[3]="#806100"
+fill[4]="#807500"
+fill[5]="#737500"
+fill[6]="#536700"
+fill[7]="#425900"
+fill[8]="#265100"
+fill[9]="#004000"
+fill[10]="#004000"
+get_boxColors() {
+    outlinec="${outline[$load]}"
+    fillc="${fill[$load]}"
+}
+
+get_battery() {
+    bat_now=$(cat /sys/class/power_supply/BAT0/energy_now)
+    bat_status=$( cat /sys/class/power_supply/BAT0/status )
+    bat_full=$(cat /sys/class/power_supply/BAT0/energy_full)
+    load=$(( bat_now*10/bat_full ))
+    bat_now_mAh=$(( bat_now/10000 ))
+    get_boxColors
+    if [[ "$bat_status" == "Charging" ]] ; then
+        content="+ $bat_now_mAh"
+    elif [[ "$bat_status" == "Unknown" ]] || [[ "$bat_status" == "Full" ]] ; then
+        content="$bat_now_mAh"
+        outlinec="#444444"
+        fillc="#3f3f3f"
+    else
+        content="- $bat_now_mAh"
+    fi
+}
+
+ofifo=/tmp/ocollector.fifo
+while true ; do
+    get_battery
+
+    battery="obattery:=$content;;$outlinec--$fillc"
+    echo "$battery"
+    #echo "[DEBUG] load = $load"
+    echo "$battery" > "$ofifo"
+
+    sleep 60
+done

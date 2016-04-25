@@ -22,21 +22,9 @@ fill[7]="#425900"
 fill[8]="#265100"
 fill[9]="#004000"
 fill[10]="#004000"
-contentColors[0]="#ff0000"
-contentColors[1]="#ff9700"
-contentColors[2]="#ffe900"
-contentColors[3]="#fff300"
-contentColors[4]="#ffff00"
-contentColors[5]="#f9f200"
-contentColors[6]="#f7f600"
-contentColors[7]="#b7fb00"
-contentColors[8]="#73ef00"
-contentColors[9]="#00b000"
-contentColors[10]="#00b000"
 get_boxColors() {
     outlinec="${outline[$load]}"
     fillc="${fill[$load]}"
-    contentc=${contentColors[$load]}
 }
 
 get_battery() {
@@ -47,11 +35,17 @@ get_battery() {
     bat_now_mAh=$(( bat_now/10000 ))
     get_boxColors
     if [[ "$bat_status" == "Charging" ]] ; then
-        content="^fg(#ffffff)$bat_now_mAh mAh"
+        if [[ "$load" -gt 2 ]] && [[ "$load" -lt 7 ]] ; then
+            content="^fg(#292929)$bat_now_mAh mAh"
+        else
+            content="^fg(#ffffff)$bat_now_mAh mAh"
+        fi
         fillc=$outlinec
     elif [[ "$bat_status" == "Unknown" ]] || [[ "$bat_status" == "Full" ]] ; then
-        content="^fg()$bat_now_mAh mAh"
-        outlinec="#808080"
+        content="^fg(#ffffff)$bat_now_mAh mAh"
+        #outlinec="#808080"
+        outlinec="#3f3f3f"
+        #outlinec=$fillc
         fillc="#3f3f3f"
     else
         content="^fg(#ffffff)$bat_now_mAh mAh"

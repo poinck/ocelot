@@ -1,6 +1,6 @@
 # Readme: ocelot
 - *forked from [monsterwm](https://github.com/c00kiemon5ter/monsterwm)*
-- *I have found out that "monsterwm" is similar to [catwm](https://github.com/pyknite/catwm), it is a catmonster!*
+- *"monsterwm" is similar to [catwm](https://github.com/pyknite/catwm) and "dwm"*
 
 **ocelot:**
 "ocelot" is a minimal tiling window manager bundle forked from "monsterwm" with a customized "config.h", side-panel support and a lot of scripts and resources to feel at home right from the start.
@@ -68,13 +68,14 @@ See "config/.ocelotrc" for help adjusting the variables.
 **`~/.ocelotbarrc` for additional settings:**
 See "config/.ocelotbarrc" for help adjusting variables specific to ocelotbar:
 - current local temperature
-- *XXX*   will be depricated, tmd-settings can be sourced from `~/.ocelotrc` or `~/.otmdrc` in the near future
+- `~/.ocelotbarrc` will be depricated, tmd-settings can be sourced from `~/.ocelotrc` or `~/.otmdrc` in the near future
 
 Things to come (order is priority):
-- network-indication
+- display brightness indication (wrapper-script for `xbrightness`)
 - `glsa-check` notification for Gentoo-users
 - `thunderbird` notifications for new mail
-- display brightness indication (wrapper-script for `xbrightness`)
+- Xinerama-support
+- network-indication
 - CAPSLOCK-indication
 - support more than just "BAT0" from `/proc/sys`
 - update-indication for `dnf` if you are a Fedora-user

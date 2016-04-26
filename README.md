@@ -3,9 +3,9 @@
 - *"monsterwm" is similar to [catwm](https://github.com/pyknite/catwm) and "dwm"*
 
 **ocelot:**
-"ocelot" is a minimal tiling window manager bundle forked from "monsterwm" with a customized "config.h", side-panel support and a lot of scripts and resources to feel at home right from the start.
+"ocelot" is a minimal tiling window manager bundle forked from "monsterwm" with a customized "config.h" and a side-panel instead of a top-panel.
 
-*NOTICE: The side-panel is currently under construction; I recommend to set `PANEL_WIDTH 0` to use top-panel instead.*
+*NOTICE: The top-panel support is now officially unsupported.*
 
 ![ocelot](/ocelot.png)
 
@@ -14,7 +14,6 @@
 
 Following dependencies are required to get the intended look and feel:
 - `xsetbg` (part of xloadimage) to set a wallpaper
-- `dzen2` for ocelotbar (will be depricated soon) *or*
 - `ocelot-dzen` for side-panel, see [ocelot-dzen](https://github.com/poinck/ocelot-dzen)
 - `dmenu` to run stuff
 - `urxvt` to have a terminal
@@ -25,7 +24,6 @@ Following dependencies are required to get the intended look and feel:
 - *optional* `tmd` to show local temperature, see [tm](https://github.com/poinck/tm)
 
 Things to come (order is priority):
-- side-panel, see "./idea" and [THIS](https://poinck.de/screenFetch-2016-02-16_22-45-33.png) awesome screenshot; will use new ocolletcor multiplexer-script
 - lock screen on lid-close (provided as systemd.unit-file)
 - lock screen before hibernate or standby
 - take screenshot, using `scrot`
@@ -51,7 +49,7 @@ ln -s /home/$USER/gits/ocelot/bin/obrightness ~/bin/obrightness
 ln -s /home/$USER/gits/ocelot/bin/ovolume ~/bin/ovolume
 ln -s /home/$USER/gits/ocelot/bin/olock ~/bin/olock
 ln -s /home/$USER/gits/ocelot/bin/obattery ~/bin/obattery
-ln -s /home/$USER/gits/ocelot/bin/ocelot2dzen2 ~/bin/ocelot2dzen2
+ln -s /home/$USER/gits/ocelot/bin/startocelot ~/bin/startocelot
 ```
 - additionally you can configure `OCELOT_PATH` in "~/.ocelotrc"
 
@@ -89,7 +87,7 @@ Currently I can only describe the option to use `startx`.
 **`~/.xinitrc`, start with `startx`:**
 ```.sh
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
-exec ocelot2dzen2
+exec startocelot
 ```
 
 ## Security
@@ -107,7 +105,7 @@ fi
 Many thanks go to the Gentoo- and Arch-wiki:
 
 **tweaks you can put in `~/.ocelotrc`:**
-You can put any command you would put in a bash-script to tweak your desktop in `.ocelotrc`, see "config/.ocelotrc" fo tweaks I use:
+You can put any command you would put in a bash-script to tweak your desktop in `.ocelotrc`, see "config/.ocelotrc" for tweaks you could use:
 - natural scrolling
 - disable right-click on touchpad
 - load different ICC-profile from colord
@@ -131,7 +129,7 @@ How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs 
 ## FAQ
 
 **Does `ocelot` support multiple monitors?**
-Yes and no. You can at least use `xrandr` to mirror your screen output:
+Yes and no. Adding Xinerama-support from "monsterwm" is planned. You can at least use `xrandr` to mirror your screen output:
 - if output does not support native resolution of LVDS1
 ```.sh
 xrandr --output HDMI2 --mode 1280x720 --fb 1366x768 --panning 1366x768 --same-as LVDS1 # --dryrun
@@ -142,7 +140,7 @@ xrandr --output HDMI2 --mode 1366x768 --same-as LVDS1 # --dryrun
 ```
 
 **Will `ocelot` run with wayland?**
-If all dependencies and `monsterwm` will support libwayland then I can maybe adjust the instructions to install and setup `ocelot`. Currently I do not plan to port it to libwayland on my own. If you can do it, that'll be great! *(:*
+No, this would mean starting a new project. I'll let you know.
 
 ## License
 Licensed under MIT/X Consortium License, see [LICENSE][law] file for more

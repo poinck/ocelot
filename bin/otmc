@@ -1,0 +1,127 @@
+#!/bin/bash
+
+TMD_URL="~/public_html/tm/tm_720.csv"
+if [[ -f ~/.ocelotrc ]] ; then
+    . ~/.ocelotrc
+    if [[ -n "$tmd_url" ]] ; then
+        TMD_URL="$tmd_url"
+    fi
+fi
+
+outside_tm="-00"
+inside_tm="00"
+
+# http://gka.github.io/palettes/#colors=red,orange,yellow,yellowgreen,green,turquoise,blue,purple,pink|steps=20|bez=0|coL=0
+outline[19]="#ff0000"
+outline[18]="#ff6400"
+outline[17]="#ff9500"
+outline[16]="#ffbd00"
+outline[15]="#ffe300"
+outline[14]="#f4fa0e"
+outline[13]="#cae526"
+outline[12]="#9fd031"
+outline[11]="#6db021"
+outline[10]="#34900b"
+outline[9]="#229339"
+outline[8]="#3bbb89"
+outline[7]="#4ad6d3"
+outline[6]="#5e89e9"
+outline[5]="#3430fb"
+outline[4]="#5b00d5"
+outline[3]="#7800a0"
+outline[2]="#952f8c"
+outline[1]="#ca79ac"
+outline[0]="#ffc0cb"
+fill[19]="#880000"
+fill[18]="#883200"
+fill[17]="#885300"
+fill[16]="#886700"
+fill[15]="#888200"
+fill[14]="#828508"
+fill[13]="#658313"
+fill[12]="#587020"
+fill[11]="#376010"
+fill[10]="#225006"
+fill[9]="#115225"
+fill[8]="#266645"
+fill[7]="#267372"
+fill[6]="#384585"
+fill[5]="#222086"
+fill[4]="#360073"
+fill[3]="#440050"
+fill[2]="#531847"
+fill[1]="#754556"
+fill[0]="#886066"
+
+get_boxColors() {
+    if [[ -z "$outside_tm" ]] ; then
+        echo "[DEBUG] -z"
+        outlinec="#3f3f3f"
+        fillc="#3f3f3f"
+        outside_tm="--"
+        inside_tm="--"
+    else
+        diff_tm=$(( (inside_tm-outside_tm)/4+9 ))
+        outlinec="${outline[$diff_tm]}"
+        fillc="${fill[$diff_tm]}"
+        echo "[DEBUG] diff = $diff_tm"
+    fi
+}
+
+format_temp() {
+    local t="$1"
+    #t="-12000"
+    local ft="0"
+    local tt=0
+
+    if [[ "$t" -ge 0 ]] ; then
+        ft=$(( t/1000 ))
+    else
+        tt=${t#*-}
+        ft=$(( tt/1000 ))
+        ft="-$ft"
+    fi
+
+    echo "$ft"
+}
+
+get_tm() {
+
+    # tests
+    #outlinec="#123456"
+    #fillc="#654321"
+
+    all_720_temps=$( curl -s "$TMD_URL" -m 1 )
+    temp_available=$?
+    if [[ "$temp_available" -eq 0 ]] ; then
+        current_temp=$( echo "$all_720_temps" | tail -n 1 )
+        temp_temp=${current_temp#*,}
+        outside_t=${temp_temp##*,}
+        inside_t=${temp_temp%%,*}
+        outside_tm=$( format_temp "outside_t" )
+        inside_tm=$( format_temp "inside_t" )
+
+        # test
+        #outside_tm="-12"
+
+        echo "[DEBUG] outside = $outside_t, inside = $inside_t"
+        echo "[DEBUG] (formatted) outside = $outside_tm, inside = $inside_tm"
+
+        get_boxColors
+    fi
+}
+
+ofifo=/tmp/ocollector.fifo
+while true ; do
+    get_tm
+
+    inside_space=""
+    if [[ "$outside_tm" -lt 0 ]] ; then
+        inside_space=" "
+    fi
+    tmc="otmc:=^fg(#ffffff) $outside_tm °C==^fg(#ffffff)$inside_space($inside_tm);;$outlinec--$fillc"
+    echo "[DEBUG] tmc = $tmc"
+    echo "$tmc" > "$ofifo"
+
+    sleep 600
+done

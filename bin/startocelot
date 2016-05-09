@@ -38,6 +38,7 @@ sleep 1
 # start ocelot side-panel elements (in background)
 ${OCELOT_PATH}bin/otime &
 ${OCELOT_PATH}bin/obattery &
+${OCELOT_PATH}bin/otmc &
 
 # start ocelot desktop
 ${OCELOT_PATH}bin/odesktop

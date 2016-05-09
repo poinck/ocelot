@@ -104,8 +104,8 @@ fi
 ## Tweaks
 Many thanks go to the Gentoo- and Arch-wiki:
 
-**tweaks you can put in `~/.ocelotrc`:**
-You can put any command you would put in a bash-script to tweak your desktop in `.ocelotrc`, see "config/.ocelotrc" for tweaks you could use:
+**tweaks you can put in `~/.xinitrc`:**
+Copy paste from "tweaks/.xinitrc" for following:
 - natural scrolling
 - disable right-click on touchpad
 - load different ICC-profile from colord

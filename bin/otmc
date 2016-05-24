@@ -8,8 +8,10 @@ if [[ -f ~/.ocelotrc ]] ; then
     fi
 fi
 
-outside_tm="-00"
-inside_tm="00"
+outlinec="#292928"
+fillc="#292929"
+outside_tm="--"
+inside_tm="--"
 
 # http://gka.github.io/palettes/#colors=red,orange,yellow,yellowgreen,green,turquoise,blue,purple,pink|steps=20|bez=0|coL=0
 outline[19]="#ff0000"
@@ -56,8 +58,8 @@ fill[0]="#886066"
 get_boxColors() {
     if [[ -z "$outside_tm" ]] ; then
         echo "[DEBUG] -z"
-        outlinec="#3f3f3f"
-        fillc="#3f3f3f"
+        outlinec="#292929"
+        fillc="#292929"
         outside_tm="--"
         inside_tm="--"
     else

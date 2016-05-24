@@ -8,7 +8,7 @@ if [[ -f ~/.ocelotrc ]] ; then
     fi
 fi
 
-outlinec="#292928"
+outlinec="#292929"
 fillc="#292929"
 outside_tm="--"
 inside_tm="--"

@@ -53,6 +53,19 @@ guess_display_height() {
     echo -n "$current_height"
 }
 
+# get status about:
+# - Master volume of speakers
+# - display brightness
+# - systemd load 1, 5, 15
+# - (free slot for future use)
+get_status() {
+    status="^pa(8;4)^fg(#ffffff)^r(${ovolume}x4)\n"
+    status+="^pa(8;8)^fg(#ffeb00)^r(${obrightness}x4)\n"
+
+
+    echo -n "$status"
+}
+
 display_height=$( guess_display_height )
 panel_line_count=$(( display_height/16))
 
@@ -85,8 +98,13 @@ while read -r reply ; do
         _isBox=true
     fi
 
+    # handle each reply type
+        # TODO  change to case switch, should be faster
     if [[ "$replyType" == "otime" ]] ; then
         otime="$replyContent"
+    elif [[ "$replyType" == "ovolume" ]] ; then
+        ovolume="$replyContent"
+        ostatus="$( get_status )"
     elif [[ "$replyType" == "odesktop" ]] ; then
         odesktop="$( get_box "$boxOutline" "$boxFill" "$replyContent" )"
     elif [[ "$replyType" == "odesktops" ]] ; then
@@ -110,6 +128,7 @@ while read -r reply ; do
     # "otime" has to be the first replyType, because it clears all lines of
     # the child-window
     echo -e "^tw()$otime"
+    echo -e "$ostatus"
     echo -e "$odesktop"
     echo -e "$odesktops"
     echo -en "${obattery_start}${obattery_inner}"

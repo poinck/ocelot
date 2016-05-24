@@ -1,8 +1,20 @@
 #!/bin/bash
 
+ofifo=/tmp/ocollector.fifo
+
 if [[ "$1" == "up" ]] ; then
-    amixer -q set Master 5%+
+    omixer=$( amixer set Master 5%+ )
 elif [[ "$1" == "down" ]] ; then
-    amixer -q set Master 5%-
+    omixer=$( amixer set Master 5%- )
 fi
+
+_tmp_master_volume=$( echo "$omixer" | grep "Front Left: Playback" )
+_tmp2_mavo=${_tmp_master_volume#*[}
+omixer_master_volume=${_tmp2_mavo%%%]*}
+echo "[DEBUG] omixer_master_volume = $omixer_master_volume"
+ovolume_pixel=$(( omixer_master_volume*60/100 ))
+
+volume="ovolume:=$ovolume_pixel"
+echo "[DEBUG] $volume"
+echo "$volume" > "$ofifo"
 

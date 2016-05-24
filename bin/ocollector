@@ -57,10 +57,9 @@ guess_display_height() {
 # - Master volume of speakers
 # - display brightness
 # - systemd load 1, 5, 15
-# - (free slot for future use)
 get_status() {
-    status="^pa(8;4)^fg(#ffffff)^r(${ovolume}x4)\n"
-    status+="^pa(8;8)^fg(#ffeb00)^r(${obrightness}x4)\n"
+    status="^pa(8;4)^fg(#ffffff)^r(${ovolume}x4)"
+    status+="^ib(1)^pa(8;8)^fg(#ffeb00)^r(${obrightness}x4)"
 
 
     echo -n "$status"
@@ -104,6 +103,9 @@ while read -r reply ; do
         otime="$replyContent"
     elif [[ "$replyType" == "ovolume" ]] ; then
         ovolume="$replyContent"
+        ostatus="$( get_status )"
+    elif [[ "$replyType" == "obrightness" ]] ; then
+        obrightness="$replyContent"
         ostatus="$( get_status )"
     elif [[ "$replyType" == "odesktop" ]] ; then
         odesktop="$( get_box "$boxOutline" "$boxFill" "$replyContent" )"

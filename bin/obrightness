@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ofifo=/tmp/ocollector.fifo
+
 current_brightness=$( xbacklight -get )
 current_brightness=${current_brightness%%.*}
 if [[ "$1" == "up" ]] ; then
@@ -11,7 +13,8 @@ elif [[ "$1" == "down" ]] ; then
 fi
 current_brightness=$( xbacklight -get )
 current_brightness=${current_brightness%%.*}
-    # TODO  show brightness-indication for 2 seconds
+brightness_pixel=$(( current_brightness*60/100 ))
+echo "obrightness:=$brightness_pixel" > "$ofifo"
 
 # debug
-echo "brightness: $1 $current_brightness" >> /tmp/obrightness.log
+#echo "brightness: $1 $current_brightness" >> /tmp/obrightness.log

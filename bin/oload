@@ -4,9 +4,14 @@ remove_leading_zeros() {
     local s="$1"
     local number=0
 
-    re='^[0]+(.*)'
-    [[ "$s" =~ $re ]] && number="${BASH_REMATCH[1]}" || number="$s"
-    #echo "[DEBUG] '${BASH_REMATCH[1]}' '${BASH_REMATCH[2]}'"
+    #re='^[0]+(.*)'
+    #[[ "$s" =~ $re ]] && number="${BASH_REMATCH[1]}" || number="$s"
+        # XXX   see new implementation below, implementation above works, but is
+        # maybe slower at runtime.
+
+    # force decimal (base 10), side-effect: leading zeros will be removed;
+    # does not evaluate wether this is a number
+    number=$(( 10#$s ))
 
     echo "$number"
 }

@@ -60,7 +60,7 @@ guess_display_height() {
 get_status() {
     status="^pa(8;4)^fg(#808080)^r(${ovolume}x4)^fg(#ffffff)^r(4x4)"
     status+="^ib(1)^pa(8;8)^fg(#807500)^r(${obrightness}x4)^fg(#ffeb00)^r(4x4)"
-
+    status+="$oload"
 
     echo -n "$status"
 }
@@ -106,6 +106,9 @@ while read -r reply ; do
         ostatus="$( get_status )"
     elif [[ "$replyType" == "obrightness" ]] ; then
         obrightness="$replyContent"
+        ostatus="$( get_status )"
+    elif [[ "$replyType" == "oload" ]] ; then
+        oload="$replyContent"
         ostatus="$( get_status )"
     elif [[ "$replyType" == "odesktop" ]] ; then
         odesktop="$( get_box "$boxOutline" "$boxFill" "$replyContent" )"

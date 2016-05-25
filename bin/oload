@@ -1,0 +1,64 @@
+#!/bin/bash
+
+remove_leading_zeros() {
+    local s="$1"
+    local number=0
+
+    re='^[0]+(.*)'
+    [[ "$s" =~ $re ]] && number="${BASH_REMATCH[1]}" || number="$s"
+    #echo "[DEBUG] '${BASH_REMATCH[1]}' '${BASH_REMATCH[2]}'"
+
+    echo "$number"
+}
+
+get_load() {
+    content=""
+
+    # get virtual cpu count and loadavg from proc-filesystem
+    proc_cpuinfo_siblings=$( cat /proc/cpuinfo | grep siblings | head -n 1 )
+    proc_loadavg=$( cat /proc/loadavg )
+
+    local i=0
+    for loadavg in $proc_loadavg ; do
+        #echo "[DEBUG] loadavg = $loadavg"
+        i=$(( i+1 ))
+        loadavg=${loadavg/./}
+        #^0+*
+        if [[ "$i" -eq 1 ]] ; then
+            load1="$loadavg"
+        elif [[ "$i" -eq 2 ]] ; then
+            load5="$loadavg"
+        elif [[ "$i" -eq 3 ]] ; then
+            load15="$loadavg"
+        fi
+    done
+    load_max=${proc_cpuinfo_siblings#*: }
+    load_warning=$(( load_max*100 ))
+    load_max=$(( load_max*200 ))
+    #echo "[DEBUG] load1 = $( remove_leading_zeros "$load1" )"
+    load1=$( remove_leading_zeros "$load1" )
+    load5=$( remove_leading_zeros "$load5" )
+    load15=$( remove_leading_zeros "$load15" )
+    load1_pixel=$(( load1*59/load_max ))
+    load5_pixel=$(( load5*59/load_max ))
+    load15_pixel=$(( load15*59/load_max ))
+    [[ "$load1" -gt "$load_warning" ]] && color1="#ffeb00" || color1="#008000"
+    [[ "$load5" -gt "$load_warning" ]] && color5="#ff9600" || color5="#529c00"
+    [[ "$load15" -gt "$load_warning" ]] && color15="#ff0000" || color15="#b5d400"
+
+    #echo "[DEBUG] $load1,$load1_pixel $load5,$load5_pixel $load15,$load15_pixel $load_max"
+    content="^ib(1)^pa(8;12)^fg($color1)^r(${load1_pixel}x4)"
+    content+="^ib(1)^pa(8;12)^fg($color5)^r(${load5_pixel}x4)"
+    content+="^ib(1)^pa(8;12)^fg($color15)^r(${load15_pixel}x4)"
+}
+
+ofifo=/tmp/ocollector.fifo
+while true ; do
+    get_load
+
+    load="oload:=$content"
+    echo "[DEBUG] $load"
+    echo "$load" > "$ofifo"
+
+    sleep 60
+done

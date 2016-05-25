@@ -56,10 +56,10 @@ guess_display_height() {
 # get status about:
 # - Master volume of speakers
 # - display brightness
-# - systemd load 1, 5, 15
+# - system load 1, 5, 15
 get_status() {
-    status="^pa(8;4)^fg(#ffffff)^r(${ovolume}x4)"
-    status+="^ib(1)^pa(8;8)^fg(#ffeb00)^r(${obrightness}x4)"
+    status="^pa(8;4)^fg(#808080)^r(${ovolume}x4)^fg(#ffffff)^r(4x4)"
+    status+="^ib(1)^pa(8;8)^fg(#807500)^r(${obrightness}x4)^fg(#ffeb00)^r(4x4)"
 
 
     echo -n "$status"

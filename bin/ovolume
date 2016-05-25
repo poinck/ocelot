@@ -12,7 +12,8 @@ _tmp_master_volume=$( echo "$omixer" | grep "Front Left: Playback" )
 _tmp2_mavo=${_tmp_master_volume#*[}
 omixer_master_volume=${_tmp2_mavo%%%]*}
 echo "[DEBUG] omixer_master_volume = $omixer_master_volume"
-ovolume_pixel=$(( omixer_master_volume*60/100 ))
+# 75-16-4=55
+ovolume_pixel=$(( omixer_master_volume*55/100 ))
 
 volume="ovolume:=$ovolume_pixel"
 echo "[DEBUG] $volume"

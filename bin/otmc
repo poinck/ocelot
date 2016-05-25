@@ -8,8 +8,8 @@ if [[ -f ~/.ocelotrc ]] ; then
     fi
 fi
 
-outlinec="#292929"
-fillc="#292929"
+outlinec="#3f3f3f"
+fillc="#3f3f3f"
 outside_tm="--"
 inside_tm="--"
 
@@ -58,8 +58,8 @@ fill[0]="#886066"
 get_boxColors() {
     if [[ -z "$outside_tm" ]] ; then
         echo "[DEBUG] -z"
-        outlinec="#292929"
-        fillc="#292929"
+        outlinec="#3f3f3f"
+        fillc="#3f3f3f"
         outside_tm="--"
         inside_tm="--"
     else
@@ -118,8 +118,10 @@ while true ; do
     get_tm
 
     inside_space=""
+    if [[ "$outside_tm" =~ [:digit:] ]] ; then
     if [[ "$outside_tm" -lt 0 ]] ; then
         inside_space=" "
+    fi
     fi
     tmc="otmc:=^fg(#ffffff) $outside_tm °C==^fg(#ffffff)$inside_space($inside_tm);;$outlinec--$fillc"
     echo "[DEBUG] tmc = $tmc"

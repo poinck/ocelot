@@ -13,7 +13,7 @@ elif [[ "$1" == "down" ]] ; then
 fi
 current_brightness=$( xbacklight -get )
 current_brightness=${current_brightness%%.*}
-brightness_pixel=$(( current_brightness*60/100 ))
+brightness_pixel=$(( current_brightness*55/100 ))
 echo "obrightness:=$brightness_pixel" > "$ofifo"
 
 # debug

@@ -16,10 +16,8 @@ ${OCELOT_PATH}ocelot > "$odfifo" &
 ofifo=/tmp/ocollector.fifo
 # tail -f $odfifo | \
 while read -r desktopReply ; do
-    # TODO  format output for ocollector
-
     # debug
-    # echo "desktopReply = $desktopReply"
+    #echo "desktopReply = $desktopReply"
 
     # filter output to only what we want to match and parse
     [[ $desktopReply =~ ^(([[:digit:]]+:)+[[:digit:]]+ ?)+$ ]] && read -ra desktops <<< "$desktopReply" || continue
@@ -56,7 +54,7 @@ while read -r desktopReply ; do
         ((u)) && f="#ff2d2d" outlinec="#ff2d2d" fillc="#992d2d"
             # FIXME box-colors won't work, will be reset for each desktop,
             # throw this away
-            # TODO  colorize box depending on window-count; if there are not windows
+            # TODO  colorize box depending on window-count; if there are no windows
             # use same colors as unfocused terminal: outlinec="#444444",
             # fillc="#3f3f3f"
 

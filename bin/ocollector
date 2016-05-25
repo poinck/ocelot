@@ -110,6 +110,8 @@ while read -r reply ; do
     elif [[ "$replyType" == "oload" ]] ; then
         oload="$replyContent"
         ostatus="$( get_status )"
+    elif [[ "$replyType" == "ouptime" ]] ; then
+        ouptime="$replyContent"
     elif [[ "$replyType" == "odesktop" ]] ; then
         odesktop="$( get_box "$boxOutline" "$boxFill" "$replyContent" )"
     elif [[ "$replyType" == "odesktops" ]] ; then
@@ -126,6 +128,7 @@ while read -r reply ; do
         battery_boxFill=$boxFill
     elif [[ "$replyType" == "otmc" ]] ; then
         otmc_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
+        otmc_end="$( get_box_seperator "$boxOutline" "$boxFill" "#292929" "#292929" )"
         tmc_boxOutline=$boxOutline
         tmc_boxFill=$boxFill
     fi
@@ -138,11 +141,13 @@ while read -r reply ; do
     echo -e "$odesktops"
     echo -en "${obattery_start}${obattery_inner}"
     echo -en "$( get_box_seperator "$battery_boxOutline" "$battery_boxFill" "$tmc_boxOutline" "$tmc_boxFill" )"
-    echo -en "${otmc_inner}"
+    echo -en "${otmc_inner}${otmc_end}"
+    echo -e "$ouptime"
+        # TODO  change "ouptime" to "ostatus2" for additional line-indicators
 
     # test
-    echo -en "$( get_box_seperator "$tmc_boxOutline" "$tmc_boxFill" "$test_boxOutline" "$test_boxFill" )"
-    echo -en "${otest_inner}${otest_end}"
+    #echo -en "$( get_box_seperator "$tmc_boxOutline" "$tmc_boxFill" "$test_boxOutline" "$test_boxFill" )"
+    #echo -en "${otest_inner}${otest_end}"
 
 done | ocelot-dzen -p -l "$panel_line_count" -h 16 -ta l -w 75 -fn "monospace:bold:size=9" -e 'onstart=uncollapse' -bg "#292929"
 # dzen2 -p -x 100 -y 700 -w 500

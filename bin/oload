@@ -16,6 +16,33 @@ remove_leading_zeros() {
     echo "$number"
 }
 
+get_uptime() {
+    uptime_content=""
+
+    local proc_uptime=$(</proc/uptime)
+
+    local i=0
+    for c_uptime in $proc_uptime ; do
+        i=$(( i+1 ))
+        c_uptime="${c_uptime%%.*}"
+        if [[ "$i" -eq 1 ]] ; then
+            _tmp_uptime="$c_uptime"
+        elif [[ "$i" -eq 2 ]] ; then
+            _tmp_idletime="$c_uptime"
+        fi
+    done
+
+    idle=$(( _tmp_idletime*100/_tmp_uptime ))
+    uptime=$(( _tmp_uptime/60/60/24 ))
+
+    uptime_content="^fg(#ffffff) U: ${uptime}d\n ^fg()${idle}% idle"
+        # TODO  draw blue idle line-indicator instead in ostatus2 of ocollector
+        # FIXME need a graphical representaion of uptime, maybe each day uptime
+        # one ^r(1x4)? combine idle uptime in same line-idicator? (different color:
+        # darker blue), what happens after 59d (maximum pixel-width) of time? how
+        # to represent that?
+}
+
 get_load() {
     content=""
 
@@ -28,7 +55,6 @@ get_load() {
         #echo "[DEBUG] loadavg = $loadavg"
         i=$(( i+1 ))
         loadavg=${loadavg/./}
-        #^0+*
         if [[ "$i" -eq 1 ]] ; then
             load1="$loadavg"
         elif [[ "$i" -eq 2 ]] ; then
@@ -64,6 +90,9 @@ while true ; do
     load="oload:=$content"
     echo "[DEBUG] $load"
     echo "$load" > "$ofifo"
+
+    get_uptime
+    echo "ouptime:=$uptime_content" > "$ofifo"
 
     sleep 60
 done

@@ -32,15 +32,19 @@ get_uptime() {
         fi
     done
 
-    idle=$(( _tmp_idletime*100/_tmp_uptime ))
-    uptime=$(( _tmp_uptime/60/60/24 ))
+    too_much_uptime=0
+    uptime_pixel=$(( _tmp_uptime/60/60/24/2 ))
+    [[ "$uptime_pixel" -gt 59 ]] && uptime_pixel=59 too_much_uptime=1
+    too_much_idletime=0
+    idle_pixel=$(( _tmp_idletime/60/60/24/2 ))
+    [[ "$idle_pixel" -gt 59 ]] && idle_pixel=59 too_much_idletime=1
 
-    uptime_content="^fg(#ffffff) U: ${uptime}d\n ^fg()${idle}% idle"
-        # TODO  draw blue idle line-indicator instead in ostatus2 of ocollector
-        # FIXME need a graphical representaion of uptime, maybe each day uptime
-        # one ^r(1x4)? combine idle uptime in same line-idicator? (different color:
-        # darker blue), what happens after 59d (maximum pixel-width) of time? how
-        # to represent that?
+    #uptime_content="^fg(#ffffff) U: ${uptime}d\n ^fg()${idle}% idle"
+    uptime_content="^pa(8;0)^fg(#3430fb)^r(${uptime_pixel}x4)"
+    uptime_content+="^ib(1)^pa(8;0)^fg(#222086)^r(${idle_pixel}x4)"
+    if [[ "$too_much_uptime" -eq 1 ]] || [[ "$too_much_idletime" -eq 1 ]] ; then
+        uptime_content+="^ib(1)^pa(59;0)^fg(#292929)^r(4x4)"
+    fi
 }
 
 get_load() {

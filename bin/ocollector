@@ -68,8 +68,7 @@ get_status() {
 display_height=$( guess_display_height )
 panel_line_count=$(( display_height/16))
 
-# debug
-echo "panel_line_count=$panel_line_count"
+echo "[DEBUG] panel_line_count=$panel_line_count"
 
 # initialize box colors of side-panel elements
 battery_boxOutline="#292929"
@@ -142,7 +141,7 @@ while read -r reply ; do
     echo -en "${obattery_start}${obattery_inner}"
     echo -en "$( get_box_seperator "$battery_boxOutline" "$battery_boxFill" "$tmc_boxOutline" "$tmc_boxFill" )"
     echo -en "${otmc_inner}${otmc_end}"
-    echo -e "$ouptime"
+    echo -e "$ostatus2"
         # TODO  change "ouptime" to "ostatus2" for additional line-indicators
 
     # test

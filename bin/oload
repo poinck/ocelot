@@ -87,6 +87,36 @@ get_load() {
     content+="^ib(1)^pa(8;12)^fg($color15)^r(${load15_pixel}x4)"
 }
 
+get_traffic() {
+    local interface_number=0
+    max_bytes=125000000
+    rx_pixel=0
+    tx_pixel=0
+    for interfaces in /sys/class/net/*/operstate ; do
+        operstate=$( cat "$interfaces" )
+        if [[ "$operstate" == "up" ]] ; then
+            active_interface=${interfaces%/*}
+            rx_bytes_last=$( cat "${active_interface}/statistics/rx_bytes" )
+            tx_bytes_last=$( cat "${active_interface}/statistics/tx_bytes" )
+            sleep 1
+            rx_bytes_now=$( cat "${active_interface}/statistics/rx_bytes" )
+            tx_bytes_now=$( cat "${active_interface}/statistics/tx_bytes" )
+
+            rx_bytes_diff=$(( rx_bytes_now-rx_bytes_last ))
+            tx_bytes_diff=$(( tx_bytes_now-tx_bytes_last ))
+            rx_pixel=$(( rx_bytes_diff*59/max_bytes ))
+            tx_pixel=$(( tx_bytes_diff*59/max_bytes ))
+            break
+        fi
+        interface_number=$(( interface_number+1 ))
+    done
+
+    echo "[DEBUG] rx_bytes_diff = $rx_bytes_diff, tx_bytes_diff = $tx_bytes_diff; $rx_pixel $tx_pixel"
+
+    traffic_content="^ib(1)^pa(8;4)^fg(#ffc0cb)^r(${rx_pixel}x4)"
+    traffic_content+="^ib(1)^pa(8;4)^fg(#886066)^r(${tx_pixel}x4)"
+}
+
 ofifo=/tmp/ocollector.fifo
 while true ; do
     get_load
@@ -96,7 +126,8 @@ while true ; do
     echo "$load" > "$ofifo"
 
     get_uptime
-    echo "ouptime:=$uptime_content" > "$ofifo"
+    get_traffic
+    echo "ostatus2:=${uptime_content}${traffic_content}" > "$ofifo"
 
     sleep 60
 done

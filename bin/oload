@@ -40,10 +40,10 @@ get_uptime() {
     [[ "$idle_pixel" -gt 59 ]] && idle_pixel=59 too_much_idletime=1
 
     #uptime_content="^fg(#ffffff) U: ${uptime}d\n ^fg()${idle}% idle"
-    uptime_content="^pa(8;0)^fg(#3430fb)^r(${uptime_pixel}x4)"
-    uptime_content+="^ib(1)^pa(8;0)^fg(#222086)^r(${idle_pixel}x4)"
+    uptime_content="^ib(1)^pa(8;4)^fg(#3430fb)^r(${uptime_pixel}x4)"
+    uptime_content+="^ib(1)^pa(8;4)^fg(#222086)^r(${idle_pixel}x4)"
     if [[ "$too_much_uptime" -eq 1 ]] || [[ "$too_much_idletime" -eq 1 ]] ; then
-        uptime_content+="^ib(1)^pa(59;0)^fg(#292929)^r(4x4)"
+        uptime_content+="^ib(1)^pa(59;4)^fg(#292929)^r(4x4)"
     fi
 }
 
@@ -92,6 +92,10 @@ get_traffic() {
     max_bytes=125000000
     rx_pixel=0
     tx_pixel=0
+    oper_color=""
+    interface_name="offline"
+    net_box_outline="#3f3f3f"
+    net_box_fill="#3f3f3f"
     for interfaces in /sys/class/net/*/operstate ; do
         operstate=$( cat "$interfaces" )
         if [[ "$operstate" == "up" ]] ; then
@@ -104,8 +108,12 @@ get_traffic() {
 
             rx_bytes_diff=$(( rx_bytes_now-rx_bytes_last ))
             tx_bytes_diff=$(( tx_bytes_now-tx_bytes_last ))
-            rx_pixel=$(( rx_bytes_diff*59/max_bytes ))
-            tx_pixel=$(( tx_bytes_diff*59/max_bytes ))
+            rx_pixel=$(( rx_bytes_diff*55/max_bytes ))
+            tx_pixel=$(( tx_bytes_diff*55/max_bytes ))
+            oper_color="#ffffff"
+            interface_name=${active_interface##*/}
+            net_box_outline="#4ad6d3"
+            net_box_fill="#267372"
             break
         fi
         interface_number=$(( interface_number+1 ))
@@ -113,21 +121,29 @@ get_traffic() {
 
     echo "[DEBUG] rx_bytes_diff = $rx_bytes_diff, tx_bytes_diff = $tx_bytes_diff; $rx_pixel $tx_pixel"
 
-    traffic_content="^ib(1)^pa(8;4)^fg(#ffc0cb)^r(${rx_pixel}x4)"
-    traffic_content+="^ib(1)^pa(8;4)^fg(#886066)^r(${tx_pixel}x4)"
+    traffic_content="^ib(1)^pa(8;0)^fg(#4ad6d3)^r(${rx_pixel}x4)^fg(${oper_color})"
+    traffic_content+="^ib(1)^pa(8;0)^fg(#267372)^r(${tx_pixel}x4)"
+}
+
+get_temp() {
+    max_cpu_temp=$( cat /sys/class/thermal/thermal_zone0/trip_point_0_temp )
+    current_cpu_temp=$( cat /sys/class/thermal/thermal_zone0/temp )
+        # TODO  finish cpu_temp-indication
 }
 
 ofifo=/tmp/ocollector.fifo
 while true ; do
     get_load
-
     load="oload:=$content"
     echo "[DEBUG] $load"
     echo "$load" > "$ofifo"
 
     get_uptime
     get_traffic
-    echo "ostatus2:=${uptime_content}${traffic_content}" > "$ofifo"
+    echo "ostatus2:=${traffic_content}${uptime_content}" > "$ofifo"
+    onet="onet:=^fg(#ffffff)$interface_name;;$net_box_outline--$net_box_fill"
+    echo "[DEBUG] $onet"
+    echo "$onet" > "$ofifo"
 
-    sleep 60
+    sleep 14
 done

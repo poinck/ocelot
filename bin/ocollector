@@ -75,6 +75,8 @@ battery_boxOutline="#292929"
 battery_boxFill="#292929"
 tmc_boxOutline="#292929"
 tmc_boxFill="#292929"
+net_box_outline="#292929"
+net_box_fill="#292929"
 test_boxOutline="#292929"
 test_boxFill="#292929"
 
@@ -109,8 +111,8 @@ while read -r reply ; do
     elif [[ "$replyType" == "oload" ]] ; then
         oload="$replyContent"
         ostatus="$( get_status )"
-    elif [[ "$replyType" == "ouptime" ]] ; then
-        ouptime="$replyContent"
+    elif [[ "$replyType" == "ostatus2" ]] ; then
+        ostatus2="$replyContent"
     elif [[ "$replyType" == "odesktop" ]] ; then
         odesktop="$( get_box "$boxOutline" "$boxFill" "$replyContent" )"
     elif [[ "$replyType" == "odesktops" ]] ; then
@@ -127,9 +129,14 @@ while read -r reply ; do
         battery_boxFill=$boxFill
     elif [[ "$replyType" == "otmc" ]] ; then
         otmc_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-        otmc_end="$( get_box_seperator "$boxOutline" "$boxFill" "#292929" "#292929" )"
+        #otmc_end="$( get_box_seperator "$boxOutline" "$boxFill" "#292929" "#292929" )"
         tmc_boxOutline=$boxOutline
         tmc_boxFill=$boxFill
+    elif [[ "$replyType" == "onet" ]] ; then
+        onet_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
+        onet_end="$( get_box_seperator "$boxOutline" "$boxFill" "#292929" "#292929" )"
+        net_box_outline=$boxOutline
+        net_box_fill=$boxFill
     fi
 
     # "otime" has to be the first replyType, because it clears all lines of
@@ -140,9 +147,10 @@ while read -r reply ; do
     echo -e "$odesktops"
     echo -en "${obattery_start}${obattery_inner}"
     echo -en "$( get_box_seperator "$battery_boxOutline" "$battery_boxFill" "$tmc_boxOutline" "$tmc_boxFill" )"
-    echo -en "${otmc_inner}${otmc_end}"
+    echo -en "${otmc_inner}"
+    echo -en "$( get_box_seperator "$tmc_boxOutline" "$tmc_boxFill" "$net_box_outline" "$net_box_fill" )"
+    echo -en "${onet_inner}${onet_end}"
     echo -e "$ostatus2"
-        # TODO  change "ouptime" to "ostatus2" for additional line-indicators
 
     # test
     #echo -en "$( get_box_seperator "$tmc_boxOutline" "$tmc_boxFill" "$test_boxOutline" "$test_boxFill" )"

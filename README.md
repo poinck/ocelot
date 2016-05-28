@@ -25,7 +25,7 @@ Following dependencies are required to get the intended look and feel:
 
 Things to come (order is priority):
 - lock screen on lid-close (provided as systemd.unit-file)
-- lock screen before hibernate or standby
+- lock screen before hibernate or standby (provided as systemd-unit-file)
 - take screenshot, using `scrot`
 
 Things *NOT* to come:
@@ -50,6 +50,7 @@ ln -s /home/$USER/gits/ocelot/bin/ovolume ~/bin/ovolume
 ln -s /home/$USER/gits/ocelot/bin/olock ~/bin/olock
 ln -s /home/$USER/gits/ocelot/bin/obattery ~/bin/obattery
 ln -s /home/$USER/gits/ocelot/bin/startocelot ~/bin/startocelot
+ln -s /home/$USER/gits/ocelot/bin/oload ~/bin/oload
 ```
 - additionally you can configure `OCELOT_PATH` in "~/.ocelotrc"
 
@@ -57,7 +58,7 @@ ln -s /home/$USER/gits/ocelot/bin/startocelot ~/bin/startocelot
 *.. TODO*
 
 ## Configuration
-"ocelot" has two user config-files; create them if you want to change default
+"ocelot" has one user config-file; create it if you want to change default
 behavior:
 
 **`~/.ocelotrc` for general settings:**
@@ -69,17 +70,14 @@ See "config/.ocelotbarrc" for help adjusting variables specific to ocelotbar:
 - `~/.ocelotbarrc` will be depricated, tmd-settings can be sourced from `~/.ocelotrc` or `~/.otmdrc` in the near future
 
 Things to come (order is priority):
-- display brightness indication (wrapper-script for `xbrightness`)
+- better network-indication
 - `glsa-check` notification for Gentoo-users
 - `thunderbird` notifications for new mail
 - Xinerama-support
-- network-indication
 - CAPSLOCK-indication
 - support more than just "BAT0" from `/proc/sys`
 - update-indication for `dnf` if you are a Fedora-user
 - update-indication for `pacman` if you are an Arch-user
-- update-indication for `apt` if you are using a Debian based distribution
-- update-indication for `zypper` if you prefer to use `ocelot` with awesome openSUSE (they have chameleons)
 
 ### Start ocelot
 Currently I can only describe the option to use `startx`.

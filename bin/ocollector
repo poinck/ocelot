@@ -152,6 +152,8 @@ while read -r reply ; do
     echo -en "${onet_inner}${onet_end}"
     echo -e "$ostatus2"
 
+    # TODO  add "odisks" to monitor free space on / /home and /var
+
     # test
     #echo -en "$( get_box_seperator "$tmc_boxOutline" "$tmc_boxFill" "$test_boxOutline" "$test_boxFill" )"
     #echo -en "${otest_inner}${otest_end}"

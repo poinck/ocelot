@@ -9,6 +9,9 @@ synclient RightButtonAreaLeft=0
 # set color profile, recommended for blue-ish displays
 xcalib -d :0 /usr/share/color/icc/colord/Gamma5500K.icc
 
+# improve keyboard rate
+xset r rate 300 45
+
 # start ocelot
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 exec startocelot

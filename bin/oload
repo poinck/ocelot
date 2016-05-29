@@ -160,7 +160,7 @@ get_traffic() {
         tx_pixel_high=$tx_pixel
         tx_pixel=0
     else
-        tx_ixel_high=4
+        tx_pixel_high=4
         tx_pixel=$(( tx_pixel-4 ))
     fi
     traffic_content="^ib(1)^pa(8;0)^fg(#267372)^r(${rx_max_pixel}x4)^fg(#4ad6d3)^r(${rx_max_pixel_high}x4)"
@@ -176,7 +176,7 @@ get_temp() {
     cpu_temp_color_high="#292929"
     if [[ "$cpu_temp" -gt 50 ]] ; then
         # red
-        cpu_temp_color="#880000"
+        cpu_temp_color="#aa0000"
         cpu_temp_color_high="#ff0000"
     fi
     cpu_temp_content="^ib(1)^pa(8;12)^fg(${cpu_temp_color})^r(${cpu_temp}x4)^fg(${cpu_temp_color_high})^r(4x4)"

@@ -111,16 +111,16 @@ get_traffic() {
             tx_pixel=$( echo "l($tx_bytes_diff+1)/l(10)*10-26" | bc -l )
             rx_pixel="${rx_pixel%.*}"
             tx_pixel="${tx_pixel%.*}"
-            if [[ "$rx_pixel" =~ "^-(.*)" ]] ; then
-                rx_pixel=0
-            else
-                rx_pixel=$(( 10#$rx_pixel ))
-            fi
-            if [[ "$tx_pixel" =~ "^-(.*)" ]] ; then
-                tx_pixel=0
-            else
-                tx_pixel=$(( 10#$tx_pixel ))
-            fi
+            #if [[ "$rx_pixel" =~ "^-(.*)" ]] ; then
+            #    rx_pixel=0
+            #else
+            #    rx_pixel=$(( 10#$rx_pixel ))
+            #fi
+            #if [[ "$tx_pixel" =~ "^-(.*)" ]] ; then
+            #    tx_pixel=0
+            #else
+            #    tx_pixel=$(( 10#$tx_pixel ))
+            #fi
             [[ "$rx_pixel" -lt 0 ]] && rx_pixel=0
             [[ "$tx_pixel" -lt 0 ]] && tx_pixel=0
             interface_name=${active_interface##*/}
@@ -142,8 +142,46 @@ get_temp() {
     current_cpu_temp=$( cat /sys/class/thermal/thermal_zone0/temp )
 
     cpu_temp=$(( current_cpu_temp*59/max_cpu_temp ))
-    cpu_temp_content=""
-        # TODO  finish cpu_temp-indication
+    cpu_temp_color=""
+    if [[ "$cpu_temp" -lt 25 ]] ; then
+        # green
+#fill[19]="#880000"
+#fill[18]="#883200"
+#fill[17]="#885300"
+#fill[16]="#886700"
+#fill[15]="#888200"
+#fill[14]="#828508"
+#fill[13]="#658313"
+#fill[12]="#587020"
+#fill[11]="#376010"
+#fill[10]="#225006"
+
+#outline[19]="#ff0000"
+#outline[18]="#ff6400"
+#outline[17]="#ff9500"
+#outline[16]="#ffbd00"
+#outline[15]="#ffe300"
+#outline[14]="#f4fa0e"
+#outline[13]="#cae526"
+#outline[12]="#9fd031"
+#outline[11]="#6db021"
+#outline[10]="#34900b"
+        #cpu_temp_color="#225006"
+        cpu_temp_color="#34900b"
+    elif [[ "$cpu_temp" -lt 40 ]] ; then
+        # yellow
+        #cpu_temp_color="#886700"
+        cpu_temp_color="#cae526"
+    elif [[ "$cpu_temp" -lt 50 ]] ; then
+        # orange
+        #cpu_temp_color="#658313"
+        cpu_temp_color="#ffbd00"
+    else
+        # red
+        #cpu_temp_color="#880000"
+        cpu_temp_color="#ff0000"
+    fi
+    cpu_temp_content="^ib(1)^pa(8;8)^fg(${cpu_temp_color})^r(${cpu_temp}x4)"
 }
 
 ofifo=/tmp/ocollector.fifo
@@ -155,7 +193,8 @@ while true ; do
 
     get_uptime
     get_traffic
-    echo "ostatus2:=${traffic_content}${uptime_content}" > "$ofifo"
+    get_temp
+    echo "ostatus2:=${traffic_content}${uptime_content}${cpu_temp_content}" > "$ofifo"
     onet="onet:=^fg(#ffffff)$interface_name;;$net_box_outline--$net_box_fill"
     echo "[DEBUG] $onet"
     echo "$onet" > "$ofifo"

@@ -171,13 +171,14 @@ get_temp() {
     max_cpu_temp=$( cat /sys/class/thermal/thermal_zone0/trip_point_0_temp )
     current_cpu_temp=$( cat /sys/class/thermal/thermal_zone0/temp )
 
-    cpu_temp=$(( current_cpu_temp*55/max_cpu_temp ))
-    cpu_temp_color="#292929"
-    cpu_temp_color_high="#292929"
-    if [[ "$cpu_temp" -gt 50 ]] ; then
-        # red
-        cpu_temp_color="#aa0000"
-        cpu_temp_color_high="#ff0000"
+    if [[ "$current_cpu_temp" -gt 85000 ]] ; then
+        cpu_temp=$(( (current_cpu_temp-85000)*55/(max_cpu_temp-85000) ))
+        cpu_temp_color="#aa1111"
+        cpu_temp_color_high="#ff2222"
+    else
+        cpu_temp=0
+        cpu_temp_color="#292929"
+        cpu_temp_color_high="#292929"
     fi
     cpu_temp_content="^ib(1)^pa(8;12)^fg(${cpu_temp_color})^r(${cpu_temp}x4)^fg(${cpu_temp_color_high})^r(4x4)"
 }

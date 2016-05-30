@@ -73,7 +73,7 @@ See "config/.ocelotbarrc" for help adjusting variables specific to ocelotbar:
 ### side-panel TODOs
 Things to come (order is priority):
 - `glsa-check indication for Gentoo-users (as box; between "otmc" and "onet")
-- disk- and swap-usage (swap, `/`, `/var/tmp` and `/home` as graphs; status as box; below cpu-temperature-grpah)
+- disk- and swap-usage (ram, swap, `/` and `/home` as graphs; additional status(?) as box; below cpu-temperature-graph)
 - Xinerama-support
 - `thunderbird` notifications for new mail
 - CAPSLOCK-indication

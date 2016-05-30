@@ -23,8 +23,7 @@ fi
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 
 # use autolocks defaults to lock screen (after 10 minutes)
-# xautolock -locker "olock" &
-    # TODO  disabled for testing
+xautolock -locker "olock" &
     # FIXME make timeout for screenlock configurable in ".ocelotrc"
 
 # create a fifo to send output

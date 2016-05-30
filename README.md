@@ -69,11 +69,13 @@ See "config/.ocelotbarrc" for help adjusting variables specific to ocelotbar:
 - current local temperature
 - `~/.ocelotbarrc` will be depricated, tmd-settings can be sourced from `~/.ocelotrc` or `~/.otmdrc` in the near future
 
+
+### side-panel TODOs
 Things to come (order is priority):
-- better network-indication
-- `glsa-check` notification for Gentoo-users
-- `thunderbird` notifications for new mail
+- `glsa-check indication for Gentoo-users (as box; between "otmc" and "onet")
+- disk- and swap-usage (swap, `/`, `/var/tmp` and `/home` as graphs; status as box; below cpu-temperature-grpah)
 - Xinerama-support
+- `thunderbird` notifications for new mail
 - CAPSLOCK-indication
 - support more than just "BAT0" from `/proc/sys`
 - update-indication for `dnf` if you are a Fedora-user

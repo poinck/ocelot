@@ -71,14 +71,15 @@ panel_line_count=$(( display_height/16))
 echo "[DEBUG] panel_line_count=$panel_line_count"
 
 # initialize box colors of side-panel elements
-battery_boxOutline="#292929"
-battery_boxFill="#292929"
-tmc_boxOutline="#292929"
-tmc_boxFill="#292929"
-net_box_outline="#292929"
-net_box_fill="#292929"
-test_boxOutline="#292929"
-test_boxFill="#292929"
+pbc="#1c1c1c" # panel background color
+battery_boxOutline=$pbc
+battery_boxFill=$pbc
+tmc_boxOutline=$pbc
+tmc_boxFill=$pbc
+net_box_outline=$pbc
+net_box_fill=$pbc
+test_boxOutline=$pbc
+test_boxFill=$pbc
 
 ofifo=/tmp/ocollector.fifo
 [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
@@ -119,22 +120,22 @@ while read -r reply ; do
         odesktops="$replyContent"
     elif [[ "$replyType" == "otest" ]] ; then
         otest_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-        otest_end="$( get_box_seperator "$boxOutline" "$boxFill" "#292929" "#292929" )"
+        otest_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
         test_boxOutline="$boxOutline"
         test_boxFill="$boxFill"
     elif [[ "$replyType" == "obattery" ]] ; then
-        obattery_start="$( get_box_seperator "#292929" "#292929" "$boxOutline" "$boxFill" )"
+        obattery_start="$( get_box_seperator "$pbc" "$pbc" "$boxOutline" "$boxFill" )"
         obattery_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
         battery_boxOutline=$boxOutline
         battery_boxFill=$boxFill
     elif [[ "$replyType" == "otmc" ]] ; then
         otmc_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-        #otmc_end="$( get_box_seperator "$boxOutline" "$boxFill" "#292929" "#292929" )"
+        #otmc_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
         tmc_boxOutline=$boxOutline
         tmc_boxFill=$boxFill
     elif [[ "$replyType" == "onet" ]] ; then
         onet_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-        onet_end="$( get_box_seperator "$boxOutline" "$boxFill" "#292929" "#292929" )"
+        onet_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
         net_box_outline=$boxOutline
         net_box_fill=$boxFill
     fi
@@ -158,7 +159,7 @@ while read -r reply ; do
     #echo -en "$( get_box_seperator "$tmc_boxOutline" "$tmc_boxFill" "$test_boxOutline" "$test_boxFill" )"
     #echo -en "${otest_inner}${otest_end}"
 
-done | ocelot-dzen -p -l "$panel_line_count" -h 16 -ta l -w 75 -fn "monospace:bold:size=9" -e 'onstart=uncollapse' -bg "#292929"
+done | ocelot-dzen -p -l "$panel_line_count" -h 16 -ta l -w 75 -fn "monospace:bold:size=9" -e 'onstart=uncollapse' -bg "$pbc"
 # dzen2 -p -x 100 -y 700 -w 500
 # -l 48
 # -bg "#2c2c2c"

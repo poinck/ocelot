@@ -45,7 +45,7 @@ static const AppRule rules[] = { \
  * custom commands
  * must always end with ', NULL };'
  */
-static const char *termcmd[] = { "urxvt", "+sb", "-fade", "15", "+si", "-uc", "-bg", "#3f3f3f", "-fg", "white", "-fn", "xft:Monospace:pixelsize=13", NULL };
+static const char *termcmd[] = { "urxvt", "+sb", "-fade", "15", "+si", "-bg", "#3f3f3f", "-fg", "white", "-fn", "xft:Monospace:pixelsize=13", NULL };
 /* dmenu_run -b -nb "#292929" -nf "#bbbbbb" -sf "#292929" -sb "#4ad6d3" -fn "monospace:bold:size=10" */
 static const char *menucmd[] = { "dmenu_run", "-b", "-nb", "#292929", "-nf", "#bbbbbb", "-sf", "#292929", "-sb", "#4ad6d3", "-fn", "monospace:size=10", NULL };
 /* static const char *menucmd[] = { "dmenu_run", "-b", "-sf", "#000000", "-sb", "#ffffff", "-fn", "monospace:size=9", NULL }; */

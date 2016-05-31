@@ -8,8 +8,8 @@ Xft*hinting:   Full
 !-*- Perl extensions -*-
 URxvt.perl-ext-common:default,clipboard,matcher,keyboard-select
 URxvt.keysym.M-u:     perl:url-select:select_next
-URxvt.url-launcher:   /usr/bin/firefox
-URxvt.underlineURLs:  True
+URxvt.url-launcher:   /usr/bin/firefox -P poinck
+URxvt.underlineURLs:  False
 URxvt.matcher.button: 1
 URxvt.keysym.M-Escape:perl:keyboard-select:activate
 URxvt.keysym.M-c:     perl:clipboard:copy
@@ -20,6 +20,18 @@ URxvt.keysym.M-C-v:   perl:clipboard:paste_escaped
 !Comment this if you dont want copy when text is selected
 URxvt.clipboard.autocopy: true
 
+! blinky orange cursor and content margin
+URxvt.cursorColor: #ffbd00
+URxvt.cursorBlink: true
+Urxvt.cursorUnderline: false
+URxvt.internalBorder: 4
+URxvt.pointerColor: #ffbd00
+!Urxvt.pointerColor2: #ff0000
+
+! switch font-size ondemand
+URxvt.keysym.M-C-3: command:\033]50;xft:Monospace:pixelsize=13\007
+URxvt.keysym.M-C-4: command:\033]50;xft:Monospace:pixelsize=19\007
+URxvt.keysym.M-C-5: command:\033]50;xft:Monospace:pixelsize=25\007
 
 ! black
 *color0:  #2E3436

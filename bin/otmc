@@ -113,7 +113,7 @@ get_tm() {
     fi
 }
 
-ofifo=/tmp/ocollector.fifo
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 while true ; do
     get_tm
 

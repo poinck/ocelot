@@ -183,7 +183,7 @@ get_temp() {
     cpu_temp_content="^ib(1)^pa(8;12)^fg(${cpu_temp_color})^r(${cpu_temp}x4)^fg(${cpu_temp_color_high})^r(4x4)"
 }
 
-ofifo=/tmp/ocollector.fifo
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 while true ; do
     get_load
     load="oload:=$content"

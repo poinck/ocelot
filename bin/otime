@@ -5,7 +5,7 @@ get_otime() {
     otime_content="otime:=^pa(0;4) ^fg(#ffffff)$(date '+%a,') ^fg()$(date '+W%-W')\n^p1()\n ^fg(#ffffff)$(date '+%-H:%M')\n^pa(0;0) $(date '+%-d. %b')"
 }
 
-ofifo=/tmp/ocollector.fifo
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 while true ; do
     get_otime
 

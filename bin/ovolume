@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ofifo=/tmp/ocollector.fifo
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 
 if [[ "$1" == "up" ]] ; then
     omixer=$( amixer set Master 5%+ )

@@ -9,11 +9,11 @@ if [[ -f ~/.ocelotrc ]] ; then
     echo "odesktop.ocelot_path=$OCELOT_PATH"
 fi
 
-odfifo=/tmp/odesktop.fifo
+odfifo="/tmp/odesktop.fifo$OCELOT_INSTANCE"
 [[ -p $odfifo ]] || mkfifo -m 600 "$odfifo"
 ${OCELOT_PATH}ocelot > "$odfifo" &
 
-ofifo=/tmp/ocollector.fifo
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 # tail -f $odfifo | \
 while read -r desktopReply ; do
     # debug

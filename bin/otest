@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ofifo=/tmp/ocollector.fifo
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 while true; do
     # otest="^fg(#666666)^ib(1)^pa(8;0)^r(8x4)"
     # otest+="^fg(#666666)^ib(1)^pa(8;4)^r(4x4)"

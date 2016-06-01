@@ -19,7 +19,7 @@ else
     echo "~/.ocelotrc does not exist"
 fi
 
-# load xresources
+# load xresources again if not already done in "~/.xinitrc"
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 
 # use autolocks defaults to lock screen (after 10 minutes)
@@ -27,7 +27,7 @@ xautolock -locker "olock" &
     # FIXME make timeout for screenlock configurable in ".ocelotrc"
 
 # create a fifo to send output
-ofifo=/tmp/ocollector.fifo
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
 
 # start side-panel (in backgroud)

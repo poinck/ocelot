@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ofifo=/tmp/ocollector.fifo
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 
 current_brightness=$( xbacklight -get )
 current_brightness=${current_brightness%%.*}

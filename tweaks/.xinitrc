@@ -9,6 +9,10 @@ synclient RightButtonAreaLeft=0
 # set color profile, recommended for blue-ish displays
 xcalib -d :0 /usr/share/color/icc/colord/Gamma5500K.icc
 
+# disable DPMS if your monitor has other means to save energy (e.g presense
+# sensor)
+xset -dpms
+
 # improve keyboard rate
 xset r rate 300 45
 

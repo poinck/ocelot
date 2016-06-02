@@ -11,9 +11,9 @@ elif [[ "$1" == "down" ]] ; then
     if [[ "$current_brightness" -ge 20 ]] ; then
         xbacklight -steps 3 -time 100 -dec 15
         brightness_pixel=$(( (current_brightness-15)*55/115 ))
-    elif [[ "$current_brightness" -ge 10 ]] ; then
-        xbacklight -steps 3 -time 100 -dec 5
-        brightness_pixel=$(( (current_brightness-5)*55/115 ))
+    elif [[ "$current_brightness" -ge 6 ]] ; then
+        xbacklight -steps 3 -time 100 -set 5
+        brightness_pixel=$(( 5*55/115 ))
     fi
 fi
 echo "obrightness:=$brightness_pixel" > "$ofifo"

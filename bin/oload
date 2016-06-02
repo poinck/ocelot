@@ -39,17 +39,12 @@ get_uptime() {
     idle_pixel=$(( _tmp_idletime/60/60/24/2 ))
     [[ "$idle_pixel" -gt 59 ]] && idle_pixel=59 too_much_idletime=1
 
-    #uptime_content="^ib(1)^pa(8;4)^fg(#5652fd)^r(${uptime_pixel}x4)"
-    #uptime_content+="^ib(1)^pa(8;4)^fg(#4442a8)^r(${idle_pixel}x4)"
-    #uptime_content="^ib(1)^pa(8;8)^fg(#3430db)^r(${uptime_pixel}x4)"
-    #uptime_content+="^ib(1)^pa(8;8)^fg(#222086)^r(${idle_pixel}x4)"
     uptime_content="^ib(1)^pa(8;8)^fg(#ffffff)^r(${uptime_pixel}x4)"
     uptime_content+="^ib(1)^pa(8;8)^fg(#808080)^r(${idle_pixel}x4)"
     if [[ "$too_much_uptime" -eq 1 ]] || [[ "$too_much_idletime" -eq 1 ]] ; then
         uptime_content+="^ib(1)^pa(59;4)^fg(#292929)^r(4x4)"
     fi
 }
-#807500)^r(${obrightness}x4)^fg(#ffeb00
 
 get_load() {
     content=""

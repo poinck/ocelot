@@ -5,8 +5,6 @@
 **ocelot:**
 "ocelot" is a minimal tiling window manager bundle forked from "monsterwm" with a customized "config.h" and a side-panel instead of a top-panel.
 
-*NOTICE: The top-panel support is now officially unsupported.*
-
 ![ocelot](/ocelot.png)
 
 ## Dependencies
@@ -29,7 +27,7 @@ Things to come (order is priority):
 - take screenshot, using `scrot`
 
 Things *NOT* to come:
-- Powermanagement: please use `systemd` and `UPower` or your existing setup; ocelot should have no impact on it.
+- Powermanagement: please use your existing setup; ocelot should have no impact on it.
 - save session and restore open application, etc: please use hibernate (suspend to disk) or standby (suspend).
 
 ## Compile
@@ -43,6 +41,7 @@ vim config.h  # look, (change) and :wq
 make
 ```
 
+## Install
 If you do not plan to install ocelot system-wide, make sure "/home/$USER/bin" is in your `$PATH` and create at least following symlinks:
 ```.sh
 ln -s /home/$USER/gits/ocelot/bin/obrightness ~/bin/obrightness
@@ -52,10 +51,7 @@ ln -s /home/$USER/gits/ocelot/bin/obattery ~/bin/obattery
 ln -s /home/$USER/gits/ocelot/bin/startocelot ~/bin/startocelot
 ln -s /home/$USER/gits/ocelot/bin/oload ~/bin/oload
 ```
-- additionally you can configure `OCELOT_PATH` in "~/.ocelotrc"
-
-## Install
-*.. TODO*
+- additionally you should configure `OCELOT_PATH` in "~/.ocelotrc"
 
 ## Configuration
 "ocelot" has one user config-file; create it if you want to change default
@@ -64,15 +60,9 @@ behavior:
 **`~/.ocelotrc` for general settings:**
 See "config/.ocelotrc" for help adjusting the variables.
 
-**`~/.ocelotbarrc` for additional settings:**
-See "config/.ocelotbarrc" for help adjusting variables specific to ocelotbar:
-- current local temperature
-- `~/.ocelotbarrc` will be depricated, tmd-settings can be sourced from `~/.ocelotrc` or `~/.otmdrc` in the near future
-
-
 ### side-panel TODOs
 Things to come (order is priority):
-- `glsa-check indication for Gentoo-users (as box; between "otmc" and "onet")
+- `glsa-check` indication for Gentoo-users (as box; between "otmc" and "onet")
 - disk- and swap-usage (ram, swap, `/` and `/home` as graphs; additional status(?) as box; below cpu-temperature-graph)
 - Xinerama-support
 - `thunderbird` notifications for new mail
@@ -125,6 +115,7 @@ How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs 
 - **select window** ALT+j|k
 - **change tiling-mode** ALT+SHIFT+f|t|b|g|m
 - **change display brightness** XF86MonBrightnessUp|XF86MonBrightnessDown (FN-Keys)
+- **change speaker volume** (FN-Keys)
 
 ## FAQ
 
@@ -139,14 +130,10 @@ xrandr --output HDMI2 --mode 1280x720 --fb 1366x768 --panning 1366x768 --same-as
 xrandr --output HDMI2 --mode 1366x768 --same-as LVDS1 # --dryrun
 ```
 
-**Will `ocelot` run with wayland?**
-No, this would mean starting a new project. I'll let you know.
-
 ## License
 Licensed under MIT/X Consortium License, see [LICENSE][law] file for more
 copyright and license information.
-- Changes I made after the fork are licensed under CC0 if the MIT-license
-permits it
+- Changes to existing and new functionality I added after the fork are licensed under CC0 if the MIT-license permits it
 
   [law]: https://raw.github.com/c00kiemon5ter/monsterwm/master/LICENSE
 

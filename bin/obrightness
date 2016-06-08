@@ -5,11 +5,11 @@ ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 current_brightness=$( xbacklight -get )
 current_brightness=${current_brightness%%.*}
 if [[ "$1" == "up" ]] ; then
-    xbacklight -steps 3 -time 100 -inc 15
+    xbacklight -steps 3 -time 100 -inc 10
     brightness_pixel=$(( (current_brightness+15)*55/115 ))
 elif [[ "$1" == "down" ]] ; then
-    if [[ "$current_brightness" -ge 20 ]] ; then
-        xbacklight -steps 3 -time 100 -dec 15
+    if [[ "$current_brightness" -ge 15 ]] ; then
+        xbacklight -steps 3 -time 100 -dec 10
         brightness_pixel=$(( (current_brightness-15)*55/115 ))
     elif [[ "$current_brightness" -ge 6 ]] ; then
         xbacklight -steps 3 -time 100 -set 5

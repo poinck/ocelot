@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+# oupdates looks for Gentoo security updates using `glsa-check`
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
+
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
+
+# gentoo
+update_cmd="portage"
+outlinec="#3f3f3f"
+fillc="#3f3f3f"
+contentc="#ffffff"
+#contentc="#ad8fdc"
+availablec="#ffffff"
+updates_available=$( glsa-check -n -q -l affected | wc -l )
+
+# test
+#updates_available=$( glsa-check -n -q -l all | wc -l )
+
+if [[ "$updates_available" -eq 0 ]] ; then
+    updates_available="U: ^fg(#aaaaaa)OK"
+    #contentc="#aaaaaa"
+else
+    #update_cmd="$updates_available"
+    #updates_available="updates!"
+    updates_available="U: $updates_available"
+    #availablec="#8b6fba"
+    outlinec="#8b6fba"
+    #outlinec="#463c65"
+    fillc="#463c65"
+fi
+
+#updates="oupdates:=^fg($contentc)$update_cmd==^fg($availablec)$updates_available;;$outlinec--$fillc"
+updates="oupdates:=^fg($availablec)$updates_available;;$outlinec--$fillc"
+echo "[DEBUG] $updates"
+echo "$updates" > "$ofifo"

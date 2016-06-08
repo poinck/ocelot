@@ -53,7 +53,7 @@ get_battery() {
         fi
         fillc=$outlinec
     elif [[ "$bat_status" == "Unknown" ]] || [[ "$bat_status" == "Full" ]] ; then
-        content="^fg(#ffffff)$bat_now_mAh mAh"
+        content="^fg(#ffffff)$bat_now_mAh ^fg(#aaaaaa)mAh"
         outlinec="#3f3f3f"
         fillc="#3f3f3f"
     else

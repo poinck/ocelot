@@ -50,6 +50,7 @@ sleep 1
 ${OCELOT_PATH}bin/otime &
 ${OCELOT_PATH}bin/oload &
 ${OCELOT_PATH}bin/obattery &
+${OCELOT_PATH}bin/oupdates &
 ${OCELOT_PATH}bin/otmc &
 
 # start ocelot desktop

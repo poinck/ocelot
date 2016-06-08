@@ -1,0 +1,11 @@
+[Unit]
+Description=check updates for ocelot side-panel
+After=hibernate.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sleep 42 ; /home/poinck/gits/ocelot/bin/oupdates
+
+[Install]
+WantedBy=hibernate.target
+

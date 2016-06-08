@@ -1,4 +1,15 @@
 #!/bin/bash
+#
+# oload does too much: load 15, 5, 1; net-usage; critical cpu-temperature;
+# uptime; ..
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
 
 remove_leading_zeros() {
     local s="$1"

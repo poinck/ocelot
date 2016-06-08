@@ -1,4 +1,15 @@
 #!/bin/bash
+#
+# obattery uses battery-information from /sys/class/power_supply. Currently
+# only BAT0 is supported.
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
 
 outline[0]="#ff0000"
 outline[1]="#ff6500"

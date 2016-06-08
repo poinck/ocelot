@@ -1,4 +1,16 @@
 #!/bin/bash
+#
+# ocollector is the multiplexer for ocelot. It has some predefined functions to
+# boxes and horizontal graphs. It furthermore defines the order of all
+# side-panel elements. It uses `ocelot-dzen` to draw.
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
 
 get_box() {
     outline=$1

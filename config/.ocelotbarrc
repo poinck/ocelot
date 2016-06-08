@@ -1,3 +1,0 @@
-# if you have a tmd running nearby for local outside temperature
-tmd_url="https://yourdomain.tld/tm/tm_1.csv"
-

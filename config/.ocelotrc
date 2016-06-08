@@ -1,15 +1,25 @@
-# set screen_width, this is still required for dzen2, depricated
-#screen_width=1366
+# sample configuration-file for the ocelot side-panel
+#
+# HOWTO: copy to your home-directory and adjust to you needs
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
 
 # setting the ocelot_path is required if you do not install executables of
 # "ocelot" in a directory inside $PATH
 ocelot_path="/home/username/gits/ocelot/"
 
-# we love wallpapers, even if we cant see them all the time,
+# we love wallpapers, even if we can't see them all the time,
 # default: "${ocelot_path}/desktop.png"
 #wallpaper="/home/username/path/to/desktop.jpg"
 
 # lockscreen pictures are also a good thing,
 # default: "${ocelot_path}/desktop-light.png"
 #lockscreen="/home/username/path/to/lockscreen.jpg"
+
+# if you have a tmd running nearby for local outside temperature
+#tmd_url="https://yourdomain.tld/tm/tm_1.csv"
 

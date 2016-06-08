@@ -1,4 +1,15 @@
 #!/bin/bash
+#
+# otime provides day of the week, week number, time, day of month and month
+# for the ocelot side-panel
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
 
 otime_content=""
 get_otime() {

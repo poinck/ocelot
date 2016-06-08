@@ -1,4 +1,4 @@
-/* see LICENSE for copyright and license */
+/* see LICENSE and LICENSE-monsterwm for copyright and license */
 
 #ifndef CONFIG_H
 #define CONFIG_H

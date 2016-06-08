@@ -140,4 +140,11 @@ copyright and license information.
 ## Thanks
 - [monsterwm](https://github.com/c00kiemon5ter/monsterwm)
 
-
+## ASCII-Logo
+```
+   ^   ^
+ +-------+
+ |  o_O  |
+ |  >.<  |__/
+ +-------+
+```

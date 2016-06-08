@@ -1,4 +1,15 @@
 #!/bin/bash
+#
+# otmc is a client for data provided by a tmd (temperature measuremen deamon).
+# It uses https to get the current condition
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
 
 TMD_URL="~/public_html/tm/tm_720.csv"
 if [[ -f ~/.ocelotrc ]] ; then

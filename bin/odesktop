@@ -1,4 +1,16 @@
 #!/bin/bash
+#
+# odesktop is the main loop for the window-manager. It shows the current
+# desktop number. window mode of the current desktop and graphs for all
+# other desktops with windows.
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
 
 OCELOT_PATH=""
 if [[ -f ~/.ocelotrc ]] ; then

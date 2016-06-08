@@ -1,4 +1,16 @@
 #!/bin/bash
+#
+# startocelot is the start script for ocelot. It loads xressources, enables
+# the auto-locker, start the window manager and starts all other scripts
+# in the background to show the side-panel
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
 
 # initial configuration
 OCELOT_PATH=""

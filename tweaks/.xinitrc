@@ -1,12 +1,21 @@
-# natural scrolling on touchpad, recommended if you are used to it
+# HINT: do not replace "~/.xinitrc" with this file, copy what you need instead
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
+
+# natural scrolling on touchpad
 synclient VertScrollDelta=-111
 
-# disable standard rightclick on touchpad, not recommended if you don't own a
-# clickable multitouchpad
+# disable standard rightclick on touchpad
 synclient RightButtonAreaTop=0
 synclient RightButtonAreaLeft=0
 
-# set color profile, recommended for blue-ish displays
+# set color profile
 xcalib -d :0 /usr/share/color/icc/colord/Gamma5500K.icc
 
 # disable DPMS if your monitor has other means to save energy (e.g presense
@@ -18,5 +27,5 @@ xset r rate 300 45
 
 # start ocelot
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
-exec startocelot
+exec /home/poinck/gits/ocelot/bin/startocelot
 

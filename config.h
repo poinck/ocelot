@@ -64,15 +64,16 @@ static const char *vodocmd[] = { "ovolume", "down", NULL };
  */
 static Key keys[] = {
     /* modifier          key            function           argument */
-    {  MOD1,             XK_b,          togglepanel,       {NULL}},
-    {  MOD1,             XK_BackSpace,  focusurgent,       {NULL}},
-    {  MOD1|SHIFT,       XK_c,          killclient,        {NULL}},
-    {  MOD1,             XK_j,          next_win,          {NULL}},
-    {  MOD1,             XK_k,          prev_win,          {NULL}},
-    {  MOD1,             XK_h,          resize_master,     {.i = -10}}, /* decrease size in px */
-    {  MOD1,             XK_l,          resize_master,     {.i = +10}}, /* increase size in px */
-    {  MOD1,             XK_o,          resize_stack,      {.i = -10}}, /* shrink   size in px */
-    {  MOD1,             XK_p,          resize_stack,      {.i = +10}}, /* grow     size in px */
+    {  MOD4,             XK_b,          togglepanel,       {NULL}},
+    {  MOD4,             XK_BackSpace,  focusurgent,       {NULL}},
+    {  MOD4|SHIFT,       XK_c,          killclient,        {NULL}},
+    {  MOD1,             XK_Tab,        next_win,          {NULL}},
+    {  MOD4,             XK_j,          next_win,          {NULL}},
+    {  MOD4,             XK_k,          prev_win,          {NULL}},
+    {  MOD4,             XK_u,          resize_master,     {.i = -10}}, /* decrease size in px */
+    {  MOD4,             XK_i,          resize_master,     {.i = +10}}, /* increase size in px */
+    {  MOD4,             XK_o,          resize_stack,      {.i = -10}}, /* shrink   size in px */
+    {  MOD4,             XK_p,          resize_stack,      {.i = +10}}, /* grow     size in px */
     {  MOD4,             XK_Left,       rotate,            {.i = -1}},
     {  MOD4,             XK_Right,      rotate,            {.i = +1}},
     {  MOD4|SHIFT,       XK_Left,       rotate_filled,     {.i = -1}},
@@ -81,18 +82,18 @@ static Key keys[] = {
     {  MOD4,             XK_Down,       rotate,            {.i = +1}},
     {  MOD4|SHIFT,       XK_Up,         rotate_filled,     {.i = -1}},
     {  MOD4|SHIFT,       XK_Down,       rotate_filled,     {.i = +1}},
-    {  MOD1,             XK_Tab,        last_desktop,      {NULL}},
-    {  MOD1,             XK_Return,     swap_master,       {NULL}},
-    {  MOD1|SHIFT,       XK_j,          move_down,         {NULL}},
-    {  MOD1|SHIFT,       XK_k,          move_up,           {NULL}},
-    {  MOD1|SHIFT,       XK_t,          switch_mode,       {.i = TILE}},
-    {  MOD1|SHIFT,       XK_m,          switch_mode,       {.i = MONOCLE}},
-    {  MOD1|SHIFT,       XK_b,          switch_mode,       {.i = BSTACK}},
-    {  MOD1|SHIFT,       XK_g,          switch_mode,       {.i = GRID}},
-    {  MOD1|SHIFT,       XK_f,          switch_mode,       {.i = FLOAT}},
-    {  MOD1|CONTROL,     XK_r,          quit,              {.i = 0}}, /* quit with exit value 0 */
-    {  MOD1|CONTROL,     XK_q,          quit,              {.i = 1}}, /* quit with exit value 1 */
-    {  MOD1|SHIFT,       XK_Return,     spawn,             {.com = termcmd}},
+    {  MOD4,             XK_Tab,        last_desktop,      {NULL}},
+    {  MOD4,             XK_Return,     swap_master,       {NULL}},
+    {  MOD4|SHIFT,       XK_j,          move_down,         {NULL}},
+    {  MOD4|SHIFT,       XK_k,          move_up,           {NULL}},
+    {  MOD4|SHIFT,       XK_t,          switch_mode,       {.i = TILE}},
+    {  MOD4|SHIFT,       XK_m,          switch_mode,       {.i = MONOCLE}},
+    {  MOD4|SHIFT,       XK_b,          switch_mode,       {.i = BSTACK}},
+    {  MOD4|SHIFT,       XK_g,          switch_mode,       {.i = GRID}},
+    {  MOD4|SHIFT,       XK_f,          switch_mode,       {.i = FLOAT}},
+    {  MOD4|CONTROL,     XK_r,          quit,              {.i = 0}}, /* quit with exit value 0 */
+    {  MOD4|CONTROL,     XK_q,          quit,              {.i = 1}}, /* quit with exit value 1 */
+    {  MOD4|SHIFT,       XK_Return,     spawn,             {.com = termcmd}},
     {  MOD1,             XK_F2,         spawn,             {.com = menucmd}},
     {  MOD4,             XK_l,          spawn,             {.com = lockcmd}},
     {  MOD4,             XK_s,          moveresize,        {.v = (int []){   0,  25,   0,   0 }}}, /* move down  */
@@ -129,7 +130,7 @@ static Key keys[] = {
  * mouse shortcuts
  */
 static Button buttons[] = {
-    {  MOD1,    Button1,     mousemotion,   {.i = MOVE}},
+    {  MOD4,    Button1,     mousemotion,   {.i = MOVE}},
     {  MOD1,    Button3,     mousemotion,   {.i = RESIZE}},
     {  MOD4,    Button3,     spawn,         {.com = menucmd}},
 };

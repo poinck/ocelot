@@ -106,16 +106,25 @@ Copy paste from "tweaks/.Xresources": This will lighten font colors in the termi
 ## Keys
 How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs recompile and restart):
 
-- **open terminal** ALT+SHIFT+ENTER
-- **open menu** ALT+F2
-- **switch desktop** SUPER-L+LEFT|RIGHT
-- **lock screen** SUPER-L+l
-- **move window** SUPER-L+w|a|s|d
-- **resize window** SUPER-L+SHIFT+w|a|s|d
-- **select window** ALT+j|k
-- **change tiling-mode** ALT+SHIFT+f|t|b|g|m
+- **open terminal** SUPER+SHIFT+ENTER
+- **open menu** ALT+F2, SUPER+MOUSE_RIGHT
+- **switch desktop** SUPER+LEFT|RIGHT, SUPER+UP|DOWN, SUPER+1|2|3|4|5|6|7|8|9|0
+- **switch desktop with windows** SUPER+SHIFT+LEFT|RIGHT, SUPER+SHIFT+UP|DOWN
+- **switch to last desktop** SUPER+TAB
+- **lock screen** SUPER+l
+- **move window** SUPER+w|a|s|d
+- **resize window** SUPER+SHIFT+w|a|s|d, ALT+MOUSE_RIGHT+MOUSE_MOVE
+- **choose as new primary window** SUPER+ENTER
+- **resize primary window** SUPER+u|i
+- **resize first secondary window** SUPER+o|p
+- **select window on current desktop** SUPER+j|k, ALT+TAB (last), MOUSE_RIGHT
+- **move window on current desktop** SUPER+SHIFT+j|k, SUPER+MOUSE_LEFT+MOUSE_MOVE
+- **move selected window to another desktop** SUPER+SHIFT+1|2|3|4|5|6|7|8|9
+- **change window-mode** SUPER+SHIFT+f|t|b|g|m
+- **close window** SUPER+SHIFT+s
 - **change display brightness** XF86MonBrightnessUp|XF86MonBrightnessDown (FN-Keys)
 - **change speaker volume** (FN-Keys)
+- **quit ocelot** SUPER+SHIFT+r|q
 
 ## FAQ
 

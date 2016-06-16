@@ -19,7 +19,7 @@ if [[ -f ~/.ocelotrc ]] ; then
     if [[ -n "$ocelot_path" ]] ; then
         OCELOT_PATH="$ocelot_path"
     fi
-    echo "ocelot_path=$OCELOT_PATH"
+    echo "[DEBUG] ocelot_path = '$OCELOT_PATH'"
     if [[ -n "$wallpaper" ]] ; then
         xsetbg "$wallpaper"
         echo "wallpaper=$wallpaper"
@@ -27,16 +27,19 @@ if [[ -f ~/.ocelotrc ]] ; then
         echo "wallpaper not set, setting default wallpaper"
         xsetbg "${OCELOT_PATH}desktop.png"
     fi
+    if [[ -n "$lockscreen_timeout" ]] ; then
+        echo "[DEBUG] lockscreen_timeout = $lockscreen_timeout"
+        xautolock -time $lockscreen_timeout -locker "olock" &
+    else
+        # use autolocks defaults to lock screen (after 10 minutes)
+        xautolock -locker "olock" &
+    fi
 else
     echo "~/.ocelotrc does not exist"
 fi
 
 # load xresources again if not already done in "~/.xinitrc"
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
-
-# use autolocks defaults to lock screen (after 10 minutes)
-xautolock -locker "olock" &
-    # FIXME make timeout for screenlock configurable in ".ocelotrc"
 
 # create a fifo to send output
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"

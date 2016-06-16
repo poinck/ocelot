@@ -1,6 +1,6 @@
 # sample configuration-file for the ocelot side-panel
 #
-# HOWTO: copy to your home-directory and adjust to you needs
+# HOWTO: copy to your home-directory and adjust to your needs
 #
 #    ^   ^
 #  +-------+
@@ -19,6 +19,9 @@ ocelot_path="/home/username/gits/ocelot/"
 # lockscreen pictures are also a good thing,
 # default: "${ocelot_path}/desktop-light.png"
 #lockscreen="/home/username/path/to/lockscreen.jpg"
+
+# set lockscreen timeout other than the default of 10 minutes
+#lockscreen_timeout=5
 
 # if you have a tmd running nearby for local outside temperature
 #tmd_url="https://yourdomain.tld/tm/tm_1.csv"

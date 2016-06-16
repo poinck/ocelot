@@ -12,6 +12,7 @@
 #
 # ocelot by André Klausnitzer, CC0
 
+# load user settings, if any
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
     if [[ -n "$panel_line_count" ]] ; then

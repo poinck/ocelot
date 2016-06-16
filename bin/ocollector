@@ -12,6 +12,18 @@
 #
 # ocelot by André Klausnitzer, CC0
 
+if [[ -f ~/.ocelotrc ]] ; then
+    . ~/.ocelotrc
+    if [[ -n "$panel_line_count" ]] ; then
+        PANEL_LINE_COUNT="$panel_line_count"
+    else
+        echo "[DEBUG] panel_line_count not set, guessing .."
+        display_height=$( guess_display_height )
+        PANEL_LINE_COUNT=$(( display_height/16))
+    fi
+    echo "[DEBUG] panel_line_count = $PANEL_LINE_COUNT"
+fi
+
 get_box() {
     outline=$1
     fill=$2
@@ -76,11 +88,6 @@ get_status() {
 
     echo -n "$status"
 }
-
-display_height=$( guess_display_height )
-panel_line_count=$(( display_height/16))
-
-echo "[DEBUG] panel_line_count=$panel_line_count"
 
 # initialize box colors of side-panel elements
 pbc="#1c1c1c" # panel background color
@@ -178,5 +185,5 @@ while read -r reply ; do
     #echo -en "${otest_inner}${otest_end}"
 
     echo "^fg() "  # blank last line to avoid artifacts
-done | ocelot-dzen -p -l "$panel_line_count" -h 16 -ta l -w 75 -fn "monospace:bold:size=9" -e 'onstart=uncollapse' -bg "$pbc"
+done | ocelot-dzen -p -l "$PANEL_LINE_COUNT" -h 16 -ta l -w 75 -fn "monospace:bold:size=9" -e 'onstart=uncollapse' -bg "$pbc"
 

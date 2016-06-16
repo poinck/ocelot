@@ -20,7 +20,7 @@ if [[ -f ~/.ocelotrc ]] ; then
     else
         echo "[DEBUG] panel_line_count not set, guessing .."
         display_height=$( guess_display_height )
-        PANEL_LINE_COUNT=$(( display_height/16))
+        PANEL_LINE_COUNT=$(( display_height/16 ))
     fi
     echo "[DEBUG] panel_line_count = $PANEL_LINE_COUNT"
 fi

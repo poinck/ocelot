@@ -12,6 +12,17 @@
 #
 # ocelot by André Klausnitzer, CC0
 
+guess_display_height() {
+    current_resolution="$( xrandr -q --verbose | grep "*current" )"
+    _tmp1CR=${current_resolution#*x}
+
+    # debug
+    # echo "$_tmp1CR"
+
+    current_height=${_tmp1CR%% *}
+    echo -n "$current_height"
+}
+
 # load user settings, if any
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
@@ -65,17 +76,6 @@ get_box_seperator() {
     box+="^ib(1)^pa(0;8)^fg($nextOutline)^r(75x8)^fg($nextFill)^ib(1)^pa(4;12)^r(67x4)\n"
 
     echo "$box"
-}
-
-guess_display_height() {
-    current_resolution="$( xrandr -q --verbose | grep "*current" )"
-    _tmp1CR=${current_resolution#*x}
-
-    # debug
-    # echo "$_tmp1CR"
-
-    current_height=${_tmp1CR%% *}
-    echo -n "$current_height"
 }
 
 # get status about:

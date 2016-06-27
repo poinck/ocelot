@@ -1,0 +1,12 @@
+[Unit]
+Description=lock display before suspend
+Before=suspend.target
+
+[Service]
+Environment=DISPLAY=:0
+Type=forking
+ExecStart=/home/poinck/bin/olock
+    # TODO  change path to "olock"
+
+[Install]
+WantedBy=suspend.target

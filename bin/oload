@@ -62,6 +62,10 @@ get_load() {
 
     # get virtual cpu count and loadavg from proc-filesystem
     proc_cpuinfo_siblings=$( cat /proc/cpuinfo | grep siblings | head -n 1 )
+    if [[ -z "$proc_cpuinfo_siblings" ]] ; then
+        #echo "[DEBUG] is it 0?"
+        proc_cpuinfo_siblings=1
+    fi
     proc_loadavg=$( cat /proc/loadavg )
 
     local i=0
@@ -81,6 +85,7 @@ get_load() {
     load_warning=$(( load_max*100 ))
     load_max=$(( load_max*200 ))
     #echo "[DEBUG] load1 = $( remove_leading_zeros "$load1" )"
+    #echo "[DEBUG] load1 = $load1"
     load1=$( remove_leading_zeros "$load1" )
     load5=$( remove_leading_zeros "$load5" )
     load15=$( remove_leading_zeros "$load15" )

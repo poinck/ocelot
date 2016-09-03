@@ -104,7 +104,7 @@ get_tm() {
     #outlinec="#123456"
     #fillc="#654321"
 
-    all_720_temps=$( curl -s "$TMD_URL" -m 1 )
+    all_720_temps=$( curl -s "$TMD_URL" -m 5 )
     temp_available=$?
     if [[ "$temp_available" -eq 0 ]] ; then
         current_temp=$( echo "$all_720_temps" | tail -n 1 )

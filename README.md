@@ -19,6 +19,7 @@ Following dependencies are required to get the intended look and feel:
 - `xautolock` to lock screen after some idle time (10 minutes)
 - `xbacklight` to control backlight of your notebook screen
 - `amixer` from alsa to control volume
+- `xrandr` to guess display height
 - *optional* `tmd` to show local temperature, see [tm](https://github.com/poinck/tm)
 
 Things to come (order is priority):

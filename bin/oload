@@ -61,10 +61,9 @@ get_load() {
     content=""
 
     # get virtual cpu count and loadavg from proc-filesystem
-    proc_cpuinfo_siblings=$( cat /proc/cpuinfo | grep siblings | head -n 1 )
-    if [[ -z "$proc_cpuinfo_siblings" ]] ; then
-        #echo "[DEBUG] is it 0?"
-        proc_cpuinfo_siblings=1
+    proc_cpuinfo_processor=$( cat /proc/cpuinfo | grep processor | tail -n 1 )
+    if [[ -z "$proc_cpuinfo_processor" ]] ; then
+        proc_cpuinfo_processor=1
     fi
     proc_loadavg=$( cat /proc/loadavg )
 
@@ -81,7 +80,8 @@ get_load() {
             load15="$loadavg"
         fi
     done
-    load_max=${proc_cpuinfo_siblings#*: }
+    load_max=${proc_cpuinfo_processor#*: }
+    load_max=$(( load_max+1 ))
     load_warning=$(( load_max*100 ))
     load_max=$(( load_max*200 ))
     #echo "[DEBUG] load1 = $( remove_leading_zeros "$load1" )"
@@ -208,8 +208,6 @@ while true ; do
     onet="onet:=^fg(#ffffff)$interface_name;;$net_box_outline--$net_box_fill"
     echo "[DEBUG] $onet"
     echo "$onet" > "$ofifo"
-        # TODO  show IPv6-adress in the side-panel,
-        # each segment between ":" in a new line
 
     sleep 14
 done

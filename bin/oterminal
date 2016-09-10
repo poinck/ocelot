@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# oterminal opens a terminal with options suitable for ocelot
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
+
+SCALE=1
+if [[ -f ~/.ocelotrc ]] ; then
+    . ~/.ocelotrc
+    if [[ -n "$scale" ]] ; then
+        SCALE="$scale"
+    fi
+else
+    echo "~/.ocelotrc does not exist"
+fi
+
+pixelsize=$(( 13*SCALE ))
+urxvt +sb -fade 15 +si -bg '#3f3f3f' -fg white -fn xft:Monospace:pixelsize=${pixelsize}
+

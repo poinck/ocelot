@@ -51,6 +51,7 @@ ln -s /home/$USER/gits/ocelot/bin/olock ~/bin/olock
 ln -s /home/$USER/gits/ocelot/bin/obattery ~/bin/obattery
 ln -s /home/$USER/gits/ocelot/bin/startocelot ~/bin/startocelot
 ln -s /home/$USER/gits/ocelot/bin/oload ~/bin/oload
+ln -s /home/$USER/gits/ocelot/bin/oterminal ~/bin/oterminal
 ```
 - additionally you should configure `OCELOT_PATH` in "~/.ocelotrc"
 

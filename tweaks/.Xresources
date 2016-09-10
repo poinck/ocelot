@@ -33,7 +33,6 @@ URxvt.clipboard.autocopy: true
 URxvt.cursorColor: #ffbd00
 URxvt.cursorBlink: true
 Urxvt.cursorUnderline: false
-URxvt.internalBorder: 4
 URxvt.pointerColor: #ffbd00
 !Urxvt.pointerColor2: #ff0000
 

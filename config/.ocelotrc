@@ -26,3 +26,6 @@ ocelot_path="/home/username/gits/ocelot/"
 # if you have a tmd running nearby for local outside temperature
 #tmd_url="https://yourdomain.tld/tm/tm_1.csv"
 
+# scale side-panel, terminal and menu
+# default: 1
+#scale=2

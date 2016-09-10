@@ -21,5 +21,6 @@ else
 fi
 
 pixelsize=$(( 13*SCALE ))
-urxvt +sb -fade 15 +si -bg '#3f3f3f' -fg white -fn xft:Monospace:pixelsize=${pixelsize}
+borderpixels=$(( 4*SCALE ))
+urxvt +sb -fade 15 +si -bg '#3f3f3f' -fg white -fn xft:Monospace:pixelsize=${pixelsize} -b ${borderpixels}
 

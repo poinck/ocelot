@@ -4,7 +4,8 @@ After=hibernate.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/sleep 42 ; /home/poinck/gits/ocelot/bin/oupdates
+ExecStart=/usr/bin/sleep 42 ; /home/poinck/bin/oupdates
+    # TODO  change path to "oupdates"
 
 [Install]
 WantedBy=hibernate.target

@@ -14,14 +14,21 @@
 #define SHOW_PANEL      True      /* show panel by default on exec */
 #define TOP_PANEL       True      /* False means panel is on bottom */
 #define PANEL_HEIGHT    21        /* 0 for no space for panel, thus no panel */
-#define PANEL_WIDTH     75        /* 0 for no space for side-panel, thus fallback to top-panel. otherwise space of side-panel on the left and PANEL-HEIGHT will be ignored, thus no space for top-panel */
+#define PANEL_WIDTH     75        /* 0 for no space for side-panel, thus
+                                     fallback to top-panel. otherwise space
+                                     of side-panel on the left and
+                                     PANEL_HEIGHT will be ignored, thus no
+                                     space for top-panel. choose 75 pixels for
+                                     ocelot side-panel or 150 if you've set
+                                     "scale=2" in .ocelotrc */
 #define DEFAULT_MODE    FLOAT     /* initial layout/mode: TILE MONOCLE BSTACK GRID FLOAT */
 #define ATTACH_ASIDE    False     /* False means new window is master */
 #define FOLLOW_WINDOW   False     /* follow the window when moved to a different desktop */
 #define FOLLOW_MOUSE    False     /* focus the window the mouse just entered */
 #define CLICK_TO_FOCUS  True      /* focus an unfocused window when clicked  */
 #define FOCUS_BUTTON    Button3   /* mouse button to be used along with CLICK_TO_FOCUS */
-#define BORDER_WIDTH    4         /* window border width */
+#define BORDER_WIDTH    4         /* window border width. choose 8 if you've
+                                     set "scale=2" in .ocelotrc */
 #define FOCUS           "#bbbbbb" /* "#ff950e" - focused window border color    */
 #define UNFOCUS         "#444444" /* unfocused window border color  */
 #define MINWSZ          50        /* minimum window size in pixels  */

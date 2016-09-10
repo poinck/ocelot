@@ -53,9 +53,7 @@ static const AppRule rules[] = { \
  * must always end with ', NULL };'
  */
 static const char *termcmd[] = { "oterminal", NULL };
-/* dmenu_run -b -nb "#292929" -nf "#bbbbbb" -sf "#292929" -sb "#4ad6d3" -fn "monospace:bold:size=10" */
-static const char *menucmd[] = { "dmenu_run", "-b", "-nb", "#292929", "-nf", "#bbbbbb", "-sf", "#292929", "-sb", "#4ad6d3", "-fn", "monospace:size=10", NULL };
-/* static const char *menucmd[] = { "dmenu_run", "-b", "-sf", "#000000", "-sb", "#ffffff", "-fn", "monospace:size=9", NULL }; */
+static const char *menucmd[] = { "omenu", NULL };
 static const char *lockcmd[] = { "olock", NULL };
 static const char *brupcmd[] = { "obrightness", "up", NULL };
 static const char *brdocmd[] = { "obrightness", "down", NULL };

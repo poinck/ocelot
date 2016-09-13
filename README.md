@@ -23,8 +23,7 @@ Following dependencies are required to get the intended look and feel:
 - *optional* `tmd` to show local temperature, see [tm](https://github.com/poinck/tm)
 
 Things to come (order is priority):
-- lock screen on lid-close (provided as systemd.unit-file)
-- lock screen before hibernate or standby (provided as systemd-unit-file)
+- lock screen on lid-close (provided as systemd.unit-file or something else that might do the trick)
 - take screenshot, using `scrot`
 
 Things *NOT* to come:
@@ -64,16 +63,20 @@ behavior:
 **`~/.ocelotrc` for general settings:**
 See "config/.ocelotrc" for help adjusting the variables.
 
+**Security updates with `oupdates.service`**
+If you use systemd you can check for security-updates every time you resumes from sleep (hibernate); see "config/systemd/system/oupdates.service". Currently only Gentoo GLSA is supported. Syncing the portage-tree has to be done seperately.
+
+**Lock screen with `olock.service`**
+Use "config/systemd/user/olock.service" to lock your screen before your computer goes to sleep (standby).
+
 ### side-panel TODOs
 Things to come (order is priority):
-- `glsa-check` indication for Gentoo-users (as box; between "otmc" and "onet")
 - disk- and swap-usage (ram, swap, `/` and `/home` as graphs; additional status(?) as box; below cpu-temperature-graph)
-- Xinerama-support
-- `thunderbird` notifications for new mail
-- CAPSLOCK-indication
 - support more than just "BAT0" from `/proc/sys`
-- update-indication for `dnf` if you are a Fedora-user
-- update-indication for `pacman` if you are an Arch-user
+- `thunderbird` notifications for new mail
+- update-indication for `yum` if you are a CentOS-user
+- CAPSLOCK-indication
+- Xinerama-support
 
 ### Start ocelot
 Currently I can only describe the option to use `startx`.

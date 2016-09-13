@@ -1,5 +1,5 @@
 #!/bin/bash
 
 vurl=$( youtube-dl -f mp4 -g "$1" )
-omxplayer -o hdmi "$vurl"
+omxplayer -o both "$vurl"
 

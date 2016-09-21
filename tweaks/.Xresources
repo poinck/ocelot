@@ -38,8 +38,8 @@ URxvt.pointerColor: #ffbd00
 
 ! switch font-size ondemand
 URxvt.keysym.M-C-3: command:\033]50;xft:Monospace:pixelsize=13\007
-URxvt.keysym.M-C-4: command:\033]50;xft:Monospace:pixelsize=19\007
-URxvt.keysym.M-C-5: command:\033]50;xft:Monospace:pixelsize=25\007
+URxvt.keysym.M-C-4: command:\033]50;xft:Monospace:pixelsize=20\007
+URxvt.keysym.M-C-5: command:\033]50;xft:Monospace:pixelsize=26\007
 
 ! black
 *color0:  #2E3436

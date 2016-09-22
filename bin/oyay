@@ -1,5 +1,17 @@
 #!/bin/bash
 
-vurl=$( youtube-dl -f mp4 -g "$1" )
+if [[ -f ~/.oyay ]] ; then
+    . ~/.oyay
+    if [[ -n "$oyay" ]] ; then
+        OYAY="$oyay"
+        rm ~/.oyay
+    else
+        OYAY=$1
+    fi
+else
+    OYAY=$1
+fi
+
+vurl=$( youtube-dl -f mp4 -g "$OYAY" )
 omxplayer -o both "$vurl"
 

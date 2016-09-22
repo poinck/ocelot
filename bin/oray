@@ -1,0 +1,6 @@
+#!/bin/bash
+
+#OYAYHOST="localhost"
+
+ssh $OYAYHOST echo 'oyay="$1"' > ~/.oyay
+

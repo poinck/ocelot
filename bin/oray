@@ -1,0 +1,7 @@
+#!/bin/bash
+
+#OYAYHOST="localhost"
+
+echo "sending to oyay host $OYAYHOST"
+ssh $OYAYHOST "echo \"oyay='$1'\" > ~/.oyay"
+

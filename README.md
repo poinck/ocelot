@@ -20,9 +20,13 @@ Following dependencies are required to get the intended look and feel:
 - `xbacklight` to control backlight of your notebook screen
 - `amixer` from alsa to control volume
 - `xrandr` to guess display height
-- *optional* `tmd` to show local temperature, see [tm](https://github.com/poinck/tm)
+
+Following is *optional*:
+- `tmd` to show local temperature, see [tm](https://github.com/poinck/tm)
+- `youtube-dl` and `omxplayer` to use "oyay" to play from video-url supported by youtube-dl on raspberry pi without pre-downloading.
 
 Things to come (order is priority):
+- wrapper using dzen or zenity to play from video-urls supported by youtube-dl on a remote raspberry pi with installed "oyay"
 - lock screen on lid-close (provided as systemd.unit-file or something else that might do the trick)
 - take screenshot, using `scrot`
 
@@ -53,6 +57,7 @@ ln -s /home/$USER/gits/ocelot/bin/oload ~/bin/oload
 ln -s /home/$USER/gits/ocelot/bin/oterminal ~/bin/oterminal
 ln -s /home/$USER/gits/ocelot/bin/omenu ~/bin/omenu
 ln -s /home/$USER/gits/ocelot/bin/oupdates ~/bin/oupdates
+ln -s /home/$USER/gits/ocelot/bin/oyay ~/bin/oyay
 ```
 - additionally you should configure `OCELOT_PATH` in "~/.ocelotrc"
 

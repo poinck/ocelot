@@ -2,5 +2,6 @@
 
 #OYAYHOST="localhost"
 
-ssh $OYAYHOST echo 'oyay="$1"' > ~/.oyay
+echo "[DEBUG] OYAYHOST=$OYAYHOST"
+ssh $OYAYHOST "echo \"oyay='$1'\" > ~/.oyay"
 

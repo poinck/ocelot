@@ -13,13 +13,27 @@
 # ocelot by André Klausnitzer, CC0
 
 OCELOT_PATH=""
+SCALE=1
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
+    if [[ -n "$scale" ]] ; then
+        SCALE="$scale"
+    fi
     if [[ -n "$ocelot_path" ]] ; then
         OCELOT_PATH="$ocelot_path"
     fi
     echo "odesktop.ocelot_path=$OCELOT_PATH"
 fi
+
+# initialize scaling
+_FP=$(( 9*SCALE ))      # font pixels
+_BP=$(( 4*SCALE ))      # border pixels
+_PW=$(( _PW*SCALE ))
+_PLH=$(( _PLH*SCALE ))
+_BI=$(( _PW-(_BP*2) ))  # box inner
+_BTB=$(( 8*SCALE ))     # box border top, bottom and left
+_BTM=$(( _BTB+_BP ))    # box inner top margin
+_TA=$(( 1*SCALE))       # text adjustment
 
 odfifo="/tmp/odesktop.fifo$OCELOT_INSTANCE"
 [[ -p $odfifo ]] || mkfifo -m 600 "$odfifo"
@@ -78,7 +92,7 @@ while read -r desktopReply ; do
             desktopCount_pos=$(( desktopCount-(desktopCount_div*4)-1 ))
             [[ "$desktopCount_pos" -eq -1 ]] && desktopCount_pos=3
 
-            r+="^fg($f)^ib(1)^pa(8;$(( desktopCount_pos*4 )))^r($(( 4*w ))x4)"
+            r+="^fg($f)^ib(1)^pa(${_BTB};$(( desktopCount_pos*_BP )))^r($(( _BP*w ))x${_BP})"
             [[ "$desktopCount_mod" -eq "0" ]] && r+="\n"
         fi
     done

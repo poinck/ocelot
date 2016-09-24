@@ -47,9 +47,6 @@ fi
 
 # initialize scaling
 _FP=$(( 9*SCALE ))      # font pixels
-#if [[ "$SCALE" -eq 2 ]] ; then
-#    _FP=18              # font pixels
-#fi
 _BP=$(( 4*SCALE ))      # border pixels
 _PW=$(( _PW*SCALE ))
 _PLH=$(( _PLH*SCALE ))

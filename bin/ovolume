@@ -10,6 +10,24 @@
 #
 # ocelot by André Klausnitzer, CC0
 
+SCALE=1
+if [[ -f ~/.ocelotrc ]] ; then
+    . ~/.ocelotrc
+    if [[ -n "$scale" ]] ; then
+        SCALE="$scale"
+    fi
+fi
+
+# initialize scaling
+#_FP=$(( 9*SCALE ))      # font pixels
+#_BP=$(( 4*SCALE ))      # border pixels
+#_PW=$(( _PW*SCALE ))
+#_PLH=$(( _PLH*SCALE ))
+#_BI=$(( _PW-(_BP*2) ))  # box inner
+#_BTB=$(( 8*SCALE ))     # box border top, bottom and left
+#_BTM=$(( _BTB+_BP ))    # box inner top margin
+#_TA=$(( 1*SCALE))       # text adjustment
+
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 
 if [[ "$1" == "up" ]] ; then
@@ -23,7 +41,7 @@ _tmp2_mavo=${_tmp_master_volume#*[}
 omixer_master_volume=${_tmp2_mavo%%%]*}
 echo "[DEBUG] omixer_master_volume = $omixer_master_volume"
 # 75-16-4=55
-ovolume_pixel=$(( omixer_master_volume*55/100 ))
+ovolume_pixel=$(( omixer_master_volume*55*SCALE/100 ))
 
 volume="ovolume:=$ovolume_pixel"
 echo "[DEBUG] $volume"

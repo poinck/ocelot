@@ -16,5 +16,5 @@ else
 fi
 
 vurl=$( youtube-dl -f mp4 -g "$OYAY" )
-omxplayer -o both "$vurl"
+omxplayer -b -o both "$vurl"
 

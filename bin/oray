@@ -1,7 +1,15 @@
 #!/bin/bash
 
-#OYAYHOST="localhost"
+# load user settings, if any
+OYAYHOST="localhost"
+if [[ -f ~/.ocelotrc ]] ; then
+    . ~/.ocelotrc
+    if [[ -n "$oyay_host" ]] ; then
+        OYAYHOST="$oyay_host"
+    fi
+fi
 
-echo "sending to oyay host $OYAYHOST"
+echo -n "sending to oyay host $OYAYHOST .. "
 ssh $OYAYHOST "echo \"oyay='$1'\" > ~/.oyay"
+echo "sent"
 

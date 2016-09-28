@@ -29,3 +29,7 @@ ocelot_path="/home/username/gits/ocelot/"
 # scale side-panel, terminal and menu
 # default: 1
 #scale=2
+
+# send video urls to oyay_host with "oray"
+#oyay_host="localhost"
+

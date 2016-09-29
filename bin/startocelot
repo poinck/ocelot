@@ -27,13 +27,6 @@ if [[ -f ~/.ocelotrc ]] ; then
         echo "wallpaper not set, setting default wallpaper"
         xsetbg "${OCELOT_PATH}desktop.png"
     fi
-    if [[ -n "$lockscreen_timeout" ]] ; then
-        echo "[DEBUG] lockscreen_timeout = $lockscreen_timeout"
-        xautolock -time $lockscreen_timeout -locker "olock" &
-    else
-        # use autolocks defaults to lock screen (after 10 minutes)
-        xautolock -locker "olock" &
-    fi
 else
     echo "~/.ocelotrc does not exist"
 fi
@@ -45,12 +38,16 @@ fi
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
 
+# start screen locker
+${OCELOT_PATH}bin/olocker
+
 # start side-panel (in backgroud)
 ${OCELOT_PATH}bin/ocollector &
 sleep 1
 
 # start ocelot side-panel elements (in background)
 ${OCELOT_PATH}bin/otime &
+sleep 1
 ${OCELOT_PATH}bin/oload &
 ${OCELOT_PATH}bin/obattery &
 ${OCELOT_PATH}bin/oupdates &

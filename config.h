@@ -59,6 +59,8 @@ static const char *brupcmd[] = { "obrightness", "up", NULL };
 static const char *brdocmd[] = { "obrightness", "down", NULL };
 static const char *voupcmd[] = { "ovolume", "up", NULL };
 static const char *vodocmd[] = { "ovolume", "down", NULL };
+static const char *loencmd[] = { "olocker", "enable", NULL };
+static const char *lodicmd[] = { "olocker", "disable", NULL };
 
 #define DESKTOPCHANGE(K,N) \
     {  MOD4,             K,              change_desktop, {.i = N}}, \
@@ -101,6 +103,8 @@ static Key keys[] = {
     {  MOD4|SHIFT,       XK_Return,     spawn,             {.com = termcmd}},
     {  MOD1,             XK_F2,         spawn,             {.com = menucmd}},
     {  MOD4,             XK_l,          spawn,             {.com = lockcmd}},
+    {  MOD4|SHIFT,       XK_l,          spawn,             {.com = loencmd}},
+    {  MOD4|CONTROL,     XK_l,          spawn,             {.com = lodicmd}},
     {  MOD4,             XK_s,          moveresize,        {.v = (int []){   0,  25,   0,   0 }}}, /* move down  */
     {  MOD4,             XK_w,          moveresize,        {.v = (int []){   0, -25,   0,   0 }}}, /* move up    */
     {  MOD4,             XK_d,          moveresize,        {.v = (int []){  25,   0,   0,   0 }}}, /* move right */

@@ -1,0 +1,49 @@
+#!/bin/bash
+#
+# olocker configures xautolock: start, disable, enable, notify
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
+
+LOCKSCREEN_TIMEOUT=10
+if [[ -f ~/.ocelotrc ]] ; then
+    . ~/.ocelotrc
+    if [[ -n "$lockscreen_timeout" ]] ; then
+        echo "[DEBUG] lockscreen_timeout = $lockscreen_timeout"
+        LOCKSCREEN_TIMEOUT=$lockscreen_timeout
+    fi
+fi
+
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
+
+backgroundc="#1c1c1c"   # panel background color
+outlinec="#ff9500"      # orange
+fillc="#885300"         # orange
+olocker=""
+if [[ "$1" == "disable" ]] ; then
+    xautolock -disable
+    olocker="^fg($backgroundc)NO LOCK;;$outlinec--$outlinec"
+elif [[ "$1" == "enable" ]] ; then
+    xautolock -enable
+    olocker="^fg($backgroundc);;$backgroundc--$backgroundc"
+elif [[ "$1" == "notify" ]] ; then
+    for i in 9 8 7 6 5 4 3 2 1 ; do
+        olocker="^fg(#ffffff)LOCK: $i;;$outlinec--$fillc"
+        echo "olocker:=$olocker" > "$ofifo"
+        sleep 1
+    done
+    olocker="^fg($backgroundc);;$backgroundc--$backgroundc"
+else
+    # default: start xautolock
+    xautolock -time $lockscreen_timeout -locker "olock" -notifier "olocker notify" -notify 10 &
+fi
+
+if [[ -n "$olocker" ]] ; then
+    echo "olocker:=$olocker" > "$ofifo"
+    echo "[DEBUG] olocker:=$olocker"
+fi

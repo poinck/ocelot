@@ -100,6 +100,8 @@ updates_box_outline=$pbc
 updates_box_fill=$pbc
 net_box_outline=$pbc
 net_box_fill=$pbc
+locker_box_outline=$pbc
+locker_box_fill=$pbc
 test_boxOutline=$pbc
 test_boxFill=$pbc
 
@@ -163,6 +165,12 @@ while read -r reply ; do
         onet_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
         net_box_outline=$boxOutline
         net_box_fill=$boxFill
+    elif [[ "$replyType" == "olocker" ]] ; then
+        olocker_start="$( get_box_seperator "$pbc" "$pbc" "$boxOutline" "$boxFill" )"
+        olocker_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
+        olocker_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
+        locker_box_outline=$boxOutline
+        locker_box_fill=$boxFill
     fi
 
     # "otime" has to be the first replyType, because it clears all lines of
@@ -179,6 +187,7 @@ while read -r reply ; do
     echo -en "$( get_box_seperator "$updates_box_outline" "$updates_box_fill" "$net_box_outline" "$net_box_fill" )"
     echo -en "${onet_inner}${onet_end}"
     echo -e "$ostatus2"
+    echo -en "${olocker_start}${olocker_inner}${olocker_end}"
         # TODO  add "odisks" to monitor free space on / /home and /var
 
     # test

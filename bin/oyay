@@ -1,20 +1,28 @@
 #!/bin/bash
 
-if [[ -f ~/.oyay ]] ; then
+if [[ -n "$1" ]] ; then
+    OYAY=$1
+    echo "play: '$OYAY'"
+elif [[ -f ~/.oyay ]] ; then
     . ~/.oyay
     if [[ -n "$oyay" ]] ; then
         OYAY="$oyay"
-        echo "using url from oray: '$OYAY'"
+        echo "play url from oray: '$OYAY'"
         rm ~/.oyay
     else
-        echo "fall back to first argument"
-        OYAY=$1
+        echo "cannot load url provided from oray"
+        echo "usage: \"oray URL\""
     fi
 else
-    OYAY=$1
-    echo "play '$OYAY'"
+    echo "please provide url as parameter or use oray from a remote system"
+    echo "usage: \"oyay URL\" or \"oray URL\""
 fi
 
-vurl=$( youtube-dl -f mp4 -g "$OYAY" )
-omxplayer -b -o both "$vurl"
+if [[ -n "$OYAY" ]] ; then
+    vurl=$( youtube-dl -f mp4 -g "$OYAY" )
+
+    # start omxplayer with black background and audio output on hdmi and
+    # analog jack
+    omxplayer -b -o both "$vurl"
+fi
 

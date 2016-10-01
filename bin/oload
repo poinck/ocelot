@@ -11,6 +11,24 @@
 #
 # ocelot by André Klausnitzer, CC0
 
+SCALE=1
+if [[ -f ~/.ocelotrc ]] ; then
+    . ~/.ocelotrc
+    if [[ -n "$scale" ]] ; then
+        SCALE="$scale"
+    fi
+fi
+
+# initialize scaling
+_FP=$(( 9*SCALE ))      # font pixels
+_BP=$(( 4*SCALE ))      # border pixels
+_PW=$(( _PW*SCALE ))
+_PLH=$(( _PLH*SCALE ))
+_BI=$(( _PW-(_BP*2) ))  # box inner
+_BTB=$(( 8*SCALE ))     # box border top, bottom and left
+_BTM=$(( _BTB+_BP ))    # box inner top margin
+_TA=$(( 1*SCALE))       # text adjustment
+
 remove_leading_zeros() {
     local s="$1"
     local number=0
@@ -43,17 +61,18 @@ get_uptime() {
         fi
     done
 
+    too_much_pixel=$(( 59*SCALE ))
     too_much_uptime=0
-    uptime_pixel=$(( _tmp_uptime/60/60/24/2 ))
-    [[ "$uptime_pixel" -gt 59 ]] && uptime_pixel=59 too_much_uptime=1
+    uptime_pixel=$(( _tmp_uptime/60/60/24/2*SCALE ))
+    [[ "$uptime_pixel" -gt "$too_much_pixel" ]] && uptime_pixel=$too_much_pixel too_much_uptime=1
     too_much_idletime=0
-    idle_pixel=$(( _tmp_idletime/60/60/24/2 ))
-    [[ "$idle_pixel" -gt 59 ]] && idle_pixel=59 too_much_idletime=1
+    idle_pixel=$(( _tmp_idletime/60/60/24/2*SCALE ))
+    [[ "$idle_pixel" -gt "$too_much_pixel" ]] && idle_pixel=$too_much_pixel too_much_idletime=1
 
-    uptime_content="^ib(1)^pa(8;8)^fg(#ffffff)^r(${uptime_pixel}x4)"
-    uptime_content+="^ib(1)^pa(8;8)^fg(#808080)^r(${idle_pixel}x4)"
+    uptime_content="^ib(1)^pa(${_BTB};${_BTB})^fg(#ffffff)^r(${uptime_pixel}x${_BP})"
+    uptime_content+="^ib(1)^pa(${_BTB};${_BTB})^fg(#808080)^r(${idle_pixel}x${_BP})"
     if [[ "$too_much_uptime" -eq 1 ]] || [[ "$too_much_idletime" -eq 1 ]] ; then
-        uptime_content+="^ib(1)^pa(59;4)^fg(#292929)^r(4x4)"
+        uptime_content+="^ib(1)^pa(${too_much_pixel};${_BP})^fg(#292929)^r(${_BP}x${_BP})"
     fi
 }
 
@@ -89,17 +108,17 @@ get_load() {
     load1=$( remove_leading_zeros "$load1" )
     load5=$( remove_leading_zeros "$load5" )
     load15=$( remove_leading_zeros "$load15" )
-    load1_pixel=$(( load1*59/load_max ))
-    load5_pixel=$(( load5*59/load_max ))
-    load15_pixel=$(( load15*59/load_max ))
+    load1_pixel=$(( load1*59*SCALE/load_max ))
+    load5_pixel=$(( load5*59*SCALE/load_max ))
+    load15_pixel=$(( load15*59*SCALE/load_max ))
     [[ "$load1" -gt "$load_warning" ]] && color1="#ffeb00" || color1="#008000"
     [[ "$load5" -gt "$load_warning" ]] && color5="#ff9600" || color5="#529c00"
     [[ "$load15" -gt "$load_warning" ]] && color15="#ff0000" || color15="#b5d400"
 
     #echo "[DEBUG] $load1,$load1_pixel $load5,$load5_pixel $load15,$load15_pixel $load_max"
-    content="^ib(1)^pa(8;12)^fg($color1)^r(${load1_pixel}x4)"
-    content+="^ib(1)^pa(8;12)^fg($color5)^r(${load5_pixel}x4)"
-    content+="^ib(1)^pa(8;12)^fg($color15)^r(${load15_pixel}x4)"
+    content="^ib(1)^pa(${_BTB};${_BTM})^fg($color1)^r(${load1_pixel}x${_BP})"
+    content+="^ib(1)^pa(${_BTB};${_BTM})^fg($color5)^r(${load5_pixel}x${_BP})"
+    content+="^ib(1)^pa(${_BTB};${_BTM})^fg($color15)^r(${load15_pixel}x${_BP})"
 }
 
 # add new traffic measurement, remove last know measurement and get average of all
@@ -160,22 +179,23 @@ get_traffic() {
 
     all_the_traffics "$rx_pixel"
     echo "[DEBUG] rx_bytes_diff = $rx_bytes_diff, tx_bytes_diff = $tx_bytes_diff; $rx_max_pixel $tx_pixel"
-    if [[ "$rx_max_pixel" -lt 5 ]] ; then
+    pixel_high=$(( (4*SCALE)+1 ))
+    if [[ "$rx_max_pixel" -lt "$pixel_high" ]] ; then
         rx_max_pixel_high=$rx_max_pixel
         rx_max_pixel=0
     else
-        rx_max_pixel_high=4
-        rx_max_pixel=$(( rx_max_pixel-4 ))
+        rx_max_pixel_high=$(( 4*SCALE ))
+        rx_max_pixel=$(( rx_max_pixel-(4*SCALE) ))
     fi
-    if [[ "$tx_pixel" -lt 5 ]] ; then
+    if [[ "$tx_pixel" -lt "$pixel_high" ]] ; then
         tx_pixel_high=$tx_pixel
         tx_pixel=0
     else
-        tx_pixel_high=4
-        tx_pixel=$(( tx_pixel-4 ))
+        tx_pixel_high=$(( 4*SCALE ))
+        tx_pixel=$(( tx_pixel-(4*SCALE) ))
     fi
-    traffic_content="^ib(1)^pa(8;0)^fg(#267372)^r(${rx_max_pixel}x4)^fg(#4ad6d3)^r(${rx_max_pixel_high}x4)"
-    traffic_content+="^ib(1)^pa(8;4)^fg(#886066)^r(${tx_pixel}x4)^fg(#ffc0cb)^r(${tx_pixel_high}x4)"
+    traffic_content="^ib(1)^pa(${_BTB};0)^fg(#267372)^r(${rx_max_pixel}x${_BP})^fg(#4ad6d3)^r(${rx_max_pixel_high}x${_BP})"
+    traffic_content+="^ib(1)^pa(${_BTB};${_BP})^fg(#886066)^r(${tx_pixel}x${_BP})^fg(#ffc0cb)^r(${tx_pixel_high}x${_BP})"
 }
 
 get_temp() {
@@ -183,7 +203,7 @@ get_temp() {
     current_cpu_temp=$( cat /sys/class/thermal/thermal_zone0/temp )
 
     if [[ "$current_cpu_temp" -gt 85000 ]] ; then
-        cpu_temp=$(( (current_cpu_temp-85000)*55/(max_cpu_temp-85000) ))
+        cpu_temp=$(( (current_cpu_temp-85000)*55*SCALE/(max_cpu_temp-85000) ))
         cpu_temp_color="#aa1111"
         cpu_temp_color_high="#ff2222"
     else
@@ -191,7 +211,7 @@ get_temp() {
         cpu_temp_color="#292929"
         cpu_temp_color_high="#292929"
     fi
-    cpu_temp_content="^ib(1)^pa(8;12)^fg(${cpu_temp_color})^r(${cpu_temp}x4)^fg(${cpu_temp_color_high})^r(4x4)"
+    cpu_temp_content="^ib(1)^pa(${_BTB};${_BTM})^fg(${cpu_temp_color})^r(${cpu_temp}x${_BP})^fg(${cpu_temp_color_high})^r(${_BP}x${_BP})"
 }
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"

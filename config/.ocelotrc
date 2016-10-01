@@ -33,3 +33,5 @@ ocelot_path="/home/username/gits/ocelot/"
 # send video urls to oyay_host with "oray"
 #oyay_host="localhost"
 
+# change volume master, default: "Master"
+#volume_master="PCM"

@@ -40,7 +40,7 @@ elif [[ "$1" == "notify" ]] ; then
     olocker="^fg($backgroundc);;$backgroundc--$backgroundc"
 else
     # default: start xautolock
-    xautolock -time $lockscreen_timeout -locker "olock" -notifier "olocker notify" -notify 10 &
+    xautolock -time $LOCKSCREEN_TIMEOUT -locker "olock" -notifier "olocker notify" -notify 10 &
 fi
 
 if [[ -n "$olocker" ]] ; then

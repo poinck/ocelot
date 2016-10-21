@@ -26,7 +26,6 @@ Following is *optional*:
 - `youtube-dl` and `omxplayer` to use "oyay" to play from video-url supported by youtube-dl on raspberry pi without pre-downloading.
 
 Things to come (order is priority):
-- wrapper using dzen or zenity to play from video-urls supported by youtube-dl on a remote raspberry pi with installed "oyay"
 - lock screen on lid-close (provided as systemd.unit-file or something else that might do the trick)
 - take screenshot, using `scrot`
 

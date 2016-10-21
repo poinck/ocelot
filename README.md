@@ -33,7 +33,7 @@ Things *NOT* to come:
 - Powermanagement: please use your existing setup; ocelot should have no impact on it.
 - save session and restore open application, etc: please use hibernate (suspend to disk) or standby (suspend).
 
-## Compile
+## Clone, Configure and Compile
 ```.sh
 cd /home/$USER
 mkdir gits
@@ -74,7 +74,7 @@ behavior:
 See "config/.ocelotrc" for help adjusting the variables.
 
 **Security updates with `oupdates.service`**
-If you use systemd you can check for security-updates every time you resumes from sleep (hibernate); see "config/systemd/system/oupdates.service". Currently only Gentoo GLSA is supported. Syncing the portage-tree has to be done seperately.
+If you use systemd you can check for security-updates every time the computer resumes from sleep (hibernate); see "config/systemd/system/oupdates.service". Currently only Gentoo GLSA is supported. Syncing the portage-tree has to be done seperately.
 
 **Lock screen with `olock.service`**
 Use "config/systemd/user/olock.service" to lock your screen before your computer goes to sleep (standby).

@@ -114,8 +114,8 @@ Many thanks go to the Gentoo- and Arch-wiki:
 
 **tweaks you can put in `~/.xinitrc`:**
 Copy paste from "tweaks/.xinitrc" for following:
-- natural scrolling
-- disable right-click on touchpad
+- natural scrolling (for synaptics and libxinput)
+- disable right-click on touchpad (for synaptics and libxinput)
 - load different ICC-profile from colord
 
 **better reading with `~/.Xresources`:**
@@ -130,6 +130,8 @@ How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs 
 - **switch desktop with windows** SUPER+SHIFT+LEFT|RIGHT, SUPER+SHIFT+UP|DOWN
 - **switch to last desktop** SUPER+TAB
 - **lock screen** SUPER+l
+- **disable screen locker** SUPER+CTRL+l
+- **enable screen locker** SUPER+SHIFT+l
 - **move window** SUPER+w|a|s|d
 - **resize window** SUPER+SHIFT+w|a|s|d, ALT+MOUSE_RIGHT+MOUSE_MOVE
 - **choose as new primary window** SUPER+ENTER

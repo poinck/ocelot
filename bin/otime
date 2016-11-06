@@ -31,7 +31,7 @@ _TA=$(( 1*SCALE))       # text adjustment
 
 otime_content=""
 get_otime() {
-    year_left_margin=$(( SCALE*24 ))
+    year_left_margin=$(( SCALE*23 ))
     time_left_margin=$(( SCALE*20 ))
     hour=$(date '+%-H')
 
@@ -39,7 +39,7 @@ get_otime() {
     #hour="1"
 
     if [[ "$hour" -lt 10 ]] ; then
-        time_left_margin=$(( SCALE*24 ))
+        time_left_margin=$(( SCALE*23 ))
     fi
     otime1_content="otime1:=\n^pa(${time_left_margin};0)^fg(#ffffff)${hour}:$(date '+%M')"
     otime_content="otime:=^fg(#ffffff)$(date '+%a,') ^fg(#729fcf)$(date '+W%-W')==^fg(#ffffff)$(date '+%_d.') ^fg(#729fcf)$(date '+%b');;#173252--#173252" # #3465a4 #173252

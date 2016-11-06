@@ -31,8 +31,19 @@ _TA=$(( 1*SCALE))       # text adjustment
 
 otime_content=""
 get_otime() {
-    #otime_content="otime:=^pa(0;${_BP}) ^fg(#ffffff)$(date '+%a,') ^fg()$(date '+W%-W')\n^p1()\n ^fg(#ffffff)$(date '+%-H:%M')\n^pa(0;0) $(date '+%-d. %b')"
-    otime_content="otime:=\n^pa(0;${_BP}) ^fg(#ffffff)$(date '+%a,') ^fg()$(date '+W%-W')\n ^fg(#ffffff)$(date '+%-H:%M')\n^pa(0;0) $(date '+%-d. %b')"
+    year_left_margin=$(( SCALE*24 ))
+    time_left_margin=$(( SCALE*20 ))
+    hour=$(date '+%-H')
+
+    # test
+    #hour="1"
+
+    if [[ "$hour" -lt 10 ]] ; then
+        time_left_margin=$(( SCALE*24 ))
+    fi
+    otime1_content="otime1:=\n^pa(${time_left_margin};0)^fg(#ffffff)${hour}:$(date '+%M')"
+    otime_content="otime:=^fg(#ffffff)$(date '+%a,') ^fg(#729fcf)$(date '+W%-W')==^fg(#ffffff)$(date '+%_d.') ^fg(#729fcf)$(date '+%b');;#173252--#173252" # #3465a4 #173252
+    otime2_content="otime2:=^pa(${year_left_margin};0)^fg(#3465a4)$(date '+%Y')"
 }
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
@@ -42,6 +53,8 @@ while true ; do
     # debug
     # echo "$otime_content"
 
+    echo "$otime1_content" > "$ofifo"
     echo "$otime_content" > "$ofifo"
+    echo "$otime2_content" > "$ofifo"
     sleep 15
 done

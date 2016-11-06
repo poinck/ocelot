@@ -131,6 +131,7 @@ locker_box_outline=$pbc
 locker_box_fill=$pbc
 test_boxOutline=$pbc
 test_boxFill=$pbc
+titlewindow_set=0
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
@@ -200,9 +201,14 @@ while read -r reply ; do
         locker_box_fill=$boxFill
     fi
 
-    # "otime" has to be the first replyType, because it clears all lines of
-    # the child-window
-    echo -e "^tw()$otime"
+    # print out title window (will not be updated again)
+    if [[ "$titlewindow_set" -eq 0 ]] ; then
+        echo -e "^tw()    .."
+        titlewindow_set=1
+    fi
+
+    # print out child window
+    echo -e "^p1()$otime"
     echo -e "$ostatus"
     echo -e "$odesktop"
     echo -e "$odesktops"
@@ -221,6 +227,6 @@ while read -r reply ; do
     #echo -en "$( get_box_seperator "$tmc_boxOutline" "$tmc_boxFill" "$test_boxOutline" "$test_boxFill" )"
     #echo -en "${otest_inner}${otest_end}"
 
-    echo "^fg() "  # blank last line to avoid artifacts
+    echo "^fg() "  # blank last line to clear old content
 done | ocelot-dzen -p -l "$PANEL_LINE_COUNT" -h "${_PLH}" -ta l -w "${_PW}" -fn "monospace:bold:size=${_FP}" -e 'onstart=uncollapse' -bg "$pbc"
 

@@ -54,7 +54,7 @@ _BI=$(( _PW-(_BP*2) ))  # box inner
 _BTB=$(( 8*SCALE ))     # box border top, bottom and left
 _BTM=$(( _BTB+_BP ))    # box inner top margin
 _TA=$(( 1*SCALE ))      # text adjustment
-_TC=$(( (5*SCALE)+_BTB )) # center text
+_TC=$(( (4*SCALE)+_BTB )) # center text
 
 get_box() {
     outline=$1

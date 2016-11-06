@@ -54,7 +54,7 @@ _BI=$(( _PW-(_BP*2) ))  # box inner
 _BTB=$(( 8*SCALE ))     # box border top, bottom and left
 _BTM=$(( _BTB+_BP ))    # box inner top margin
 _TA=$(( 1*SCALE ))      # text adjustment
-_TC=$(( (3*SCALE)+_BTB )) # center text
+_TC=$(( (5*SCALE)+_BTB )) # center text
 
 get_box() {
     outline=$1
@@ -75,7 +75,7 @@ get_box_inner() {
 
     hasSecond=$( echo "$content" | grep "==" )
     if [[ -z "$hasSecond" ]] ; then
-        box="^fg($outline)^r(${_PW}x${_PLH})^fg($fill)^ib(1)^pa(${_BP})^r(${_BI}x${_PLH})^pa(${_BTB};${_TA})$content\n"
+        box="^fg($outline)^r(${_PW}x${_PLH})^fg($fill)^ib(1)^pa(${_BP})^r(${_BI}x${_PLH})^pa(${_TC};${_TA})$content\n"
     else
         _tmpContentFirst=${content%%==*} # first
         _tmpContent=${content#*==} # second

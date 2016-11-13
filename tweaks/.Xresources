@@ -8,33 +8,72 @@
 ! +-------+
 
 !-*-{ Xft settings
-Xft*dpi:       96
-Xft*antialias: True
-Xft*hinting:   Full
+
+!Xcursor.theme: Bridge
+!Xcursor.size: 22
+
+Xft.dpi:        96
+Xft.antialias:  true
+Xft.rgba:       rgb
+Xft.hinting:    true
+Xft.hintstyle:  hintslight
+Xft.autohint:   false
+Xft.lcdfilter:  lcddefault
 !-*-}
 
 
 !-*- Perl extensions -*-
-URxvt.perl-ext-common:default,clipboard,matcher,keyboard-select
+URxvt.perl-ext-common:default,selection-to-clipboard,pasta,matcher,keyboard-select
 URxvt.keysym.M-u:     perl:url-select:select_next
 URxvt.url-launcher:   /usr/bin/firefox -P poinck
 URxvt.underlineURLs:  False
 URxvt.matcher.button: 1
 URxvt.keysym.M-Escape:perl:keyboard-select:activate
-URxvt.keysym.M-c:     perl:clipboard:copy
-URxvt.keysym.M-v:     perl:clipboard:paste
-URxvt.keysym.M-C-v:   perl:clipboard:paste_escaped
+URxvt.keysym.M-v:     perl:pasta:paste
+URxvt.keysym.Control-Shift-X: perl:man:topdf
 !URxvt.copyCommand:   xsel -ib
 !URxvt.pasteCommand:  xsel -ob
 !Comment this if you dont want copy when text is selected
 URxvt.clipboard.autocopy: true
 
+! -*- urxvt conf -*-
 ! blinky orange cursor and content margin
 URxvt.cursorColor: #ffbd00
 URxvt.cursorBlink: true
 Urxvt.cursorUnderline: false
 URxvt.pointerColor: #ffbd00
 !Urxvt.pointerColor2: #ff0000
+!URxvt.buffered                  : true
+!URxvt.cursorBlink               : false
+!URxvt.cursorUnderline           : false
+!URxvt.pointerBlank              : false
+!URxvt.geometry                  : 80x24
+!URxvt.font                      : xft:DejaVu Sans Mono:bold:pixelsize=11
+!URxvt.boldfont                  : xft:DejaVu Sans Mono:bold:pixelsize=11
+!URxvt.letterSpace               : -1
+!URxvt.termName                  : rxvt-256color
+!URxvt.iso14755                  : false
+!URxvt.iso14755_52               : false
+!URxvt.cursorColor               : #ffffff
+!URxvt.colorIT                   : #87af5f
+!URxvt.colorBD                   : #d7d7d7
+!URxvt.colorUL                   : #87afd7
+!URxvt.urgentOnBell              : false
+!URxvt.mapAlert                  : false
+!URxvt.visualBell                : false
+!URxvt.saveLines                 : 10000
+!URxvt.scrollBar                 : false
+!URxvt.scrollBar_right           : false
+!URxvt.scrollBar_floating        : false
+!URxvt.scrollstyle               : rxvt
+!URxvt.Depth                     : 32
+!URxvt.loginShell                : false
+!URxvt.insecure                  : false
+!URxvt.pastableTabs              : false
+!URxvt.utmpInhibit               : false
+!URxvt.reverseVideo              : false
+!URxvt.skipBuiltinGlyphs         : true
+
 
 ! switch font-size ondemand
 URxvt.keysym.M-C-3: command:\033]50;xft:Monospace:pixelsize=13\007
@@ -75,3 +114,19 @@ URxvt.keysym.M-C-5: command:\033]50;xft:Monospace:pixelsize=26\007
 *color7:  #babdb9
 *color15: #EEEEEC
 
+! -*- xterm conf -*-
+!XTerm.vt100.geometry:   80x24
+!XTerm*faceName:     DejaVu Sans Book
+!XTerm*faceSize:     9
+!XTerm*toolBar:      off
+!xterm*termName: xterm-256color
+!XTerm*locale: true
+!xterm*cursorColor: #FFFFFF
+!xterm*toolBar: false
+!xterm*scrollBar: false
+!xterm*rightScrollBar: false
+!xterm*background: #222222
+!xterm*foreground: #999999
+!xterm*faceName: DejaVu Sans Book:pixelsize=12
+!xterm*allowBoldFonts: false
+!xterm*geometry: 80x24

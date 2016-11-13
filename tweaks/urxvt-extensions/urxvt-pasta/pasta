@@ -1,0 +1,23 @@
+#!/usr/bin/env perl
+# Author:   Aaron Caffrey
+# Website:  https://notabug.org/void0/urxvt-pasta
+# License:  GPLv3
+
+# Usage: put the following lines in your .Xdefaults/.Xresources:
+# URxvt.perl-ext-common           : selection-to-clipboard,pasta
+# URxvt.keysym.Control-Shift-V    : perl:pasta:paste
+
+# Universal pasting in XMonad:
+# import XMonad.Util.Paste 
+# , ((mod4Mask , xK_v), pasteSelection) 
+
+use strict;
+use warnings;
+
+sub on_user_command {
+  my ($self, $cmd) = @_;
+  if ($cmd eq "pasta:paste") {
+    $self->selection_request (urxvt::CurrentTime, 3);
+  }
+  return;
+}

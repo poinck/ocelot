@@ -1,0 +1,182 @@
+#------------------------------------------------
+# Keep all the backdoors, trojans and so on
+# in the dungeon here. Eventually, some of them
+# might slip away one day.
+#------------------------------------------------
+
+
+# install/remove virtualbox with normal/grsecurity kernel
+#vb() {
+#  local vb_conf=/etc/modules-load.d/virtualbox.conf
+#  case $1 in
+#    install) local vb_action=S grsec_action=R
+#              __WriteTo "${vb_conf}" "vboxdrv\nvboxnetflt\nvboxnetadp" ;;
+#    remove)  local vb_action=R grsec_action=S   ;;
+#    *)
+#  esac
+#  "${vb_action}" virtualbox virtualbox-host-modules linux linux-headers
+#  "${grsec_action}" linux-grsec grsec-common
+#  sudo grub-mkconfig --output /boot/grub/grub.cfg
+#}
+
+
+# This function is replaced by `netup' in network.zsh
+# Set fake MAC and remove the IPv6 address
+# from my primary network card interface
+#antispoofing() {
+#    local inft='enp2s0'
+#    local v6addr=`ifconfig | gawk '/inet6/ {print $2;exit}'`
+
+#    sudo ifconfig ${inft} hw ether 0A:A0:04:D4:AA:12
+#    sudo ifconfig ${inft} inet6 del ${v6addr}/64
+#;}
+
+# Convert `info' document to html
+# TODO: Implement better solution
+# that doesn't include:
+# 'markdown, groff, gs, asciidoc'
+
+#infof() {
+  #gunzip --to-stdout /usr/share/info/$1.info*.gz \
+  #  >> "/tmp/$1_doc.txt"
+#}
+
+
+#del6() {
+#    local v6addr=`ifconfig | gawk '/inet6/ {print $2;exit}'`
+#    sudo ifconfig enp2s0 inet6 del ${v6addr}/64
+#;}
+
+
+# allow only certain IP to SSH
+# iptables -A INPUT -p tcp --dport 22 -s 1.2.3.4 -j ACCEPT
+# iptables -A INPUT -p tcp --dport 22 -j DROP
+#
+# TransPort 9040
+# iptables -t nat -A OUTPUT -p tcp -j REDIRECT --to-port 9040
+
+
+# The function is not meant to be used every
+# single day, so if any system failure
+# occurs, feel free to `source' this file and
+# run the function interactively
+# `errs' (misc.zsh) is not included.
+WHATFAILED() {
+
+    set -A outpuTtT
+
+    _AdD() { outpuTtT+=\
+"#----------------------------------------------------------------
+# \033[1;95m$1\033[0m
+#----------------------------------------------------------------
+\n$2\n\n\n\n\n\n" }
+
+    # _AdD "Quering systemd to get the last boot log"\
+    #        "$(systemd-analyze --system)\n\n$(journalctl --boot)"
+
+    _AdD "Listing error and warning messages\
+ from the kernel ring buffer"\
+           "$(dmesg --color=always --level=err,warn)"
+
+    # _AdD "All coredumps/segmentation faults"\
+    #        "$(coredumpctl info)"
+
+    # If there was security breach
+    # you'll find the prick below.
+    _AdD "Login, reboot, shutdown records"\
+           "$(utmpdump /var/log/wtmp 2>&1)"
+
+    # _AdD "gvfs metadata database"\
+    #        "$(for x in \
+    #          $XDG_DATA_HOME/gvfs-metadata/home.* \
+    #          $XDG_DATA_HOME/gvfs-metadata/root; \
+    #            do utmpdump $x 2>&1;done)"
+
+    _AdD "Kernel modules" "$(lsmod)"
+
+    _AdD "Kernel parameters" "$(sysctl --all 2>&1)"
+
+    printf "%b\n" "${outpuTtT[@]}" | less -j4aR
+
+}
+
+
+# To get all boot logs since the day
+# you've installed your distro:
+# journalctl --system > all_boot_logs.txt
+
+
+# Use the following to find the bottlenecks
+# while booting. SVG image will be created.
+# systemd-analyze plot > systemd.svg
+
+
+# Fix the metadata leaks, some of your
+# programs won't be able to "remember" anymore
+#fixleaks() {
+#    local XbeL="$XDG_DATA_HOME/recently-used.xbel"
+#    local gvfs_metaF="$XDG_DATA_HOME/gvfs-metadata"
+#
+#    rm -rf ${gvfs_metaF}
+#    echo '' > ${Xbel}
+#
+#    mkdir --mode=700 ${gvfs_metaF}
+#    chmod 600 ${Xbel}
+#
+#    sudo chattr +i ${gvfs_metaF}
+#    sudo chattr +i ${Xbel}
+#;}
+# rebuild1() { __emerge --ask --update --newuse --deep '@world' ;}
+# rebuild2() { __emerge --ask --update --changed-use --deep '@world' ;}
+
+# gentoo.zsh
+# __do_some_magick "${the_packs}" cat "${the_packs}"
+#
+# __do_some_magick() {
+#     local the_packs="$1"
+#     shift
+#     $@ | \
+#         gawk '{
+#                 if ("" != $2) {
+#                     print $0
+#                 }
+#             }' \
+#                 | sudo tee "${the_packs}" > /dev/null
+# ;}
+
+
+# some experiments with the gentoo.zsh caching
+# __egenzazhe() {
+#     sudo egencache --jobs=$(nproc) --repo=gentoo --update --update-use-local-desc
+# }
+# Generate a new metadata cache
+# regen() {
+#     cd '/tmp'
+#     git clone --depth=1 'git@github.com:gentoo-mirror/gentoo.git' 'meta'
+#     sudo cp -r 'meta/metadata' '/usr/portage/metadata'
+#     __egenzazhe
+# }
+#
+
+# gentoo.zsh
+# insertallpackswithuseflags
+#
+# 'abi_x86_64'
+# 'elibc_glibc'
+# 'kernel_linux'
+# 'input_devices_evdev'
+# 'linguas_en'
+# 'userland_GNU'
+## Without using regex
+# 'video_cards_'{r600,radeon}
+# 'cpu_flags_x86_'{xop,avx2,fma3,fma4,ssse3,mmxext,3dnowext}
+# 'cpu_flags_x86_sse'{1,2,3}
+# 'cpu_flags_x86_sse4_'{1,2,3,4,5,6}
+# 'python_targets_jython2_'{4,5,6,7,8,9}
+# 'python_targets_'{pypy3,python2_7}
+# 'python_targets_python'{3,4,5}_{0,1,2,3,4,5,6,7,8,9}
+# 'python_single_target_python2_7'
+## appended last, otherwise
+## sed will NOT strip the Num
+# 'cpu_flags_x86_'{sse,mmx,3dnow,avx}
+# 'python_targets_pypy'

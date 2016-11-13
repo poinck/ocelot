@@ -1,0 +1,1 @@
+/home/frost/Documents/openbox/home/frost/.zshenv

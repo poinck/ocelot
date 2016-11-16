@@ -81,8 +81,8 @@ Use "config/systemd/user/olock.service" to lock your screen before your computer
 
 ### side-panel TODOs
 Things to come (order is priority):
-- disk- and swap-usage (ram, swap, `/` and `/home` as graphs; additional status(?) as box; below cpu-temperature-graph)
-- support more than just "BAT0" from `/proc/sys`
+- disk- and swap-usage (ram, swap, `/` and `/home` as graphs; additional status(?) as box; below cpu-temperature-graph), see [#12](https://github.com/poinck/ocelot/issues/12)
+- support more than just "BAT0" from `/proc/sys`, see [#14](https://github.com/poinck/ocelot/issues/14)
 - `thunderbird` notifications for new mail
 - update-indication for `yum` if you are a CentOS-user
 - CAPSLOCK-indication

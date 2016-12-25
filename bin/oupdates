@@ -25,9 +25,10 @@ availablec="#ffffff"
 
 updates_available_list=$( glsa-check -n -q -l affected )
 updates_available=$( echo "$updates_available_list" | wc -l )
+updates_available_empty=$( echo "$updates_available" | wc -w )
 
 
-if [[ "$updates_available" -le 1 ]] ; then
+if [[ "$updates_available" -le 1 ]] && [[ "$updates_available_empty" -le 1 ]] ; then
     updates_available="U: ^fg(#aaaaaa)OK"
     #contentc="#aaaaaa"
 else
@@ -42,6 +43,7 @@ fi
 
 #updates="oupdates:=^fg($contentc)$update_cmd==^fg($availablec)$updates_available;;$outlinec--$fillc"
 updates="oupdates:=^fg($availablec)$updates_available;;$outlinec--$fillc"
+echo -e "[DEBUG] updates empty = $updates_available_empty"
 echo -e "[DEBUG] update list:\n$updates_available_list"
 echo "[DEBUG] $updates"
 echo "$updates" > "$ofifo"

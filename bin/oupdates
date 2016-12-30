@@ -25,7 +25,7 @@ availablec="#ffffff"
 
 updates_available_list=$( glsa-check -n -q -l affected )
 updates_available=$( echo "$updates_available_list" | wc -l )
-updates_available_empty=$( echo "$updates_available" | wc -w )
+updates_available_empty=$( echo "$updates_available_list" | wc -w )
 
 
 if [[ "$updates_available" -le 1 ]] && [[ "$updates_available_empty" -le 1 ]] ; then

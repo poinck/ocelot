@@ -83,17 +83,9 @@ get_boxColors() {
 
 format_temp() {
     local t="$1"
-    #t="-12000"
     local ft="0"
-    local tt=0
 
-    if [[ "$t" -ge 0 ]] ; then
-        ft=$(( t/1000 ))
-    else
-        tt=${t#*-}
-        ft=$(( tt/1000 ))
-        ft="-$ft"
-    fi
+    ft=$(( t/1000 ))
 
     echo "$ft"
 }
@@ -128,15 +120,20 @@ ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 while true ; do
     get_tm
 
+    outside_space=" "
+    if [[ "$outside_tm" -le -10 ]] ; then
+        outside_space=""
+    fi
     inside_space=""
     if [[ "$outside_tm" =~ [:digit:] ]] ; then
     if [[ "$outside_tm" -lt 0 ]] ; then
         inside_space=" "
     fi
     fi
-    tmc="otmc:=^fg(#ffffff) $outside_tm °C==^fg(#ffffff)$inside_space($inside_tm);;$outlinec--$fillc"
+    tmc="otmc:=^fg(#ffffff)${outside_space}${outside_tm} °C==^fg(#ffffff)${inside_space}(${inside_tm});;${outlinec}--${fillc}"
     echo "[DEBUG] tmc = $tmc"
     echo "$tmc" > "$ofifo"
 
     sleep 600
 done
+

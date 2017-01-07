@@ -141,7 +141,7 @@ static Key keys[] = {
     {  0,            0x1008ff17,        spawn,              {.com = munecmd}},
 };
 
-/* TODO  grab volume-buttons: 0x1008ff11 (down) and 0x1008ff13 (up)
+/* TODO
  * - find out controls for mic-mute-button
  */
 
@@ -151,7 +151,6 @@ static Key keys[] = {
  * #define XKB_KEY_XF86AudioStop   0x1008FF15   Stop playing audio
  * #define XKB_KEY_XF86AudioPrev   0x1008FF16   Previous track
  * #define XKB_KEY_XF86AudioNext   0x1008FF17   Next track
- *
  */
 
 /**

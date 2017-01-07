@@ -59,6 +59,11 @@ static const char *brupcmd[] = { "obrightness", "up", NULL };
 static const char *brdocmd[] = { "obrightness", "down", NULL };
 static const char *voupcmd[] = { "ovolume", "up", NULL };
 static const char *vodocmd[] = { "ovolume", "down", NULL };
+static const char *vomucmd[] = { "ovolume", "mute", NULL };
+static const char *muplcmd[] = { "omusic", "play", NULL };
+static const char *mustcmd[] = { "omusic", "stop", NULL };
+static const char *muprcmd[] = { "omusic", "prev", NULL };
+static const char *munecmd[] = { "omusic", "next", NULL };
 static const char *loencmd[] = { "olocker", "enable", NULL };
 static const char *lodicmd[] = { "olocker", "disable", NULL };
 
@@ -123,17 +128,31 @@ static Key keys[] = {
        DESKTOPCHANGE(    XK_8,                             7)
        DESKTOPCHANGE(    XK_9,                             8)
        DESKTOPCHANGE(    XK_0,                             9)
-    {  0,            XF86XK_MonBrightnessUp,    spawn,   {.com = brupcmd}},
-    {  0,            XF86XK_MonBrightnessDown,  spawn,   {.com = brdocmd}},
+    {  0,            XF86XK_MonBrightnessUp,    spawn,      {.com = brupcmd}},
+    {  0,            XF86XK_MonBrightnessDown,  spawn,      {.com = brdocmd}},
+    {  0,                XK_F24,        spawn,              {.com = brupcmd}},
+    {  0,                XK_F23,        spawn,              {.com = brdocmd}},
     {  0,            0x1008ff13,        spawn,              {.com = voupcmd}},
     {  0,            0x1008ff11,        spawn,              {.com = vodocmd}},
+    {  0,            0x1008ff12,        spawn,              {.com = vomucmd}},
+    {  0,            0x1008ff14,        spawn,              {.com = muplcmd}},
+    {  0,            0x1008ff15,        spawn,              {.com = mustcmd}},
+    {  0,            0x1008ff16,        spawn,              {.com = muprcmd}},
+    {  0,            0x1008ff17,        spawn,              {.com = munecmd}},
 };
 
 /* TODO  grab volume-buttons: 0x1008ff11 (down) and 0x1008ff13 (up)
- * - find out controls for speaker-mute-button
- * - find out controls for mic-mute-button */
+ * - find out controls for mic-mute-button
+ */
 
-/* XK_Super_L */
+/*
+ * speaker-mute-button: 0x1008ff12
+ * #define XKB_KEY_XF86AudioPlay   0x1008FF14   Start playing of audio >
+ * #define XKB_KEY_XF86AudioStop   0x1008FF15   Stop playing audio
+ * #define XKB_KEY_XF86AudioPrev   0x1008FF16   Previous track
+ * #define XKB_KEY_XF86AudioNext   0x1008FF17   Next track
+ *
+ */
 
 /**
  * mouse shortcuts

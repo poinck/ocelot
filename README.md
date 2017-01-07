@@ -120,8 +120,8 @@ Copy paste from "tweaks/.xinitrc" for following:
 **better reading with `~/.Xresources`:**
 Copy paste from "tweaks/.Xresources": This will lighten font colors in the terminal and adds hinting and antialiasing to all applications.
 
-**adjust and preserve keyrate in `~/.bashrc`**
-use `exec startx -- -ardelay 300 -arinterval 50` to start X.
+**adjust and preserve keyrate in `~/.bashrc`:**
+use `exec startx -- -ardelay 300 -arinterval 50` to start X, see [this question at UNIX-stackexchange](http://unix.stackexchange.com/questions/85504/setting-repeat-rate-of-usb-keyboard-automatically)
 
 ## Keys
 How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs recompile and restart):

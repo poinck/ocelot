@@ -85,7 +85,6 @@ Things to come (order is priority):
 - support more than just "BAT0" from `/proc/sys`, see [#14](https://github.com/poinck/ocelot/issues/14)
 - `thunderbird` notifications for new mail
 - update-indication for `yum` if you are a CentOS-user
-- CAPSLOCK-indication
 - Xinerama-support
 
 ### Start ocelot

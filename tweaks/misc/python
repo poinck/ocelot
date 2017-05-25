@@ -1,0 +1,53 @@
+#------------------------------------------------------------------------------
+# Pimping the interactive python sessions and their history.
+# Autocompletion is added as well.
+# In zsh/bash set the environment variable: export PYTHONSTARTUP=~/.config/python
+#
+# Every single interactive session will execute the code below - automatically.
+# My history file grows pretty quickly, and decided to use 'bzip2' compression
+# and decompression to save some disk space ( 20 MB hist -> 400 KB compressed)
+#------------------------------------------------------------------------------
+
+
+import os
+import sys
+import bz2
+import atexit
+import readline
+import rlcompleter
+
+
+@atexit.register
+def _lastcalljka3728hjhjsdl():
+    with open(_HISTx7z1b, 'rt') as z:
+        normal_text = z.read().encode('utf-8')
+    with open(_HISTx7z1b, 'wb') as f:
+        f.write(bz2.compress(normal_text))
+
+@atexit.register
+def _freakoutlnjdhj2gklb():
+    exit_line = readline.get_current_history_length()-1
+    readline.remove_history_item(exit_line)
+    readline.write_history_file(_HISTx7z1b)
+
+sys.ps2    = '    '
+_HISTx7z1b = os.path.join(os.getenv('HOME'), '.cache', 'pyhist')
+
+# readline.read_history_file
+# doesn't accept 'io.StringIO' file-like object
+# nor archives neither strings
+
+# Python 2 and 3 encode strings differently,
+# in 2 they are unicode, while in 3 they are bytes.
+# To bypass the difference we have to explicitly
+# encode and decode the reading and writing. So
+# the history file can be read and re-written
+# from any python version.
+
+if os.path.isfile(_HISTx7z1b):
+    with open(_HISTx7z1b, 'rb') as f:
+        content = bz2.decompress(f.read()).decode('utf-8')
+    [readline.add_history(x) for x in content.splitlines()]
+
+readline.parse_and_bind('tab: complete')
+del (os, sys)

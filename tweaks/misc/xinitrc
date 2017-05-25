@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# Initiate self destruction sequence
+# 10, 9, 8, 7, 6, 5, 4, 3,
+
+[[ -d /etc/X11/xinit/xinitrc.d ]] && {
+  for f in /etc/X11/xinit/xinitrc.d/*
+  do [[ -x "$f" ]] && . "$f"; done
+  unset f
+}
+
+# `man xrdb'
+xrdb -merge "$HOME/.config/misc/Xresources"
+
+# urxvt daemon
+urxvtd --quiet --opendisplay --fork &
+
+# keyboard and mouse configuration (delay, speed)
+# see $ZDOTDIR/functions/tweak_peripherials.zsh
+mouse_kb_conf="$HOME/.cache/.mouse-kb"
+[[ -f "${mouse_kb_conf}" ]] && $(<"${mouse_kb_conf}")
+
+# background setter
+nitrogen --set-scaled "$HOME/.config/misc/pinky.jpg" &
+
+# keyboard language
+setxkbmap -layout us -variant basic terminate:ctrl_alt_bksp &
+
+# disable energy saving (monitor)
+xset -dpms &
+
+# disable screensaver   (monitor)
+xset s off &
+
+session=${1:-dwm}
+start_script="$HOME/.config/dwm_scripts/dwm-start"
+
+case $session in
+    openbox)
+        exec openbox-session
+        ;;
+
+    dwm)
+        exec ${start_script} 'dwm'
+        ;;
+
+    xmonad)
+        exec ${start_script} 'xmonad'
+        ;;
+
+    *)
+        printf '%s\n' 'Choose between openbox and dwm'
+        ;;
+esac

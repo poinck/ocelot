@@ -12,6 +12,33 @@
 #
 # ocelot by André Klausnitzer, CC0
 
+# element order
+element_order=("disk_home" "disk_root")
+
+declare -a elements
+
+get_type_index() {
+    element_type=$1
+    index=99
+
+    ii=0
+    for element in ${element_order[*]} ; do
+        if [[ "$element" == "${element_type}" ]] ; then
+            index=$ii
+            break
+        fi
+        ii=$(( ii+1 ))
+    done
+
+    echo "$index"
+}
+
+format_element() {
+
+    # TODO
+    echo "$@"
+}
+
 guess_display_height() {
     current_resolution="$( xrandr -q --verbose | grep "*current" )"
     _tmp1CR=${current_resolution#*x}
@@ -245,6 +272,14 @@ while read -r reply ; do
     # test
     #echo -en "$( get_box_seperator "$tmc_boxOutline" "$tmc_boxFill" "$test_boxOutline" "$test_boxFill" )"
     #echo -en "${otest_inner}${otest_end}"
+
+    # TODO  new ocollector-api
+    current_type=${reply%%\ *}
+    current_index=$( get_type_index "$current_type" )
+    elements[$current_index]=$( format_element $reply )
+
+    # test
+    #echo "${current_index} ${elements[$current_index]}" >> /tmp/new-api-test
 
     echo "^fg() "  # blank last line to clear old content
 done | ocelot-dzen -p -l "$PANEL_LINE_COUNT" -h "${_PLH}" -ta l -w "${_PW}" -fn "monospace:bold:size=${_FP}" -e 'onstart=uncollapse' -bg "$pbc"

@@ -1,0 +1,53 @@
+#!/bin/bash
+#
+# odisks uses output from `df` Currently
+# only / and /home are supported.
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
+
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
+outlinec=""
+fillc=""
+
+get_disks() {
+    disks_now=$( df --output=target,pcent / /home | tail -n 2 )
+
+    p=0
+    #echo "[DEBUG] disks_now = ${disks_now}"
+    for disk in ${disks_now} ; do
+        p=$(( p+1 ))
+        if [[ "$p" -eq 2 ]] ; then
+            disk_root_percent=${disk%%%*}
+            disks="disk_root / ${disk_root_percent}"
+            echo "[DEBUG] $disks"
+            echo "$disks" > "$ofifo"
+        elif [[ "$p" -eq 4 ]] ; then
+            disk_home_percent=${disk%%%*}
+            disks="disk_home /home ${disk_home_percent}"
+            echo "[DEBUG] $disks"
+            echo "$disks" > "$ofifo"
+        fi
+        echo "[DEBUG] $p -> $disk"
+    done
+}
+
+while true ; do
+    get_disks
+
+    # TODO  ocollector-api
+    # - space seperated parameters:
+    #   type label bgcolor percent color
+    # - "type" is needed for ordering elements in ocollector
+    # - "label" is text that is displayed
+    # - "bgcolor" is background color of element
+    # - "percent" is value for grapical represention
+    # - "color" is color for value
+
+    sleep 600
+done

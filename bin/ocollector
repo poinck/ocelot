@@ -62,7 +62,16 @@ get_box() {
     content=$3
 
     box="^pa(0;${_BTB})^fg($outline)^r(${_PW}x${_BTB})^fg($fill)^ib(1)^pa(${_BP};${_BTM})^r(${_BI}x${_BP})\n"
-    box+="^fg($outline)^r(${_PW}x${_PLH})^fg($fill)^ib(1)^pa(${_BP})^r(${_BI}x${_PLH})^pa(${_TC};${_TA})$content\n"
+    hasSecond=$( echo "$content" | grep "==" )
+    if [[ -z "$hasSecond" ]] ; then
+        box+="^fg($outline)^r(${_PW}x${_PLH})^fg($fill)^ib(1)^pa(${_BP})^r(${_BI}x${_PLH})^pa(${_TC};${_TA})$content\n"
+    else
+        _tmpContentFirst=${content%%==*} # first
+        _tmpContent=${content#*==} # second
+        box+="^fg($outline)^r(${_PW}x${_PLH})^fg($fill)^ib(1)^pa(${_BP})^r(${_BI}x${_PLH})^pa(${_TC};${_TA})$_tmpContentFirst\n"
+        box+="^fg($outline)^r(${_PW}x${_PLH})^fg($fill)^ib(1)^pa(${_BP})^r(${_BI}x${_PLH})^pa(${_TC};${_TA})$_tmpContent\n"
+    fi
+    #box+="^fg($outline)^r(${_PW}x${_PLH})^fg($fill)^ib(1)^pa(${_BP})^r(${_BI}x${_PLH})^pa(${_TC};${_TA})$content\n"
     box+="^pa(0;0)^fg($outline)^r(${_PW}x${_BTB})^fg($fill)^ib(1)^pa(${_BP};0)^r(${_BI}x${_BP})"
 
     echo "$box"

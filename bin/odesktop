@@ -41,9 +41,18 @@ ${OCELOT_PATH}ocelot > "$odfifo" &
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 # tail -f $odfifo | \
-while read -r desktopReply ; do
+while read -r reply ; do
+    # debug
+    #echo "reply = $reply"
+
+    # get window title
+    desktopReply=${reply%%|*} # use first part of reply seperated by :=
+    title=${reply#*|} # use last part of reply seperated by :=
+    windowTitle=${title:0:7} # use just first 8 chars
+
     # debug
     #echo "desktopReply = $desktopReply"
+    #echo "windowTitle = $windowTitle"
 
     # filter output to only what we want to match and parse
     [[ $desktopReply =~ ^(([[:digit:]]+:)+[[:digit:]]+ ?)+$ ]] && read -ra desktops <<< "$desktopReply" || continue
@@ -101,7 +110,7 @@ while read -r desktopReply ; do
     #echo "odesktop:=^fg(#ffffff)$current_d: $i;;$outlinec--$fillc"
     #echo "odesktops:=$r" # $i"
 
-    echo "odesktop:=^fg(#ffffff)$current_d: $i;;$outlinec--$fillc" > "$ofifo"
+    echo "odesktop:=^fg(#ffffff)$current_d: $i==^fg(#aaaaaa)$windowTitle;;$outlinec--$fillc" > "$ofifo"
     echo "odesktops:=$r" > "$ofifo"
     unset r
 done < "$odfifo"

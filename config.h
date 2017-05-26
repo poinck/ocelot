@@ -14,7 +14,7 @@
 #define SHOW_PANEL      True      /* show panel by default on exec */
 #define TOP_PANEL       True      /* False means panel is on bottom */
 #define PANEL_HEIGHT    21        /* 0 for no space for panel, thus no panel */
-#define PANEL_WIDTH     75        /* 0 for no space for side-panel, thus
+#define PANEL_WIDTH     64        /* 0 for no space for side-panel, thus
                                      fallback to top-panel. otherwise space
                                      of side-panel on the left and
                                      PANEL_HEIGHT will be ignored, thus no

@@ -33,12 +33,6 @@ get_type_index() {
     echo "$index"
 }
 
-format_element() {
-
-    # TODO
-    echo "$@"
-}
-
 guess_display_height() {
     current_resolution="$( xrandr -q --verbose | grep "*current" )"
     _tmp1CR=${current_resolution#*x}
@@ -53,8 +47,8 @@ guess_display_height() {
 # load user settings, if any
 SCALE=1
 PANEL_LINE_COUNT=37     # minimum line count
-_PLH=16                 # panel line height
-_PW=75                  # panel width
+_PLH=24                 # panel line height
+_PW=64                  # panel width
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
     if [[ -n "$scale" ]] ; then
@@ -82,6 +76,30 @@ _BTB=$(( 8*SCALE ))     # box border top, bottom and left
 _BTM=$(( _BTB+_BP ))    # box inner top margin
 _TA=$(( 1*SCALE ))      # text adjustment
 _TC=$(( (4*SCALE)+_BTB )) # center text
+
+format_element() {
+    # TODO
+
+    i=0
+    for e in $@ ; do
+        #echo "e = $e" >> /tmp/newapi
+        if [[ "$i" -eq 1 ]] ; then
+            label=" $e"
+        elif [[ "$i" -eq 2 ]] ; then
+            background="^fg(#$e)^r(${_PW}x${_PLH})"
+        elif [[ "$i" -eq 3 ]] ; then
+            graph_height=$(( _PLH*e/100 ))
+            graph_startposv=$(( _PLH-graph_height ))
+        elif [[ "$i" -eq 4 ]] ; then
+            graph_color="^fg(#$e)"
+        fi
+        i=$(( i+1 ))
+    done
+    graph_startposh=$(( _PW-_BP ))
+    graph="^pa(${graph_startposh};${graph_startposv})${graph_color}^r(${_BP}x${graph_height})"
+    echo "${background}^ib(1)^pa(0;${_BP})${label}^ib(1)${graph}"
+    #echo "${background}^ib(1)^pa(0;${_BP})${label}" >> /tmp/newapi
+}
 
 get_box() {
     outline=$1
@@ -273,13 +291,14 @@ while read -r reply ; do
     #echo -en "$( get_box_seperator "$tmc_boxOutline" "$tmc_boxFill" "$test_boxOutline" "$test_boxFill" )"
     #echo -en "${otest_inner}${otest_end}"
 
-    # TODO  new ocollector-api
     current_type=${reply%%\ *}
     current_index=$( get_type_index "$current_type" )
     elements[$current_index]=$( format_element $reply )
 
-    # test
+    # TODO  for loop over all elements
     #echo "${current_index} ${elements[$current_index]}" >> /tmp/new-api-test
+    echo "${elements[0]}"
+    echo "${elements[1]}"
 
     echo "^fg() "  # blank last line to clear old content
 done | ocelot-dzen -p -l "$PANEL_LINE_COUNT" -h "${_PLH}" -ta l -w "${_PW}" -fn "monospace:bold:size=${_FP}" -e 'onstart=uncollapse' -bg "$pbc"

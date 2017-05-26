@@ -12,8 +12,13 @@
 # ocelot by André Klausnitzer, CC0
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
-outlinec=""
-fillc=""
+low_color="fbf236"
+high_color="fb3636"
+low_bgcolor="262613"
+high_bgcolor="261313"
+bgcolor=${low_bgcolor}
+color=${low_color}
+source ${OCELOT_PATH}bin/outils.sh
 
 get_disks() {
     disks_now=$( df --output=target,pcent / /home | tail -n 2 )
@@ -24,16 +29,22 @@ get_disks() {
         p=$(( p+1 ))
         if [[ "$p" -eq 2 ]] ; then
             disk_root_percent=${disk%%%*}
-            disks="disk_root / ${disk_root_percent}"
+            color=$( get_hex_color "${low_color}" "${high_color}" "${disk_root_percent}" )
+            bgcolor=$( get_hex_color "${low_bgcolor}" "${high_bgcolor}" "${disk_root_percent}" )
+            #echo "[DEBUG] color = $color"
+            disks="disk_root ^fg(#ffffff)/ ${bgcolor} ${disk_root_percent} ${color}"
             echo "[DEBUG] $disks"
             echo "$disks" > "$ofifo"
         elif [[ "$p" -eq 4 ]] ; then
             disk_home_percent=${disk%%%*}
-            disks="disk_home /home ${disk_home_percent}"
+            color=$( get_hex_color "${low_color}" "${high_color}" "${disk_home_percent}" )
+            bgcolor=$( get_hex_color "${low_bgcolor}" "${high_bgcolor}" "${disk_home_percent}" )
+            #echo "[DEBUG] color = $color"
+            disks="disk_home ^fg(#ffffff)/home ${bgcolor} ${disk_home_percent} ${color}"
             echo "[DEBUG] $disks"
             echo "$disks" > "$ofifo"
         fi
-        echo "[DEBUG] $p -> $disk"
+        #echo "[DEBUG] $p -> $disk"
     done
 }
 
@@ -42,12 +53,13 @@ while true ; do
 
     # TODO  ocollector-api
     # - space seperated parameters:
-    #   type label bgcolor percent color
+    #   <type> <label> [<bgcolor> [<percent> <color>]* ..]
     # - "type" is needed for ordering elements in ocollector
     # - "label" is text that is displayed
     # - "bgcolor" is background color of element
+    # - font-color should be set with dzen2-syntax inside "label"
     # - "percent" is value for grapical represention
-    # - "color" is color for value
+    # - "color" is color for graph
 
     sleep 600
 done

@@ -11,6 +11,7 @@
 #
 # ocelot by André Klausnitzer, CC0
 
+source ${OCELOT_PATH}bin/outils.sh
 SCALE=1
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
@@ -34,6 +35,9 @@ get_otime() {
     year_left_margin=$(( SCALE*23 ))
     time_left_margin=$(( SCALE*20 ))
     hour=$(date '+%-H')
+    minute=$(date '+%M')
+    minute_percent=$(( minute*100/60 ))
+    hour_percent=$(( hour*100/24 ))
 
     # test
     #hour="1"
@@ -41,8 +45,10 @@ get_otime() {
     if [[ "$hour" -lt 10 ]] ; then
         time_left_margin=$(( SCALE*23 ))
     fi
-    otime1_content="otime1:=\n^pa(${time_left_margin};0)^fg(#ffffff)${hour}:$(date '+%M')"
-    otime_content="otime:=^fg(#ffffff)$(date '+%a,') ^fg(#729fcf)$(date '+W%-W')==^fg(#ffffff)$(date '+%_d.') ^fg(#729fcf)$(date '+%b');;#173252--#173252" # #3465a4 #173252
+    #otime1_content="otime1:=\n^pa(${time_left_margin};0)^fg(#ffffff)${hour}:$(date '+%M')"
+    otime1_content="time ^fg(#${cfont})$hour^fg(#${cdarkfont}):^fg(#${cfont})$minute ${cdarkgrey} ${hour_percent} $cdarkblue ${minute_percent} $cdarkpurple"
+    #otime_content="otime:=^fg(#ffffff)$(date '+%a,') ^fg(#729fcf)$(date '+W%-W')==^fg(#ffffff)$(date '+%_d.') ^fg(#729fcf)$(date '+%b');;#173252--#173252" # #3465a4 #173252
+    otime_content="dayweek ^fg(#${cfont})$(date '+%a')_^fg(#${cdarkfont})$(date '+W%-W') $cdarkgrey"
     otime2_content="otime2:=^pa(${year_left_margin};0)^fg(#3465a4)$(date '+%Y')"
 }
 
@@ -53,6 +59,7 @@ while true ; do
     # debug
     # echo "$otime_content"
 
+    echo "[DEBUG] $otime1_content"
     echo "$otime1_content" > "$ofifo"
     echo "$otime_content" > "$ofifo"
     echo "$otime2_content" > "$ofifo"

@@ -12,6 +12,12 @@
 #
 # ocelot by André Klausnitzer, CC0
 
+cfont="cbdbfc"
+cdarkfont="9badb7"
+cdarkgrey="1c1c1c"
+cdarkblue="3f3f74"
+cdarkpurple="45283c"
+
 # get color between start and end color
 # - without leading '#'
 get_hex_color() {

@@ -46,7 +46,6 @@ get_net() {
         interface_number=$(( interface_number+1 ))
     done
 
-    #rx_percent=50
     net="net ^fg(#${cfont})${interface_name} ${bgcolor} ${rx_percent} ${rx_color} ${tx_percent} ${tx_color}"
     if [[ "${interface_name}" == "off" ]] ; then
         net="net ^fg(#${cdarkfont})${interface_name} ${bgcolor}"

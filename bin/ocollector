@@ -13,8 +13,9 @@
 # ocelot by André Klausnitzer, CC0
 
 # element order
-element_order=("dayweek" "time" "date" "year" "net" "disk_home" "disk_root")
+element_order=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "net" "disk_home" "disk_root")
 
+# content of elements
 declare -a elements
 
 get_type_index() {
@@ -38,7 +39,7 @@ guess_display_height() {
     _tmp1CR=${current_resolution#*x}
 
     # debug
-    # echo "$_tmp1CR"
+    #echo "$_tmp1CR"
 
     current_height=${_tmp1CR%% *}
     echo -n "$current_height"
@@ -72,11 +73,11 @@ _BP=$(( 4*SCALE ))      # border pixels
 _TOP=$(( 1*SCALE+_BP ))
 _PW=$(( _PW*SCALE ))
 _PLH=$(( _PLH*SCALE ))
-_BI=$(( _PW-(_BP*2) ))  # box inner
-_BTB=$(( 8*SCALE ))     # box border top, bottom and left
-_BTM=$(( _BTB+_BP ))    # box inner top margin
-_TA=$(( 1*SCALE ))      # text adjustment
-_TC=$(( (4*SCALE)+_BTB )) # center text
+#_BI=$(( _PW-(_BP*2) ))  # box inner
+#_BTB=$(( 8*SCALE ))     # box border top, bottom and left
+#_BTM=$(( _BTB+_BP ))    # box inner top margin
+#_TA=$(( 1*SCALE ))      # text adjustment
+#_TC=$(( (4*SCALE)+_BTB )) # center text
 
 format_element() {
     i=0
@@ -87,12 +88,12 @@ format_element() {
             label="  $e"
         elif [[ "$i" -eq 2 ]] ; then
             background="^fg(#$e)^r(${_PW}x${_PLH})"
-        #else
-        #elif [[ "$i" -eq 3 ]] ; then
         elif [[ "$(( i%2 ))" -eq 1 ]] ; then
+            if [[ "$e" -gt 100 ]] ; then
+                e=100
+            fi
             graph_height=$(( _PLH*e/100 ))
             graph_startposv=$(( _PLH-graph_height ))
-        #elif [[ "$i" -eq 4 ]] ; then
         elif [[ "$(( i%2 ))" -eq 0 ]] ; then
             graph_color="^fg(#$e)"
             if [[ "$i" -eq 4 ]] ; then
@@ -102,20 +103,10 @@ format_element() {
             fi
             graphs="${graphs}^ib(1)^pa(${graph_posh};${graph_startposv})${graph_color}^r(${_BP}x${graph_height})"
         fi
-        #elif [[ "$i" -eq 5 ]] ; then
-        #    graph2_height=$(( _PLH*e/100 ))
-        #    graph2_startposv=$(( _PLH-graph2_height ))
-        #elif [[ "$i" -eq 6 ]] ; then
-        #    graph2_color="^fg(#$e)"
-        #fi
         i=$(( i+1 ))
     done
-    #graph2_startposh=$(( _BP ))
-    #graph2="^pa(${graph2_startposh};${graph2_startposv})${graph2_color}^r(${_BP}x${graph2_height})"
-    #graph="^pa(0;${graph_startposv})${graph_color}^r(${_BP}x${graph_height})"
     output="${background}${graphs}^ib(1)^pa(0;${_TOP})${label}"
 
-    echo "$output" >> /tmp/newapi
     echo "$output"
 }
 
@@ -217,7 +208,6 @@ while read -r reply ; do
     fi
 
     # handle each reply type
-        # TODO  change to case switch, should be faster
     #if [[ "$replyType" == "otime1" ]] ; then
     #    otime1="$replyContent"
     #if [[ "$replyType" == "otime" ]] ; then
@@ -241,13 +231,8 @@ while read -r reply ; do
         ostatus2="$replyContent"
     elif [[ "$replyType" == "odesktop" ]] ; then
         odesktop="$( get_box "$boxOutline" "$boxFill" "$replyContent" )"
-    elif [[ "$replyType" == "odesktops" ]] ; then
-        odesktops="$replyContent"
-    elif [[ "$replyType" == "otest" ]] ; then
-        otest_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-        otest_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
-        test_boxOutline="$boxOutline"
-        test_boxFill="$boxFill"
+    #elif [[ "$replyType" == "odesktops" ]] ; then
+    #    odesktops="$replyContent"
     elif [[ "$replyType" == "obattery" ]] ; then
         obattery_start="$( get_box_seperator "$pbc" "$pbc" "$boxOutline" "$boxFill" )"
         obattery_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
@@ -280,37 +265,34 @@ while read -r reply ; do
         titlewindow_set=1
     fi
 
-    # print out child window
-    echo -e "^p1()$otime1"
-    #echo -e "$otime"
-    echo -en "${otime_start}${otime_inner}${otime_end}"
-    echo -e "$otime2"
+    # print out child window, jump to first line
+    echo -e "^p1()"
 
-    echo -e "^pa(${tw_left_margin};${tw_top})^fg(#3465a4)^r(${_BP}x${_BP})^fg(#173252)^r(${tw_width}x${_BP})^fg(#3465a4)^r(${_BP}x${_BP})"
+    #echo -e "$otime"
+    #echo -en "${otime_start}${otime_inner}${otime_end}"
+    #echo -e "$otime2"
+    #echo -e "^pa(${tw_left_margin};${tw_top})^fg(#3465a4)^r(${_BP}x${_BP})^fg(#173252)^r(${tw_width}x${_BP})^fg(#3465a4)^r(${_BP}x${_BP})"
 
     echo -e "$ostatus"
     echo -e "$odesktop"
-    echo -e "$odesktops"
+    #echo -e "$odesktops"
     echo -en "${obattery_start}${obattery_inner}"
     echo -en "$( get_box_seperator "$battery_boxOutline" "$battery_boxFill" "$tmc_boxOutline" "$tmc_boxFill" )"
     echo -en "${otmc_inner}"
     echo -en "$( get_box_seperator "$tmc_boxOutline" "$tmc_boxFill" "$updates_box_outline" "$updates_box_fill" )"
     echo -en "${oupdates_inner}"
     echo -en "$( get_box_seperator "$updates_box_outline" "$updates_box_fill" "$net_box_outline" "$net_box_fill" )"
-    echo -en "${onet_inner}${onet_end}"
+    #echo -en "${onet_inner}${onet_end}"
     echo -e "$ostatus2"
     echo -en "${olocker_start}${olocker_inner}${olocker_end}"
-        # TODO  add "odisks" to monitor free space on / /home and /var
 
-    # test
-    #echo -en "$( get_box_seperator "$tmc_boxOutline" "$tmc_boxFill" "$test_boxOutline" "$test_boxFill" )"
-    #echo -en "${otest_inner}${otest_end}"
-
+    # gather reply type of element, get order index and store it's content
+    # to elements array
     current_type=${reply%%\ *}
     current_index=$( get_type_index "$current_type" )
     elements[$current_index]=$( format_element $reply )
 
-    # for loop over all elements
+    # loop over all elements and echo out
     for ei in ${!elements[*]} ; do
         echo "${elements[$ei]}"
     done

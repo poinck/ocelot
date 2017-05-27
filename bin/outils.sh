@@ -18,7 +18,9 @@ cfont="aaaaaa"
 cdarkfont="777777"
 cdarkgrey="1c1c1c"
 cdarkblue="3f3f74"
+cblue="6767a1"
 cdarkpurple="45283c"
+cyellow="fbf236"
 
 # get color between start and end color
 # - without leading '#'

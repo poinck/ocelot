@@ -12,43 +12,30 @@
 #
 # ocelot by André Klausnitzer, CC0
 
+source ${OCELOT_PATH}bin/outils.sh
 OCELOT_PATH=""
-SCALE=1
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
-    if [[ -n "$scale" ]] ; then
-        SCALE="$scale"
-    fi
     if [[ -n "$ocelot_path" ]] ; then
         OCELOT_PATH="$ocelot_path"
     fi
     echo "odesktop.ocelot_path=$OCELOT_PATH"
 fi
 
-# initialize scaling
-_FP=$(( 9*SCALE ))      # font pixels
-_BP=$(( 4*SCALE ))      # border pixels
-_PW=$(( _PW*SCALE ))
-_PLH=$(( _PLH*SCALE ))
-_BI=$(( _PW-(_BP*2) ))  # box inner
-_BTB=$(( 8*SCALE ))     # box border top, bottom and left
-_BTM=$(( _BTB+_BP ))    # box inner top margin
-_TA=$(( 1*SCALE))       # text adjustment
-
 odfifo="/tmp/odesktop.fifo$OCELOT_INSTANCE"
 [[ -p $odfifo ]] || mkfifo -m 600 "$odfifo"
 ${OCELOT_PATH}ocelot > "$odfifo" &
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
-# tail -f $odfifo | \
 while read -r reply ; do
     # debug
     #echo "reply = $reply"
 
     # get window title
-    desktopReply=${reply%%|*} # use first part of reply seperated by :=
-    title=${reply#*|} # use last part of reply seperated by :=
-    windowTitle=${title:0:7} # use just first 8 chars
+    desktopReply=${reply%%|*} # use first part of reply seperated by |
+    title=${reply#*|} # use last part of reply seperated by |
+    windowTitle=${title:0:6} # use just first 6 chars
+    window_title=${windowTitle%% *} # throw away everything after first space
 
     # debug
     #echo "desktopReply = $desktopReply"
@@ -67,50 +54,41 @@ while read -r reply ; do
         IFS=':' read -r d w m c u <<< "$desktop"
         s=""
 
-        outlinec="#808080"
-        fillc="#3f3f3f"
-
         # for the current desktop
-        ((c)) && f="#ffffff" current_d=$(( d+1 )) && case $m in
+        ((c)) && f=$cblue current_d=$(( d+1 )) && case $m in
             # name each layout/mode with a symbol
-            # 0) i="t" ;; # ·:
             0) i="T" ;;
-            # 1) i="m" ;; # ·
             1) i="M" ;;
-            # 2) i="b" ;; # ...
             2) i="B" ;;
-            # 3) i="g" ;; # :::
             3) i="G" ;;
-            # 4) i="f" ;; # .·:
             4) i="F" ;;
-        esac  || f="#666666"
+        esac  || f=$cdarkblue
 
         # if the desktop has an urgent hint its color should be #ff0000
-        ((u)) && f="#ff2d2d" outlinec="#ff2d2d" fillc="#992d2d"
-            # FIXME box-colors won't work, will be reset for each desktop,
-            # throw this away
-            # TODO  colorize box depending on window-count; if there are no windows
-            # use same colors as unfocused terminal: outlinec="#444444",
-            # fillc="#3f3f3f"
+        ((u)) && f=$cyellow
 
         # for every desktop with windows
         if [[ "$w" -gt 0 ]] ; then
             desktopCount=$(( desktopCount+1 ))
-            desktopCount_mod=$(( desktopCount%4 ))
-            desktopCount_div=$(( desktopCount/4 ))
-            desktopCount_pos=$(( desktopCount-(desktopCount_div*4)-1 ))
-            [[ "$desktopCount_pos" -eq -1 ]] && desktopCount_pos=3
+            #desktopCount_mod=$(( desktopCount%4 ))
+            #desktopCount_div=$(( desktopCount/4 ))
+            #desktopCount_pos=$(( desktopCount-(desktopCount_div*4)-1 ))
+            #[[ "$desktopCount_pos" -eq -1 ]] && desktopCount_pos=3
 
-            r+="^fg($f)^ib(1)^pa(${_BTB};$(( desktopCount_pos*_BP )))^r($(( _BP*w ))x${_BP})"
-            [[ "$desktopCount_mod" -eq "0" ]] && r+="\n"
+            #r+="^fg($f)^ib(1)^pa(${_BTB};$(( desktopCount_pos*_BP )))^r($(( _BP*w ))x${_BP})"
+            r+="$(( w*12 )) $f "
+            #[[ "$desktopCount_mod" -eq "0" ]] && r+="\n"
         fi
     done
 
-    # debug
-    #echo "odesktop:=^fg(#ffffff)$current_d: $i;;$outlinec--$fillc"
-    #echo "odesktops:=$r" # $i"
-
-    echo "odesktop:=^fg(#ffffff)$current_d: $i==^fg(#aaaaaa)$windowTitle;;$outlinec--$fillc" > "$ofifo"
-    echo "odesktops:=$r" > "$ofifo"
+    desktop="desktop ^fg(#ffffff)${i}_^fg(#${cfont})${current_d} ${cdarkblue} 100 ${cblue}"
+    window="window ^fg(#${cblue})${window_title} ${cdarkgrey}"
+    desktops="desktops _ ${cdarkgrey} $r"
+    echo "[DEBUG] $desktops"
+    echo "$desktops" > "$ofifo"
+    echo "[DEBUG] $desktop"
+    echo "$desktop" > "$ofifo"
+    echo "[DEBUG] $window"
+    echo "$window" > "$ofifo"
     unset r
 done < "$odfifo"

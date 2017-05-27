@@ -13,7 +13,7 @@
 # ocelot by André Klausnitzer, CC0
 
 # element order
-element_order=("dayweek" "time" "net" "disk_home" "disk_root")
+element_order=("dayweek" "time" "date" "year" "net" "disk_home" "disk_root")
 
 declare -a elements
 
@@ -80,32 +80,43 @@ _TC=$(( (4*SCALE)+_BTB )) # center text
 
 format_element() {
     i=0
+    graphs=""
     for e in $@ ; do
-        #echo "e = $e" >> /tmp/newapi
         if [[ "$i" -eq 1 ]] ; then
             e=${e//_/ }
             label="  $e"
         elif [[ "$i" -eq 2 ]] ; then
             background="^fg(#$e)^r(${_PW}x${_PLH})"
-        elif [[ "$i" -eq 3 ]] ; then
+        #else
+        #elif [[ "$i" -eq 3 ]] ; then
+        elif [[ "$(( i%2 ))" -eq 1 ]] ; then
             graph_height=$(( _PLH*e/100 ))
             graph_startposv=$(( _PLH-graph_height ))
-        elif [[ "$i" -eq 4 ]] ; then
+        #elif [[ "$i" -eq 4 ]] ; then
+        elif [[ "$(( i%2 ))" -eq 0 ]] ; then
             graph_color="^fg(#$e)"
-        elif [[ "$i" -eq 5 ]] ; then
-            graph2_height=$(( _PLH*e/100 ))
-            graph2_startposv=$(( _PLH-graph2_height ))
-        elif [[ "$i" -eq 6 ]] ; then
-            graph2_color="^fg(#$e)"
+            if [[ "$i" -eq 4 ]] ; then
+                graph_posh=0
+            else
+                graph_posh=$(( ( ( i-4 )/2 )*_BP ))
+            fi
+            graphs="${graphs}^ib(1)^pa(${graph_posh};${graph_startposv})${graph_color}^r(${_BP}x${graph_height})"
         fi
+        #elif [[ "$i" -eq 5 ]] ; then
+        #    graph2_height=$(( _PLH*e/100 ))
+        #    graph2_startposv=$(( _PLH-graph2_height ))
+        #elif [[ "$i" -eq 6 ]] ; then
+        #    graph2_color="^fg(#$e)"
+        #fi
         i=$(( i+1 ))
     done
-    graph2_startposh=$(( _BP ))
-    graph2="^pa(${graph2_startposh};${graph2_startposv})${graph2_color}^r(${_BP}x${graph2_height})"
-    #graph_startposh=$(( _PW-_BP ))
-    graph="^pa(0;${graph_startposv})${graph_color}^r(${_BP}x${graph_height})"
-    echo "${background}^ib(1)^pa(0;${_TOP})${label}^ib(1)${graph}^ib(1)${graph2}"
-    #echo "${background}^ib(1)^pa(0;${_BP})${label}" >> /tmp/newapi
+    #graph2_startposh=$(( _BP ))
+    #graph2="^pa(${graph2_startposh};${graph2_startposv})${graph2_color}^r(${_BP}x${graph2_height})"
+    #graph="^pa(0;${graph_startposv})${graph_color}^r(${_BP}x${graph_height})"
+    output="${background}${graphs}^ib(1)^pa(0;${_TOP})${label}"
+
+    echo "$output" >> /tmp/newapi
+    echo "$output"
 }
 
 get_box() {
@@ -215,9 +226,9 @@ while read -r reply ; do
     #    otime_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
     #    time_box_outline=$boxOutline
     #    time_box_fill=$boxFill
-    if [[ "$replyType" == "otime2" ]] ; then
-        otime2="$replyContent"
-    elif [[ "$replyType" == "ovolume" ]] ; then
+    #if [[ "$replyType" == "otime2" ]] ; then
+    #    otime2="$replyContent"
+    if [[ "$replyType" == "ovolume" ]] ; then
         ovolume="$replyContent"
         ostatus="$( get_status )"
     elif [[ "$replyType" == "obrightness" ]] ; then

@@ -12,8 +12,10 @@
 #
 # ocelot by André Klausnitzer, CC0
 
-cfont="cbdbfc"
-cdarkfont="9badb7"
+#cfont="cbdbfc"
+#cdarkfont="9badb7"
+cfont="aaaaaa"
+cdarkfont="777777"
 cdarkgrey="1c1c1c"
 cdarkblue="3f3f74"
 cdarkpurple="45283c"

@@ -222,12 +222,12 @@ while true ; do
     echo "$load" > "$ofifo"
 
     get_uptime
-    get_traffic
+    #get_traffic
     get_temp
     echo "ostatus2:=${traffic_content}${uptime_content}${cpu_temp_content}" > "$ofifo"
-    onet="onet:=^fg(#ffffff)$interface_name;;$net_box_outline--$net_box_fill"
-    echo "[DEBUG] $onet"
-    echo "$onet" > "$ofifo"
+    #onet="onet:=^fg(#ffffff)$interface_name;;$net_box_outline--$net_box_fill"
+    #echo "[DEBUG] $onet"
+    #echo "$onet" > "$ofifo"
 
     sleep 14
 done

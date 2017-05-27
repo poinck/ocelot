@@ -13,7 +13,7 @@
 # ocelot by André Klausnitzer, CC0
 
 # element order
-element_order=("disk_home" "disk_root")
+element_order=("dayweek" "time" "net" "disk_home" "disk_root")
 
 declare -a elements
 
@@ -69,6 +69,7 @@ fi
 # initialize scaling
 _FP=$(( 9*SCALE ))      # font pixels
 _BP=$(( 4*SCALE ))      # border pixels
+_TOP=$(( 1*SCALE+_BP ))
 _PW=$(( _PW*SCALE ))
 _PLH=$(( _PLH*SCALE ))
 _BI=$(( _PW-(_BP*2) ))  # box inner
@@ -78,13 +79,12 @@ _TA=$(( 1*SCALE ))      # text adjustment
 _TC=$(( (4*SCALE)+_BTB )) # center text
 
 format_element() {
-    # TODO
-
     i=0
     for e in $@ ; do
         #echo "e = $e" >> /tmp/newapi
         if [[ "$i" -eq 1 ]] ; then
-            label=" $e"
+            e=${e//_/ }
+            label="  $e"
         elif [[ "$i" -eq 2 ]] ; then
             background="^fg(#$e)^r(${_PW}x${_PLH})"
         elif [[ "$i" -eq 3 ]] ; then
@@ -92,12 +92,19 @@ format_element() {
             graph_startposv=$(( _PLH-graph_height ))
         elif [[ "$i" -eq 4 ]] ; then
             graph_color="^fg(#$e)"
+        elif [[ "$i" -eq 5 ]] ; then
+            graph2_height=$(( _PLH*e/100 ))
+            graph2_startposv=$(( _PLH-graph2_height ))
+        elif [[ "$i" -eq 6 ]] ; then
+            graph2_color="^fg(#$e)"
         fi
         i=$(( i+1 ))
     done
-    graph_startposh=$(( _PW-_BP ))
-    graph="^pa(${graph_startposh};${graph_startposv})${graph_color}^r(${_BP}x${graph_height})"
-    echo "${background}^ib(1)^pa(0;${_BP})${label}^ib(1)${graph}"
+    graph2_startposh=$(( _BP ))
+    graph2="^pa(${graph2_startposh};${graph2_startposv})${graph2_color}^r(${_BP}x${graph2_height})"
+    #graph_startposh=$(( _PW-_BP ))
+    graph="^pa(0;${graph_startposv})${graph_color}^r(${_BP}x${graph_height})"
+    echo "${background}^ib(1)^pa(0;${_TOP})${label}^ib(1)${graph}^ib(1)${graph2}"
     #echo "${background}^ib(1)^pa(0;${_BP})${label}" >> /tmp/newapi
 }
 
@@ -200,15 +207,15 @@ while read -r reply ; do
 
     # handle each reply type
         # TODO  change to case switch, should be faster
-    if [[ "$replyType" == "otime1" ]] ; then
-        otime1="$replyContent"
-    elif [[ "$replyType" == "otime" ]] ; then
-        otime_start="$( get_box_seperator "$pbc" "$pbc" "$boxOutline" "$boxFill" )"
-        otime_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-        otime_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
-        time_box_outline=$boxOutline
-        time_box_fill=$boxFill
-    elif [[ "$replyType" == "otime2" ]] ; then
+    #if [[ "$replyType" == "otime1" ]] ; then
+    #    otime1="$replyContent"
+    #if [[ "$replyType" == "otime" ]] ; then
+    #    otime_start="$( get_box_seperator "$pbc" "$pbc" "$boxOutline" "$boxFill" )"
+    #    otime_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
+    #    otime_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
+    #    time_box_outline=$boxOutline
+    #    time_box_fill=$boxFill
+    if [[ "$replyType" == "otime2" ]] ; then
         otime2="$replyContent"
     elif [[ "$replyType" == "ovolume" ]] ; then
         ovolume="$replyContent"
@@ -243,11 +250,11 @@ while read -r reply ; do
         oupdates_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
         updates_box_outline=$boxOutline
         updates_box_fill=$boxFill
-    elif [[ "$replyType" == "onet" ]] ; then
-        onet_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-        onet_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
-        net_box_outline=$boxOutline
-        net_box_fill=$boxFill
+    #elif [[ "$replyType" == "onet" ]] ; then
+    #    onet_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
+    #    onet_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
+    #    net_box_outline=$boxOutline
+    #    net_box_fill=$boxFill
     elif [[ "$replyType" == "olocker" ]] ; then
         olocker_start="$( get_box_seperator "$pbc" "$pbc" "$boxOutline" "$boxFill" )"
         olocker_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
@@ -258,10 +265,7 @@ while read -r reply ; do
 
     # print out title window (will not be updated again)
     if [[ "$titlewindow_set" -eq 0 ]] ; then
-        tw_left_margin=$(( SCALE*25 ))
-        tw_width=$(( SCALE*17 ))
-        tw_top=$(( SCALE*6 ))
-        echo -e "^tw()^pa(${tw_left_margin};${tw_top})^fg(#3465a4)^r(${_BP}x${_BP})^fg(#173252)^r(${tw_width}x${_BP})^fg(#3465a4)^r(${_BP}x${_BP})"
+        echo -e "^tw() "
         titlewindow_set=1
     fi
 
@@ -295,10 +299,10 @@ while read -r reply ; do
     current_index=$( get_type_index "$current_type" )
     elements[$current_index]=$( format_element $reply )
 
-    # TODO  for loop over all elements
-    #echo "${current_index} ${elements[$current_index]}" >> /tmp/new-api-test
-    echo "${elements[0]}"
-    echo "${elements[1]}"
+    # for loop over all elements
+    for ei in ${!elements[*]} ; do
+        echo "${elements[$ei]}"
+    done
 
     echo "^fg() "  # blank last line to clear old content
 done | ocelot-dzen -p -l "$PANEL_LINE_COUNT" -h "${_PLH}" -ta l -w "${_PW}" -fn "monospace:bold:size=${_FP}" -e 'onstart=uncollapse' -bg "$pbc"

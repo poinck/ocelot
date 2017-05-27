@@ -53,6 +53,7 @@ ${OCELOT_PATH}bin/obattery &
 ${OCELOT_PATH}bin/oupdates &
 ${OCELOT_PATH}bin/otmc &
 ${OCELOT_PATH}bin/odisks &
+${OCELOT_PATH}bin/onet &
 
 # start ocelot desktop
 ${OCELOT_PATH}bin/odesktop

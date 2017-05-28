@@ -13,7 +13,7 @@
 # ocelot by André Klausnitzer, CC0
 
 # element order
-element_order=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "battery" "net" "disk_home" "disk_root")
+element_order=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "battery" "updates" "net" "disk_home" "disk_root")
 
 # content of elements
 declare -a elements
@@ -175,18 +175,6 @@ get_status() {
 
 # initialize box colors of side-panel elements
 pbc="#1c1c1c" # panel background color
-battery_boxOutline=$pbc
-battery_boxFill=$pbc
-tmc_boxOutline=$pbc
-tmc_boxFill=$pbc
-updates_box_outline=$pbc
-updates_box_fill=$pbc
-net_box_outline=$pbc
-net_box_fill=$pbc
-locker_box_outline=$pbc
-locker_box_fill=$pbc
-test_boxOutline=$pbc
-test_boxFill=$pbc
 titlewindow_set=0
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
@@ -242,10 +230,10 @@ while read -r reply ; do
         otmc_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
         tmc_boxOutline=$boxOutline
         tmc_boxFill=$boxFill
-    elif [[ "$replyType" == "oupdates" ]] ; then
-        oupdates_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-        updates_box_outline=$boxOutline
-        updates_box_fill=$boxFill
+    #elif [[ "$replyType" == "oupdates" ]] ; then
+    #    oupdates_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
+    #    updates_box_outline=$boxOutline
+    #    updates_box_fill=$boxFill
     #elif [[ "$replyType" == "onet" ]] ; then
     #    onet_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
     #    onet_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
@@ -274,14 +262,14 @@ while read -r reply ; do
     #echo -e "^pa(${tw_left_margin};${tw_top})^fg(#3465a4)^r(${_BP}x${_BP})^fg(#173252)^r(${tw_width}x${_BP})^fg(#3465a4)^r(${_BP}x${_BP})"
 
     echo -e "$ostatus"
-    echo -e "$odesktop"
+    #echo -e "$odesktop"
     #echo -e "$odesktops"
     #echo -en "${obattery_start}${obattery_inner}"
-    echo -en "$( get_box_seperator "$battery_boxOutline" "$battery_boxFill" "$tmc_boxOutline" "$tmc_boxFill" )"
+    #echo -en "$( get_box_seperator "$battery_boxOutline" "$battery_boxFill" "$tmc_boxOutline" "$tmc_boxFill" )"
     echo -en "${otmc_inner}"
-    echo -en "$( get_box_seperator "$tmc_boxOutline" "$tmc_boxFill" "$updates_box_outline" "$updates_box_fill" )"
-    echo -en "${oupdates_inner}"
-    echo -en "$( get_box_seperator "$updates_box_outline" "$updates_box_fill" "$net_box_outline" "$net_box_fill" )"
+    #echo -en "$( get_box_seperator "$tmc_boxOutline" "$tmc_boxFill" "$updates_box_outline" "$updates_box_fill" )"
+    #echo -en "${oupdates_inner}"
+    #echo -en "$( get_box_seperator "$updates_box_outline" "$updates_box_fill" "$net_box_outline" "$net_box_fill" )"
     #echo -en "${onet_inner}${onet_end}"
     echo -e "$ostatus2"
     echo -en "${olocker_start}${olocker_inner}${olocker_end}"

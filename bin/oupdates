@@ -11,39 +11,22 @@
 # ocelot by André Klausnitzer, CC0
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
+source ${OCELOT_PATH}bin/outils.sh
 
-# gentoo
-update_cmd="portage"
-outlinec="#3f3f3f"
-fillc="#3f3f3f"
-contentc="#ffffff"
-#contentc="#ad8fdc"
-availablec="#ffffff"
-
-# test
-#updates_available_list=$( glsa-check -n -q -l all )
-
+# check security updates for gentoo
 updates_available_list=$( glsa-check -n -q -l affected )
 updates_available=$( echo "$updates_available_list" | wc -l )
 updates_available_empty=$( echo "$updates_available_list" | wc -w )
 
 
 if [[ "$updates_available" -le 1 ]] && [[ "$updates_available_empty" -le 1 ]] ; then
-    updates_available="U: ^fg(#aaaaaa)OK"
-    #contentc="#aaaaaa"
+    updates_available="^fg(#$cdarkfont)U_^fg(#$cfont)OK $cdarkgrey"
 else
-    #update_cmd="$updates_available"
-    #updates_available="updates!"
-    updates_available="U: $updates_available"
-    #availablec="#8b6fba"
-    outlinec="#8b6fba"
-    #outlinec="#463c65"
-    fillc="#463c65"
+    updates_available="^fg(#$cdarkfont)U_^fg(#$cfont)$updates_available $cdarkpurple 100 $cfont 100 $cpurple"
 fi
 
-#updates="oupdates:=^fg($contentc)$update_cmd==^fg($availablec)$updates_available;;$outlinec--$fillc"
-updates="oupdates:=^fg($availablec)$updates_available;;$outlinec--$fillc"
-echo -e "[DEBUG] updates empty = $updates_available_empty"
-echo -e "[DEBUG] update list:\n$updates_available_list"
+updates="updates ${updates_available}"
+#echo -e "[DEBUG] updates empty = $updates_available_empty"
+#echo -e "[DEBUG] update list:\n$updates_available_list"
 echo "[DEBUG] $updates"
 echo "$updates" > "$ofifo"

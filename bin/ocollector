@@ -13,7 +13,7 @@
 # ocelot by André Klausnitzer, CC0
 
 # element order
-element_order=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "net" "disk_home" "disk_root")
+element_order=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "battery" "net" "disk_home" "disk_root")
 
 # content of elements
 declare -a elements
@@ -233,11 +233,11 @@ while read -r reply ; do
         odesktop="$( get_box "$boxOutline" "$boxFill" "$replyContent" )"
     #elif [[ "$replyType" == "odesktops" ]] ; then
     #    odesktops="$replyContent"
-    elif [[ "$replyType" == "obattery" ]] ; then
-        obattery_start="$( get_box_seperator "$pbc" "$pbc" "$boxOutline" "$boxFill" )"
-        obattery_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-        battery_boxOutline=$boxOutline
-        battery_boxFill=$boxFill
+    #elif [[ "$replyType" == "obattery" ]] ; then
+    #    obattery_start="$( get_box_seperator "$pbc" "$pbc" "$boxOutline" "$boxFill" )"
+    #    obattery_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
+    #    battery_boxOutline=$boxOutline
+    #    battery_boxFill=$boxFill
     elif [[ "$replyType" == "otmc" ]] ; then
         otmc_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
         tmc_boxOutline=$boxOutline
@@ -276,7 +276,7 @@ while read -r reply ; do
     echo -e "$ostatus"
     echo -e "$odesktop"
     #echo -e "$odesktops"
-    echo -en "${obattery_start}${obattery_inner}"
+    #echo -en "${obattery_start}${obattery_inner}"
     echo -en "$( get_box_seperator "$battery_boxOutline" "$battery_boxFill" "$tmc_boxOutline" "$tmc_boxFill" )"
     echo -en "${otmc_inner}"
     echo -en "$( get_box_seperator "$tmc_boxOutline" "$tmc_boxFill" "$updates_box_outline" "$updates_box_fill" )"

@@ -21,6 +21,8 @@ cdarkblue="3f3f74"
 cblue="6767a1"
 cdarkpurple="45283c"
 cyellow="fbf236"
+cdarkyellow="4b692f"
+#ccbdbfc
 
 # get color between start and end color
 # - without leading '#'

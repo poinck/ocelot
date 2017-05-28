@@ -12,17 +12,17 @@
 #
 # ocelot by André Klausnitzer, CC0
 
-#cfont="cbdbfc"
-#cdarkfont="9badb7"
 cfont="aaaaaa"
 cdarkfont="777777"
 cdarkgrey="1c1c1c"
 cdarkblue="3f3f74"
 cblue="6767a1"
 cdarkpurple="45283c"
+cpurple="6e5e69"
 cyellow="fbf236"
 cdarkyellow="4b692f"
-#ccbdbfc
+cblueishgrey="ccbdbfc"
+cblueishdarkgrey="9badb7"
 
 # get color between start and end color
 # - without leading '#'

@@ -29,7 +29,7 @@ get_battery() {
         bat_status2="C"
         bat_percent2=$bat_percent
     elif [[ "$bat_status" == "Unknown" ]] ; then
-        bat_status2="U"
+        bat_status2="N"
         bat_percent2=$bat_percent
     elif [[ "$bat_status" == "Full" ]] ; then
         bat_status2="F"

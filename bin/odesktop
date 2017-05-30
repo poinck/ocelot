@@ -81,7 +81,7 @@ while read -r reply ; do
         fi
     done
 
-    desktop="desktop ^fg(#ffffff)${i}_^fg(#${cfont})${current_d} ${cdarkblue} 100 ${cblue}"
+    desktop="desktop ^fg(#${cfont})${i}_^fg(#ffffff)${current_d} ${cdarkblue} 100 ${cblue}"
     window="window ^fg(#${cblue})${window_title} ${cdarkgrey}"
     desktops="desktops _ ${cdarkgrey} $r"
     echo "[DEBUG] $desktops"

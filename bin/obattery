@@ -13,35 +13,35 @@
 
 source ${OCELOT_PATH}bin/outils.sh
 
-bat_status2="_"
-bat_percent=0
-bgcolor=$cdarkgrey
-bat_graph=$cdarkpurple
-
 get_battery() {
+    bat_percent=0
     bat_now=$(cat /sys/class/power_supply/BAT0/energy_now)
     bat_status=$( cat /sys/class/power_supply/BAT0/status )
     bat_full=$(cat /sys/class/power_supply/BAT0/energy_full)
     bat_percent=$(( bat_now*100/bat_full ))
     bat_now_mAh=$(( bat_now/10000 ))
-    bat_graph2=""
+    bat_graph=$cdarkpurple
+    bgcolor=$cdarkgrey
+    bat_font=${cfont}
+    bat_darkfont=${cdarkfont}
+    bat_percent2=${bat_percent}
+    bat_status2="_"
     if [[ "$bat_status" == "Charging" ]] ; then
         bat_status2="C"
-        bat_percent2=$bat_percent
     elif [[ "$bat_status" == "Unknown" ]] ; then
         bat_status2="N"
-        bat_percent2=$bat_percent
     elif [[ "$bat_status" == "Full" ]] ; then
         bat_status2="F"
-        bat_percent2=$bat_percent
     else
         bat_status2="B"
-        if [[ "$bat_percent" -lt 10 ]] ; then
-            bat_percent2=100
-            bgcolor=$cyellow
-            bat_graph=$cfont
-            bat_graph2="100 $cdarkyellow"
-        fi
+    fi
+
+    if [[ "$bat_percent" -lt 15 ]] ; then
+        #bat_percent2=100
+        bgcolor=$cyellow
+        bat_graph=${cdarkgrey}
+        bat_font=${cdarkgrey}
+        bat_darkfont=${cdarkyellow}
     fi
 }
 
@@ -49,7 +49,7 @@ ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 while true ; do
     get_battery
 
-    battery="battery ^fg(#${cdarkfont})${bat_status2}_^fg(#${cfont})${bat_percent}% ${bgcolor} ${bat_percent2} ${bat_graph} ${bat_graph2}"
+    battery="battery ^fg(#${bat_darkfont})${bat_status2}_^fg(#${bat_font})${bat_percent}% ${bgcolor} ${bat_percent2} ${bat_graph}"
     echo "[DEBUG] $battery"
     echo "$battery" > "$ofifo"
 

@@ -35,3 +35,8 @@ ocelot_path="/home/username/gits/ocelot/"
 
 # change volume master, default: "Master"
 #volume_master="PCM"
+
+# order of elements, changes here are possible during runtime. note that
+# all elements need to rewrite their values to the ocelot-fifo until the new
+# order is active
+#element_order=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "battery" "tm_outside" "tm_outside" "updates" "net" "disk_home" "disk_root")

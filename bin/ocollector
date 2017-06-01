@@ -13,7 +13,7 @@
 # ocelot by André Klausnitzer, CC0
 
 # element order
-element_order=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "battery" "updates" "net" "disk_home" "disk_root")
+ELEMENT_ORDER=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "battery" "tm_outside" "tm_outside" "updates" "net" "disk_home" "disk_root")
 
 # content of elements
 declare -a elements
@@ -23,7 +23,7 @@ get_type_index() {
     index=99
 
     ii=0
-    for element in ${element_order[*]} ; do
+    for element in ${ELEMENT_ORDER[*]} ; do
         if [[ "$element" == "${element_type}" ]] ; then
             index=$ii
             break
@@ -193,6 +193,14 @@ while read -r reply ; do
         boxOutline=${_box%%--*} # first
         boxFill=${_box#*--} # last
         _isBox=true
+    fi
+
+    # reread element order
+    if [[ -f ~/.ocelotrc ]] ; then
+        . ~/.ocelotrc
+        if [[ -n "$element_order" ]] ; then
+            ELEMENT_ORDER="$element_order"
+        fi
     fi
 
     # handle each reply type

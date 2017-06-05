@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# olock locks the display using "i3lock". 
+# olock locks the display using "i3lock".
 #
 #    ^   ^
 #  +-------+

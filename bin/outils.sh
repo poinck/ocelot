@@ -20,8 +20,8 @@ cblue="6767a1"
 cdarkpurple="45283c"
 cpurple="6e5e69"
 cyellow="fbf236"
-cdarkyellow="4b692f"
-cblueishgrey="ccbdbfc"
+cdarkyellow="807b1c"
+cblueishgrey="cbdbfc"
 cblueishdarkgrey="9badb7"
 
 # get color between start and end color

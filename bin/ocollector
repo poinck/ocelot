@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# ocollector is the multiplexer for ocelot. It has some predefined functions to
-# boxes and horizontal graphs. It furthermore defines the order of all
-# side-panel elements. It uses `ocelot-dzen` to draw.
+# ocollector is the multiplexer for ocelot. It has some predefined functions
+# to draw elements for the side-panel using `ocelot-dzen`. It furthermore
+# defines the order of all elements.
 #
 #    ^   ^
 #  +-------+
@@ -13,7 +13,13 @@
 # ocelot by André Klausnitzer, CC0
 
 # element order
-ELEMENT_ORDER=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "battery" "tm_outside" "tm_outside" "updates" "net" "disk_home" "disk_root")
+ELEMENT_ORDER=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "battery" "tm_outside" "tm_outside" "updates" "net" "disk_home" "disk_root" "nolock" "lock")
+if [[ -f ~/.ocelotrc ]] ; then
+    . ~/.ocelotrc
+    if [[ -n "$element_order" ]] ; then
+        ELEMENT_ORDER="$element_order"
+    fi
+fi
 
 # content of elements
 declare -a elements
@@ -195,14 +201,6 @@ while read -r reply ; do
         _isBox=true
     fi
 
-    # reread element order
-    if [[ -f ~/.ocelotrc ]] ; then
-        . ~/.ocelotrc
-        if [[ -n "$element_order" ]] ; then
-            ELEMENT_ORDER="$element_order"
-        fi
-    fi
-
     # handle each reply type
     #if [[ "$replyType" == "otime1" ]] ; then
     #    otime1="$replyContent"
@@ -225,8 +223,8 @@ while read -r reply ; do
         ostatus="$( get_status )"
     elif [[ "$replyType" == "ostatus2" ]] ; then
         ostatus2="$replyContent"
-    elif [[ "$replyType" == "odesktop" ]] ; then
-        odesktop="$( get_box "$boxOutline" "$boxFill" "$replyContent" )"
+    #elif [[ "$replyType" == "odesktop" ]] ; then
+    #    odesktop="$( get_box "$boxOutline" "$boxFill" "$replyContent" )"
     #elif [[ "$replyType" == "odesktops" ]] ; then
     #    odesktops="$replyContent"
     #elif [[ "$replyType" == "obattery" ]] ; then
@@ -247,12 +245,12 @@ while read -r reply ; do
     #    onet_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
     #    net_box_outline=$boxOutline
     #    net_box_fill=$boxFill
-    elif [[ "$replyType" == "olocker" ]] ; then
-        olocker_start="$( get_box_seperator "$pbc" "$pbc" "$boxOutline" "$boxFill" )"
-        olocker_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-        olocker_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
-        locker_box_outline=$boxOutline
-        locker_box_fill=$boxFill
+    #elif [[ "$replyType" == "olocker" ]] ; then
+    #    olocker_start="$( get_box_seperator "$pbc" "$pbc" "$boxOutline" "$boxFill" )"
+    #    olocker_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
+    #    olocker_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
+    #    locker_box_outline=$boxOutline
+    #    locker_box_fill=$boxFill
     fi
 
     # print out title window (will not be updated again)
@@ -280,7 +278,7 @@ while read -r reply ; do
     #echo -en "$( get_box_seperator "$updates_box_outline" "$updates_box_fill" "$net_box_outline" "$net_box_fill" )"
     #echo -en "${onet_inner}${onet_end}"
     echo -e "$ostatus2"
-    echo -en "${olocker_start}${olocker_inner}${olocker_end}"
+    #echo -en "${olocker_start}${olocker_inner}${olocker_end}"
 
     # gather reply type of element, get order index and store it's content
     # to elements array

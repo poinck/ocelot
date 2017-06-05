@@ -10,6 +10,8 @@
 #
 # ocelot by André Klausnitzer, CC0
 
+source ${OCELOT_PATH}bin/outils.sh
+
 LOCKSCREEN_TIMEOUT=10
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
@@ -21,29 +23,31 @@ fi
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 
-backgroundc="#1c1c1c"   # panel background color
-outlinec="#ff9500"      # orange
-fillc="#885300"         # orange
+onolock=""
 olocker=""
 if [[ "$1" == "disable" ]] ; then
     xautolock -disable
-    olocker="^fg($backgroundc)NO LOCK;;$outlinec--$outlinec"
+    onolock="nolock ^fg(#${cdarkyellow})!_^fg(#000000)LOCK $cyellow 100 000000 100 $cdarkyellow"
 elif [[ "$1" == "enable" ]] ; then
     xautolock -enable
-    olocker="^fg($backgroundc);;$backgroundc--$backgroundc"
+    onolock="nolock ^fg(#${cdarkgrey})_ $cdarkgrey"
 elif [[ "$1" == "notify" ]] ; then
     for i in 9 8 7 6 5 4 3 2 1 ; do
-        olocker="^fg(#ffffff)LOCK: $i;;$outlinec--$fillc"
-        echo "olocker:=$olocker" > "$ofifo"
+        olocker="lock ^fg(#${cdarkyellow})LOCK_^fg(#000000)$i $cyellow 100 000000 100 $cdarkyellow"
+        echo "$olocker" > "$ofifo"
         sleep 1
     done
-    olocker="^fg($backgroundc);;$backgroundc--$backgroundc"
+    olocker="lock ^fg(#${cdarkgrey})_ $cdarkgrey"
 else
     # default: start xautolock
     xautolock -time $LOCKSCREEN_TIMEOUT -locker "olock" -notifier "olocker notify" -notify 10 &
 fi
 
 if [[ -n "$olocker" ]] ; then
-    echo "olocker:=$olocker" > "$ofifo"
-    echo "[DEBUG] olocker:=$olocker"
+    echo "$olocker" > "$ofifo"
+    echo "[DEBUG] $olocker"
+fi
+if [[ -n "$onolock" ]] ; then
+    echo "$onolock" > "$ofifo"
+    echo "[DEBUG] $onolock"
 fi

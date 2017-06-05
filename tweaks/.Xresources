@@ -29,12 +29,11 @@ URxvt.keysym.M-C-v:   perl:clipboard:paste_escaped
 !Comment this if you dont want copy when text is selected
 URxvt.clipboard.autocopy: true
 
-! blinky orange cursor and content margin
-URxvt.cursorColor: #ffbd00
+! yellow pointer and blinky yellow curser
+URxvt.cursorColor: #fbf236
 URxvt.cursorBlink: true
 Urxvt.cursorUnderline: false
-URxvt.pointerColor: #ffbd00
-!Urxvt.pointerColor2: #ff0000
+URxvt.pointerColor: #fbf236
 
 ! switch font-size ondemand
 URxvt.keysym.M-C-3: command:\033]50;xft:Monospace:pixelsize=13\007
@@ -43,29 +42,22 @@ URxvt.keysym.M-C-5: command:\033]50;xft:Monospace:pixelsize=26\007
 
 ! black
 *color0:  #2E3436
-!*color8:  #555753
 *color8: #7f827c
 ! red
-!*color1:  #a40000
 *color1: #ff683d
-!*color9:  #EF2929
 *color9: #ff2d2d
 ! green
-!*color2:  #4E9A06
 *color2: #43d827
 *color10: #8AE234
 ! yellow
-!*color3:  #C4A000
 *color3: #d7d827
 *color11: #FCE94F
 ! blue
 *color4:  #3465A4
-*color12: #729FCF
+*color12: #8484C4
 ! purple
 *color5:  #75507B
-!*color13: #e34fff
 *color13: #e0a1ff
-!*color13: #AD7FA8
 ! orange (replaces cyan)
 !*color6:  #ce5c00
 !*color14: #fcaf3e

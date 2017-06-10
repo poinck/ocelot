@@ -17,7 +17,7 @@ OCELOT_PATH=""
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
     if [[ -n "$ocelot_path" ]] ; then
-        OCELOT_PATH="$ocelot_path"
+        export OCELOT_PATH="$ocelot_path"
     fi
     echo "[DEBUG] ocelot_path = '$OCELOT_PATH'"
     if [[ -n "$wallpaper" ]] ; then
@@ -30,6 +30,8 @@ if [[ -f ~/.ocelotrc ]] ; then
 else
     echo "~/.ocelotrc does not exist"
 fi
+
+source ${OCELOT_PATH}bin/outils.sh
 
 # load xresources again if not already done in "~/.xinitrc"
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources

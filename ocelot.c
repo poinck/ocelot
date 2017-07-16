@@ -1275,8 +1275,8 @@ int xerrorstart(__attribute__((unused)) Display *dis, __attribute__((unused)) XE
 
 int main(int argc, char *argv[]) {
     if (argc == 2 && !strncmp(argv[1], "-v", 3))
-        errx(EXIT_SUCCESS, "version: %s - by c00kiemon5ter >:3 omnomnomnom", VERSION);
-    else if (argc != 1) errx(EXIT_FAILURE, "usage: man monsterwm");
+        errx(EXIT_SUCCESS, "\n    version: 1.0.0 - by c00kiemon5ter >:3 omnomnomnom\n    version: %s - by poinck", VERSION);
+    else if (argc != 1) errx(EXIT_FAILURE, "usage: man ocelot");
     if (!(dis = XOpenDisplay(NULL))) errx(EXIT_FAILURE, "cannot open display");
     setup();
     desktopinfo(); /* zero out every desktop on (re)start */

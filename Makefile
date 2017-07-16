@@ -61,10 +61,14 @@ install: all
 	@echo installing executable files to ${DESTDIR}${PREFIX}/bin
 	@install -Dm755 ${WMNAME} ${DESTDIR}${PREFIX}/bin/${WMNAME}
 	@for binary in ${ADDITIONAL_BINARIES}; do install -Dm755 bin/$$binary ${DESTDIR}${PREFIX}/bin/$$binary; done
+	@echo installing manual page to ${DESTDIR}${MANPREFIX}/man.1
+	@install -Dm644 ${WMNAME}.1 ${DESTDIR}${MANPREFIX}/man1/${WMNAME}.1
 
 uninstall:
 	@echo removing executable files from ${DESTDIR}${PREFIX}/bin
 	@rm -f ${DESTDIR}${PREFIX}/bin/${WMNAME}
 	@for binary in ${ADDITIONAL_BINARIES}; do rm -f ${DESTDIR}${PREFIX}/bin/$$binary; done
+	@echo removing manual page from ${DESTDIR}${MANPREFIX}/man1
+	@rm -f ${DESTDIR}${MANPREFIX}/man1/${WMNAME}.1
 
 .PHONY: all options clean install uninstall

@@ -42,6 +42,7 @@ git clone https://github.com/poinck/ocelot.git
 cd ocelot
 vim config.h  # look, (change) and :wq
 make
+make install  # as root
 ```
 
 ## Install

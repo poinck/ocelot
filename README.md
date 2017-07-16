@@ -42,7 +42,6 @@ git clone https://github.com/poinck/ocelot.git
 cd ocelot
 vim config.h  # look, (change) and :wq
 make
-make install  # as root
 ```
 
 ## Install
@@ -66,6 +65,7 @@ ln -s /home/$USER/gits/ocelot/bin/otime ~/bin/otime
 ln -s /home/$USER/gits/ocelot/bin/otmc ~/bin/otmc
 ```
 - additionally you should configure `OCELOT_PATH` in "~/.ocelotrc"
+- otherwise, if you want to install ocelot for every user, call `make install` as root.
 
 ## Configuration
 "ocelot" has one user config-file; create it if you want to change default

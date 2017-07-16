@@ -15,7 +15,7 @@
 source ${OCELOT_PATH}bin/outils.sh
 
 # element order
-ELEMENT_ORDER=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "battery" "tm_outside" "tm_outside" "updates" "net" "disk_home" "disk_root" "nolock" "lock")
+ELEMENT_ORDER=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "battery" "tm_outside" "tm_inside" "updates" "net" "disk_home" "disk_root" "nolock" "lock")
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
     if [[ -n "$element_order" ]] ; then

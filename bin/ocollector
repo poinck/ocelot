@@ -274,7 +274,7 @@ while read -r reply ; do
     #echo -e "$odesktops"
     #echo -en "${obattery_start}${obattery_inner}"
     #echo -en "$( get_box_seperator "$battery_boxOutline" "$battery_boxFill" "$tmc_boxOutline" "$tmc_boxFill" )"
-    echo -en "${otmc_inner}"
+    #echo -en "${otmc_inner}"
     #echo -en "$( get_box_seperator "$tmc_boxOutline" "$tmc_boxFill" "$updates_box_outline" "$updates_box_fill" )"
     #echo -en "${oupdates_inner}"
     #echo -en "$( get_box_seperator "$updates_box_outline" "$updates_box_fill" "$net_box_outline" "$net_box_fill" )"

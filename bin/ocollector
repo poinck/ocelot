@@ -15,7 +15,7 @@
 source ${OCELOT_PATH}bin/outils.sh
 
 # element order
-ELEMENT_ORDER=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "battery" "tm_outside" "tm_inside" "updates" "net" "disk_home" "disk_root" "nolock" "lock")
+ELEMENT_ORDER=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "battery" "updates" "net" "disk_home" "disk_root" "nolock" "lock")
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
     if [[ -n "$element_order" ]] ; then
@@ -234,10 +234,10 @@ while read -r reply ; do
     #    obattery_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
     #    battery_boxOutline=$boxOutline
     #    battery_boxFill=$boxFill
-    elif [[ "$replyType" == "otmc" ]] ; then
-        otmc_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-        tmc_boxOutline=$boxOutline
-        tmc_boxFill=$boxFill
+    #elif [[ "$replyType" == "otmc" ]] ; then
+    #    otmc_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
+    #    tmc_boxOutline=$boxOutline
+    #    tmc_boxFill=$boxFill
     #elif [[ "$replyType" == "oupdates" ]] ; then
     #    oupdates_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
     #    updates_box_outline=$boxOutline

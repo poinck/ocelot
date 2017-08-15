@@ -22,7 +22,6 @@ Following dependencies are required to get the intended look and feel:
 - `xrandr` to guess display height
 
 Following is *optional*:
-- `tmd` to show local temperature, see [tm](https://github.com/poinck/tm)
 - `youtube-dl` and `omxplayer` to use "oyay" to play from video-url supported by youtube-dl on raspberry pi without pre-downloading.
 
 Things to come (order is priority):
@@ -62,7 +61,6 @@ ln -s /home/$USER/gits/ocelot/bin/olocker ~/bin/olocker
 ln -s /home/$USER/gits/ocelot/bin/ocollector ~/bin/ocollector
 ln -s /home/$USER/gits/ocelot/bin/odesktop ~/bin/odesktop
 ln -s /home/$USER/gits/ocelot/bin/otime ~/bin/otime
-ln -s /home/$USER/gits/ocelot/bin/otmc ~/bin/otmc
 ```
 - additionally you should configure `OCELOT_PATH` in "~/.ocelotrc"
 - otherwise, if you want to install ocelot for every user, call `make install` as root.
@@ -76,6 +74,11 @@ See "config/.ocelotrc" for help adjusting the variables.
 
 **Security updates with `oupdates.service`**
 If you use systemd you can check for security-updates every time the computer resumes from sleep (hibernate); see "config/systemd/system/oupdates.service". Currently only Gentoo GLSA is supported. Syncing the portage-tree has to be done seperately.
+
+If you did not install ocelot system-wide but want security update checking on your gentoo-install, please export OCELOT_PATH in root's .bashrc:
+```.sh
+export OCELOT_PATH='/home/user/gits/ocelot/'
+```
 
 **Lock screen with `olock.service`**
 Use "config/systemd/user/olock.service" to lock your screen before your computer goes to sleep (standby).

@@ -11,6 +11,8 @@
 # ocelot by André Klausnitzer, CC0
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
+
+echo "[DEBUG] ocelot_path = '$OCELOT_PATH'"
 source ${OCELOT_PATH}bin/outils.sh
 
 # check security updates for gentoo

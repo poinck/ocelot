@@ -23,9 +23,6 @@ ocelot_path="/home/username/gits/ocelot/"
 # set lockscreen timeout other than the default of 10 minutes
 #lockscreen_timeout=5
 
-# if you have a tmd running nearby for local outside temperature
-#tmd_url="https://yourdomain.tld/tm/tm_1.csv"
-
 # scale side-panel, terminal and menu
 # default: 1
 #scale=2
@@ -39,4 +36,4 @@ ocelot_path="/home/username/gits/ocelot/"
 # order of elements, changes here are possible during runtime. note that
 # all elements need to rewrite their values to the ocelot-fifo until the new
 # order is active
-#element_order=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "battery" "tm_outside" "tm_inside" "updates" "net" "disk_home" "disk_root" "nolock" "lock")
+#element_order=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "battery" "updates" "net" "disk_home" "disk_root" "nolock" "lock")

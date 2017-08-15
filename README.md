@@ -75,7 +75,7 @@ See "config/.ocelotrc" for help adjusting the variables.
 **Security updates with `oupdates.service`**
 If you use systemd you can check for security-updates every time the computer resumes from sleep (hibernate); see "config/systemd/system/oupdates.service". Currently only Gentoo GLSA is supported. Syncing the portage-tree has to be done seperately.
 
-If you did not install ocelot system-wide but want security update checking on your gentoo-install, please export `OCELOT_PATH` "/root/.bashrc":
+If you did not install ocelot system-wide but want security update checking on your gentoo-install, please export `OCELOT_PATH` in "/root/.bashrc":
 ```.sh
 export OCELOT_PATH='/home/user/gits/ocelot/'
 ```

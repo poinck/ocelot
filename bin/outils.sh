@@ -14,6 +14,8 @@
 
 cfont="aaaaaa"
 cdarkfont="777777"
+cdarkerfont="555555"
+cgrey="333333"
 cdarkgrey="1c1c1c"
 cdarkblue="3f3f74"
 cblue="6767a1"

@@ -10,6 +10,8 @@
 #
 # ocelot by André Klausnitzer, CC0
 
+source ${OCELOT_PATH}bin/outils.sh
+
 SCALE=1
 VOLUME_MASTER="Master"
 if [[ -f ~/.ocelotrc ]] ; then
@@ -22,22 +24,12 @@ if [[ -f ~/.ocelotrc ]] ; then
     fi
 fi
 
-# initialize scaling
-#_FP=$(( 9*SCALE ))      # font pixels
-#_BP=$(( 4*SCALE ))      # border pixels
-#_PW=$(( _PW*SCALE ))
-#_PLH=$(( _PLH*SCALE ))
-#_BI=$(( _PW-(_BP*2) ))  # box inner
-#_BTB=$(( 8*SCALE ))     # box border top, bottom and left
-#_BTM=$(( _BTB+_BP ))    # box inner top margin
-#_TA=$(( 1*SCALE))       # text adjustment
-
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 
 if [[ "$1" == "up" ]] ; then
-    omixer=$( amixer set $VOLUME_MASTER 5%+ )
+    omixer=$( amixer set $VOLUME_MASTER 6%+ )
 elif [[ "$1" == "down" ]] ; then
-    omixer=$( amixer set $VOLUME_MASTER 5%- )
+    omixer=$( amixer set $VOLUME_MASTER 6%- )
 elif [[ "$1" == "mute" ]] ; then
     omixer=$( amixer set $VOLUME_MASTER toggle )
 fi
@@ -51,14 +43,26 @@ if [[ "$?" -eq 0 ]] ; then
     muted=1
 fi
 echo "[DEBUG] omixer_master_volume = $omixer_master_volume, muted = $muted"
-# 75-16-4=55
-if [[ "$muted" -eq 1 ]] ; then
-    ovolume_pixel=0
-else
-    ovolume_pixel=$(( omixer_master_volume*55*SCALE/100 ))
-fi
 
-volume="ovolume:=$ovolume_pixel"
+volume_tmp=${omixer_master_volume}
+volume_label="^fg(#${cdarkfont})V"
+volume_label2_color=$cfont
+volume_graph_color=$cfont
+volume_graph2_color=$cgrey
+if [[ "$muted" -eq 1 ]] ; then
+    volume_label="^fg(#$cdarkerfont)V"
+    volume_label2_color=$cdarkfont
+    volume_graph_color=$cdarkpurple
+    volume_graph2_color=$cdarkgrey
+fi
+volume_graph+="${omixer_master_volume} ${volume_graph_color} "
+for (( i=volume_tmp-6 ; i>=6 ; i=$i-6 )) ; do
+    #echo "[DEBUG] i = $i"
+    volume_graph+="100 ${volume_graph2_color} "
+done
+#volume_graph+="100 ${volume_graph2_color}"
+
+volume="volume ${volume_label}_^fg(#${volume_label2_color})${omixer_master_volume}% ${cdarkgrey} $volume_graph"
 echo "[DEBUG] $volume"
 echo "$volume" > "$ofifo"
 

@@ -22,7 +22,7 @@
                                      ocelot side-panel or 128 if you've set
                                      "scale=2" in .ocelotrc */
 #define DEFAULT_MODE    FLOAT     /* initial layout/mode: TILE MONOCLE BSTACK GRID FLOAT */
-#define ATTACH_ASIDE    False     /* False means new window is master */
+#define ATTACH_ASIDE    True      /* False means new window is master */
 #define FOLLOW_WINDOW   False     /* follow the window when moved to a different desktop */
 #define FOLLOW_MOUSE    False     /* focus the window the mouse just entered */
 #define CLICK_TO_FOCUS  True      /* focus an unfocused window when clicked  */

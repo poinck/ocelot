@@ -22,7 +22,7 @@ updates_available_empty=$( echo "$updates_available_list" | wc -w )
 
 
 if [[ "$updates_available" -le 1 ]] && [[ "$updates_available_empty" -le 1 ]] ; then
-    updates_available="^fg(#$cdarkfont)U_^fg(#$cfont)OK $cdarkgrey"
+    updates_available="^fg(#$cdarkerfont)U_^fg(#$cdarkfont)OK $cdarkgrey"
 else
     updates_available="^fg(#$cfont)U_^fg(#ffffff)$updates_available $cdarkpurple 100 $cfont 100 $cpurple"
 fi

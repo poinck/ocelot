@@ -15,7 +15,7 @@
 source ${OCELOT_PATH}bin/outils.sh
 
 # element order
-ELEMENT_ORDER=("dayweek" "time" "date" "year" "desktops" "desktop" "window" "battery" "updates" "net" "disk_home" "disk_root" "nolock" "lock")
+ELEMENT_ORDER=("dayweek" "time" "date" "year" "volume" "desktops" "desktop" "window" "battery" "updates" "net" "disk_home" "disk_root" "nolock" "lock")
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
     if [[ -n "$element_order" ]] ; then
@@ -56,7 +56,7 @@ guess_display_height() {
 # load user settings, if any
 SCALE=1
 PANEL_LINE_COUNT=37     # minimum line count
-_PLH=24                 # panel line height
+_PLH=23                 # panel line height
 _PW=64                  # panel width
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
@@ -78,7 +78,7 @@ fi
 # initialize scaling
 _FP=$(( 9*SCALE ))      # font pixels
 _BP=$(( 4*SCALE ))      # border pixels
-_TOP=$(( 1*SCALE+_BP ))
+_TOP=$_BP
 _PW=$(( _PW*SCALE ))
 _PLH=$(( _PLH*SCALE ))
 #_BI=$(( _PW-(_BP*2) ))  # box inner
@@ -204,20 +204,8 @@ while read -r reply ; do
     fi
 
     # handle each reply type
-    #if [[ "$replyType" == "otime1" ]] ; then
-    #    otime1="$replyContent"
-    #if [[ "$replyType" == "otime" ]] ; then
-    #    otime_start="$( get_box_seperator "$pbc" "$pbc" "$boxOutline" "$boxFill" )"
-    #    otime_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-    #    otime_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
-    #    time_box_outline=$boxOutline
-    #    time_box_fill=$boxFill
-    #if [[ "$replyType" == "otime2" ]] ; then
-    #    otime2="$replyContent"
-    if [[ "$replyType" == "ovolume" ]] ; then
-        ovolume="$replyContent"
-        ostatus="$( get_status )"
-    elif [[ "$replyType" == "obrightness" ]] ; then
+        # TODO  replace with new generic implementation
+    if [[ "$replyType" == "obrightness" ]] ; then
         obrightness="$replyContent"
         ostatus="$( get_status )"
     elif [[ "$replyType" == "oload" ]] ; then
@@ -225,34 +213,6 @@ while read -r reply ; do
         ostatus="$( get_status )"
     elif [[ "$replyType" == "ostatus2" ]] ; then
         ostatus2="$replyContent"
-    #elif [[ "$replyType" == "odesktop" ]] ; then
-    #    odesktop="$( get_box "$boxOutline" "$boxFill" "$replyContent" )"
-    #elif [[ "$replyType" == "odesktops" ]] ; then
-    #    odesktops="$replyContent"
-    #elif [[ "$replyType" == "obattery" ]] ; then
-    #    obattery_start="$( get_box_seperator "$pbc" "$pbc" "$boxOutline" "$boxFill" )"
-    #    obattery_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-    #    battery_boxOutline=$boxOutline
-    #    battery_boxFill=$boxFill
-    #elif [[ "$replyType" == "otmc" ]] ; then
-    #    otmc_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-    #    tmc_boxOutline=$boxOutline
-    #    tmc_boxFill=$boxFill
-    #elif [[ "$replyType" == "oupdates" ]] ; then
-    #    oupdates_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-    #    updates_box_outline=$boxOutline
-    #    updates_box_fill=$boxFill
-    #elif [[ "$replyType" == "onet" ]] ; then
-    #    onet_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-    #    onet_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
-    #    net_box_outline=$boxOutline
-    #    net_box_fill=$boxFill
-    #elif [[ "$replyType" == "olocker" ]] ; then
-    #    olocker_start="$( get_box_seperator "$pbc" "$pbc" "$boxOutline" "$boxFill" )"
-    #    olocker_inner="$( get_box_inner "$boxOutline" "$boxFill" "$replyContent" )"
-    #    olocker_end="$( get_box_seperator "$boxOutline" "$boxFill" "$pbc" "$pbc" )"
-    #    locker_box_outline=$boxOutline
-    #    locker_box_fill=$boxFill
     fi
 
     # print out title window (will not be updated again)
@@ -264,23 +224,10 @@ while read -r reply ; do
     # print out child window, jump to first line
     echo -e "^p1()"
 
-    #echo -e "$otime"
-    #echo -en "${otime_start}${otime_inner}${otime_end}"
-    #echo -e "$otime2"
-    #echo -e "^pa(${tw_left_margin};${tw_top})^fg(#3465a4)^r(${_BP}x${_BP})^fg(#173252)^r(${tw_width}x${_BP})^fg(#3465a4)^r(${_BP}x${_BP})"
-
     echo -e "$ostatus"
-    #echo -e "$odesktop"
-    #echo -e "$odesktops"
-    #echo -en "${obattery_start}${obattery_inner}"
-    #echo -en "$( get_box_seperator "$battery_boxOutline" "$battery_boxFill" "$tmc_boxOutline" "$tmc_boxFill" )"
-    #echo -en "${otmc_inner}"
-    #echo -en "$( get_box_seperator "$tmc_boxOutline" "$tmc_boxFill" "$updates_box_outline" "$updates_box_fill" )"
-    #echo -en "${oupdates_inner}"
-    #echo -en "$( get_box_seperator "$updates_box_outline" "$updates_box_fill" "$net_box_outline" "$net_box_fill" )"
-    #echo -en "${onet_inner}${onet_end}"
     echo -e "$ostatus2"
-    #echo -en "${olocker_start}${olocker_inner}${olocker_end}"
+        # TODO  remove after status* were replaced by new generic
+        # implementation
 
     # gather reply type of element, get order index and store it's content
     # to elements array

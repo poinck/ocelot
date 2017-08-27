@@ -11,23 +11,7 @@
 #
 # ocelot by André Klausnitzer, CC0
 
-SCALE=1
-if [[ -f ~/.ocelotrc ]] ; then
-    . ~/.ocelotrc
-    if [[ -n "$scale" ]] ; then
-        SCALE="$scale"
-    fi
-fi
-
-# initialize scaling
-_FP=$(( 9*SCALE ))      # font pixels
-_BP=$(( 4*SCALE ))      # border pixels
-_PW=$(( _PW*SCALE ))
-_PLH=$(( _PLH*SCALE ))
-_BI=$(( _PW-(_BP*2) ))  # box inner
-_BTB=$(( 8*SCALE ))     # box border top, bottom and left
-_BTM=$(( _BTB+_BP ))    # box inner top margin
-_TA=$(( 1*SCALE))       # text adjustment
+source ${OCELOT_PATH}bin/outils.sh
 
 remove_leading_zeros() {
     local s="$1"
@@ -43,37 +27,6 @@ remove_leading_zeros() {
     number=$(( 10#$s ))
 
     echo "$number"
-}
-
-get_uptime() {
-    uptime_content=""
-
-    local proc_uptime=$(</proc/uptime)
-
-    local i=0
-    for c_uptime in $proc_uptime ; do
-        i=$(( i+1 ))
-        c_uptime="${c_uptime%%.*}"
-        if [[ "$i" -eq 1 ]] ; then
-            _tmp_uptime="$c_uptime"
-        elif [[ "$i" -eq 2 ]] ; then
-            _tmp_idletime="$c_uptime"
-        fi
-    done
-
-    too_much_pixel=$(( 59*SCALE ))
-    too_much_uptime=0
-    uptime_pixel=$(( _tmp_uptime/60/60/24/2*SCALE ))
-    [[ "$uptime_pixel" -gt "$too_much_pixel" ]] && uptime_pixel=$too_much_pixel too_much_uptime=1
-    too_much_idletime=0
-    idle_pixel=$(( _tmp_idletime/60/60/24/2*SCALE ))
-    [[ "$idle_pixel" -gt "$too_much_pixel" ]] && idle_pixel=$too_much_pixel too_much_idletime=1
-
-    uptime_content="^ib(1)^pa(${_BTB};${_BTB})^fg(#ffffff)^r(${uptime_pixel}x${_BP})"
-    uptime_content+="^ib(1)^pa(${_BTB};${_BTB})^fg(#808080)^r(${idle_pixel}x${_BP})"
-    if [[ "$too_much_uptime" -eq 1 ]] || [[ "$too_much_idletime" -eq 1 ]] ; then
-        uptime_content+="^ib(1)^pa(${too_much_pixel};${_BP})^fg(#292929)^r(${_BP}x${_BP})"
-    fi
 }
 
 get_load() {
@@ -121,113 +74,13 @@ get_load() {
     content+="^ib(1)^pa(${_BTB};${_BTM})^fg($color15)^r(${load15_pixel}x${_BP})"
 }
 
-# add new traffic measurement, remove last know measurement and get average of all
-# left measurements; rx_avg_pixel (array-size is 4)
-traffics=("0" "0" "0" "0")
-all_the_traffics() {
-    local new_traffic="$1"
-
-    traffics[3]=${traffics[2]}
-    traffics[2]=${traffics[1]}
-    traffics[1]=${traffics[0]}
-    traffics[0]=$new_traffic
-
-    rx_max_pixel=0
-    for t in ${traffics[@]} ; do
-        #echo "[DEBUG] t = $t"
-        [[ "$t" -gt "$rx_max_pixel" ]] && rx_max_pixel=$t
-    done
-
-    #echo "[DEBUG] rx_max_pixel = $rx_max_pixel, traffics = ${traffics[@]}"
-}
-
-get_traffic() {
-    local interface_number=0
-    max_bytes=125000000  # 1 Gb/s
-    rx_pixel=0
-    tx_pixel=0
-    interface_name="offline"
-    net_box_outline="#3f3f3f"
-    net_box_fill="#3f3f3f"
-    for interfaces in /sys/class/net/*/operstate ; do
-        operstate=$( cat "$interfaces" )
-        if [[ "$operstate" == "up" ]] ; then
-            active_interface=${interfaces%/*}
-            rx_bytes_last=$( cat "${active_interface}/statistics/rx_bytes" )
-            tx_bytes_last=$( cat "${active_interface}/statistics/tx_bytes" )
-            sleep 1
-            rx_bytes_now=$( cat "${active_interface}/statistics/rx_bytes" )
-            tx_bytes_now=$( cat "${active_interface}/statistics/tx_bytes" )
-
-            rx_bytes_diff=$(( rx_bytes_now-rx_bytes_last ))
-            tx_bytes_diff=$(( tx_bytes_now-tx_bytes_last ))
-            rx_pixel=$( echo "l($rx_bytes_diff+1)/l(10)*10-26" | bc -l )
-            tx_pixel=$( echo "l($tx_bytes_diff+1)/l(10)*10-26" | bc -l )
-            rx_pixel="${rx_pixel%.*}"
-            tx_pixel="${tx_pixel%.*}"
-            [[ "$rx_pixel" == "-" ]] && rx_pixel=0
-            [[ "$rx_pixel" -lt 0 ]] && rx_pixel=0
-            [[ "$tx_pixel" == "-" ]] && tx_pixel=0
-            [[ "$tx_pixel" -lt 0 ]] && tx_pixel=0
-            interface_name=${active_interface##*/}
-            net_box_outline="#4ad6d3"
-            net_box_fill="#267372"
-            break
-        fi
-        interface_number=$(( interface_number+1 ))
-    done
-
-    all_the_traffics "$rx_pixel"
-    echo "[DEBUG] rx_bytes_diff = $rx_bytes_diff, tx_bytes_diff = $tx_bytes_diff; $rx_max_pixel $tx_pixel"
-    pixel_high=$(( (4*SCALE)+1 ))
-    if [[ "$rx_max_pixel" -lt "$pixel_high" ]] ; then
-        rx_max_pixel_high=$rx_max_pixel
-        rx_max_pixel=0
-    else
-        rx_max_pixel_high=$(( 4*SCALE ))
-        rx_max_pixel=$(( rx_max_pixel-(4*SCALE) ))
-    fi
-    if [[ "$tx_pixel" -lt "$pixel_high" ]] ; then
-        tx_pixel_high=$tx_pixel
-        tx_pixel=0
-    else
-        tx_pixel_high=$(( 4*SCALE ))
-        tx_pixel=$(( tx_pixel-(4*SCALE) ))
-    fi
-    traffic_content="^ib(1)^pa(${_BTB};0)^fg(#267372)^r(${rx_max_pixel}x${_BP})^fg(#4ad6d3)^r(${rx_max_pixel_high}x${_BP})"
-    traffic_content+="^ib(1)^pa(${_BTB};${_BP})^fg(#886066)^r(${tx_pixel}x${_BP})^fg(#ffc0cb)^r(${tx_pixel_high}x${_BP})"
-}
-
-get_temp() {
-    max_cpu_temp=$( cat /sys/class/thermal/thermal_zone0/trip_point_0_temp )
-    current_cpu_temp=$( cat /sys/class/thermal/thermal_zone0/temp )
-
-    if [[ "$current_cpu_temp" -gt 85000 ]] ; then
-        cpu_temp=$(( (current_cpu_temp-85000)*55*SCALE/(max_cpu_temp-85000) ))
-        cpu_temp_color="#aa1111"
-        cpu_temp_color_high="#ff2222"
-    else
-        cpu_temp=0
-        cpu_temp_color="#292929"
-        cpu_temp_color_high="#292929"
-    fi
-    cpu_temp_content="^ib(1)^pa(${_BTB};${_BTM})^fg(${cpu_temp_color})^r(${cpu_temp}x${_BP})^fg(${cpu_temp_color_high})^r(${_BP}x${_BP})"
-}
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 while true ; do
     get_load
-    load="oload:=$content"
+    load="load ${load_content}"
     echo "[DEBUG] $load"
     echo "$load" > "$ofifo"
-
-    get_uptime
-    #get_traffic
-    get_temp
-    echo "ostatus2:=${traffic_content}${uptime_content}${cpu_temp_content}" > "$ofifo"
-    #onet="onet:=^fg(#ffffff)$interface_name;;$net_box_outline--$net_box_fill"
-    #echo "[DEBUG] $onet"
-    #echo "$onet" > "$ofifo"
 
     sleep 14
 done

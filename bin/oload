@@ -65,7 +65,7 @@ get_load() {
     load15_graph=$(( load15/load_max ))
 
     echo "[DEBUG] load1 = $load1,$load1_graph load5 = $load5,$load5_graph load15 = $load15,$load15_graph load_max = $load_max"
-    load_graph="${load1_graph} ${cblue} ${load5_graph} ${cdarkblue} ${load15_graph} ${cblueishdarkgrey}"
+    load_graph="${load1_graph} ${cblue} ${load5_graph} ${cdarkblue} ${load15_graph} ${cdarkerfont}"
 }
 
 

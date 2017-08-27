@@ -81,11 +81,6 @@ _BP=$(( 4*SCALE ))      # border pixels
 _TOP=$_BP
 _PW=$(( _PW*SCALE ))
 _PLH=$(( _PLH*SCALE ))
-#_BI=$(( _PW-(_BP*2) ))  # box inner
-#_BTB=$(( 8*SCALE ))     # box border top, bottom and left
-#_BTM=$(( _BTB+_BP ))    # box inner top margin
-#_TA=$(( 1*SCALE ))      # text adjustment
-#_TC=$(( (4*SCALE)+_BTB )) # center text
 
 format_element() {
     i=0
@@ -118,65 +113,10 @@ format_element() {
     echo "$output"
 }
 
-get_box() {
-    outline=$1
-    fill=$2
-    content=$3
-
-    box="^pa(0;${_BTB})^fg($outline)^r(${_PW}x${_BTB})^fg($fill)^ib(1)^pa(${_BP};${_BTM})^r(${_BI}x${_BP})\n"
-    hasSecond=$( echo "$content" | grep "==" )
-    if [[ -z "$hasSecond" ]] ; then
-        box+="^fg($outline)^r(${_PW}x${_PLH})^fg($fill)^ib(1)^pa(${_BP})^r(${_BI}x${_PLH})^pa(${_TC};${_TA})$content\n"
-    else
-        _tmpContentFirst=${content%%==*} # first
-        _tmpContent=${content#*==} # second
-        box+="^fg($outline)^r(${_PW}x${_PLH})^fg($fill)^ib(1)^pa(${_BP})^r(${_BI}x${_PLH})^pa(${_TC};${_TA})$_tmpContentFirst\n"
-        box+="^fg($outline)^r(${_PW}x${_PLH})^fg($fill)^ib(1)^pa(${_BP})^r(${_BI}x${_PLH})^pa(${_TC};${_TA})$_tmpContent\n"
-    fi
-    #box+="^fg($outline)^r(${_PW}x${_PLH})^fg($fill)^ib(1)^pa(${_BP})^r(${_BI}x${_PLH})^pa(${_TC};${_TA})$content\n"
-    box+="^pa(0;0)^fg($outline)^r(${_PW}x${_BTB})^fg($fill)^ib(1)^pa(${_BP};0)^r(${_BI}x${_BP})"
-
-    echo "$box"
-}
-
-get_box_inner() {
-    outline=$1
-    fill=$2
-    content=$3
-
-    hasSecond=$( echo "$content" | grep "==" )
-    if [[ -z "$hasSecond" ]] ; then
-        box="^fg($outline)^r(${_PW}x${_PLH})^fg($fill)^ib(1)^pa(${_BP})^r(${_BI}x${_PLH})^pa(${_TC};${_TA})$content\n"
-    else
-        _tmpContentFirst=${content%%==*} # first
-        _tmpContent=${content#*==} # second
-        box="^fg($outline)^r(${_PW}x${_PLH})^fg($fill)^ib(1)^pa(${_BP})^r(${_BI}x${_PLH})^pa(${_TC};${_TA})$_tmpContentFirst\n"
-        box+="^fg($outline)^r(${_PW}x${_PLH})^fg($fill)^ib(1)^pa(${_BP})^r(${_BI}x${_PLH})^pa(${_TC};${_TA})$_tmpContent\n"
-    fi
-
-    echo "$box"
-}
-
-get_box_seperator() {
-    lastOutline=$1
-    lastFill=$2
-    nextOutline=$3
-    nextFill=$4
-
-    box="^pa(0;0)^fg($lastOutline)^r(${_PW}x${_BTB})^fg($lastFill)^ib(1)^pa(${_BP};0)^r(${_BI}x${_BP})"
-    box+="^ib(1)^pa(0;${_BTB})^fg($nextOutline)^r(${_PW}x${_BTB})^fg($nextFill)^ib(1)^pa(${_BP};${_BTM})^r(${_BI}x${_BP})\n"
-
-    echo "$box"
-}
-
 # get status about:
-# - Master volume of speakers
-# - display brightness
 # - system load 1, 5, 15
 get_status() {
-    status="^pa(${_BTB};${_BP})^fg(#808080)^r(${ovolume}x${_BP})^fg(#ffffff)^r(${_BP}x${_BP})"
-    status+="^ib(1)^pa(${_BTB};${_BTB})^fg(#807500)^r(${obrightness}x${_BP})^fg(#ffeb00)^r(${_BP}x${_BP})"
-    status+="$oload"
+    status="$oload"
 
     echo -n "$status"
 }
@@ -205,10 +145,7 @@ while read -r reply ; do
 
     # handle each reply type
         # TODO  replace with new generic implementation
-    if [[ "$replyType" == "obrightness" ]] ; then
-        obrightness="$replyContent"
-        ostatus="$( get_status )"
-    elif [[ "$replyType" == "oload" ]] ; then
+    if [[ "$replyType" == "oload" ]] ; then
         oload="$replyContent"
         ostatus="$( get_status )"
     elif [[ "$replyType" == "ostatus2" ]] ; then

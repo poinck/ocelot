@@ -10,6 +10,8 @@
 #
 # ocelot by André Klausnitzer, CC0
 
+source ${OCELOT_PATH}bin/outils.sh
+
 SCALE=1
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
@@ -20,6 +22,6 @@ else
     echo "~/.ocelotrc does not exist"
 fi
 
-pixelsize=$(( 9*SCALE ))
-dmenu_run -nb "#1c1c1c" -nf "#aaaaaa" -sf "#1c1c1c" -sb "#6767a1" -fn monospace:size=${pixelsize}
+pixelsize=$(( 11*SCALE ))
+dmenu_run -nb "#1c1c1c" -nf "#$cdarkfont" -sf "#ffffff" -sb "#$cdarkpurple" -fn monospace:bold:size=${pixelsize} -p 'run: '
 

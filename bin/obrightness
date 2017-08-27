@@ -10,13 +10,7 @@
 #
 # ocelot by André Klausnitzer, CC0
 
-SCALE=1
-if [[ -f ~/.ocelotrc ]] ; then
-    . ~/.ocelotrc
-    if [[ -n "$scale" ]] ; then
-        SCALE="$scale"
-    fi
-fi
+source ${OCELOT_PATH}bin/outils.sh
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 
@@ -24,14 +18,29 @@ current_brightness=$( xbacklight -get )
 current_brightness=${current_brightness%%.*}
 if [[ "$1" == "up" ]] ; then
     xbacklight -steps 3 -time 100 -inc 10
-    brightness_pixel=$(( (current_brightness+15)*55*SCALE/115 ))
+    current_brightness=$(( current_brightness+10 ))
 elif [[ "$1" == "down" ]] ; then
     if [[ "$current_brightness" -ge 15 ]] ; then
         xbacklight -steps 3 -time 100 -dec 10
-        brightness_pixel=$(( (current_brightness-15)*55*SCALE/115 ))
+        current_brightness=$(( current_brightness-10 ))
     elif [[ "$current_brightness" -ge 6 ]] ; then
         xbacklight -steps 3 -time 100 -set 5
-        brightness_pixel=$(( 5*55*SCALE/115 ))
+        current_brightness=5
     fi
 fi
-echo "obrightness:=$brightness_pixel" > "$ofifo"
+echo "[DEBUG] current_brightness = $current_brightness"
+
+brightness_tmp=${current_brightness}
+brightness_label="^fg(#${cdarkfont})P"
+brightness_label2_color=$cfont
+brightness_graph_color=$cyellow
+brightness_graph2_color=$cgrey
+brightness_graph="${current_brightness} ${brightness_graph_color} "
+for (( i=brightness_tmp-6 ; i>=6 ; i=$i-6 )) ; do
+    #echo "[DEBUG] i = $i"
+    brightness_graph+="100 ${brightness_graph2_color} "
+done
+
+brightness="brightness ${brightness_label}_^fg(#${brightness_label2_color})${current_brightness}% ${cdarkgrey} $brightness_graph"
+echo "[DEBUG] $brightness"
+echo "$brightness" > "$ofifo"

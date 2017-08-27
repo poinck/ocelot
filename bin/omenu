@@ -20,6 +20,6 @@ else
     echo "~/.ocelotrc does not exist"
 fi
 
-pixelsize=$(( 10*SCALE ))
-dmenu_run -b -nb "#292929" -nf "#bbbbbb" -sf "#292929" -sb "#4ad6d3" -fn monospace:size=${pixelsize}
+pixelsize=$(( 9*SCALE ))
+dmenu_run -nb "#1c1c1c" -nf "#aaaaaa" -sf "#1c1c1c" -sb "#6767a1" -fn monospace:size=${pixelsize}
 

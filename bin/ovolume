@@ -12,13 +12,9 @@
 
 source ${OCELOT_PATH}bin/outils.sh
 
-SCALE=1
 VOLUME_MASTER="Master"
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
-    if [[ -n "$scale" ]] ; then
-        SCALE="$scale"
-    fi
     if [[ -n "$volume_master" ]] ; then
         VOLUME_MASTER="$volume_master"
     fi
@@ -55,12 +51,11 @@ if [[ "$muted" -eq 1 ]] ; then
     volume_graph_color=$cdarkpurple
     volume_graph2_color=$cdarkgrey
 fi
-volume_graph+="${omixer_master_volume} ${volume_graph_color} "
+volume_graph="${omixer_master_volume} ${volume_graph_color} "
 for (( i=volume_tmp-6 ; i>=6 ; i=$i-6 )) ; do
     #echo "[DEBUG] i = $i"
     volume_graph+="100 ${volume_graph2_color} "
 done
-#volume_graph+="100 ${volume_graph2_color}"
 
 volume="volume ${volume_label}_^fg(#${volume_label2_color})${omixer_master_volume}% ${cdarkgrey} $volume_graph"
 echo "[DEBUG] $volume"

@@ -70,14 +70,7 @@ while read -r reply ; do
         # for every desktop with windows
         if [[ "$w" -gt 0 ]] ; then
             desktopCount=$(( desktopCount+1 ))
-            #desktopCount_mod=$(( desktopCount%4 ))
-            #desktopCount_div=$(( desktopCount/4 ))
-            #desktopCount_pos=$(( desktopCount-(desktopCount_div*4)-1 ))
-            #[[ "$desktopCount_pos" -eq -1 ]] && desktopCount_pos=3
-
-            #r+="^fg($f)^ib(1)^pa(${_BTB};$(( desktopCount_pos*_BP )))^r($(( _BP*w ))x${_BP})"
             r+="$(( w*12 )) $f "
-            #[[ "$desktopCount_mod" -eq "0" ]] && r+="\n"
         fi
     done
 

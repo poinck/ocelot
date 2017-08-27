@@ -23,5 +23,5 @@ else
 fi
 
 pixelsize=$(( 11*SCALE ))
-dmenu_run -nb "#1c1c1c" -nf "#$cdarkfont" -sf "#ffffff" -sb "#$cdarkpurple" -fn monospace:bold:size=${pixelsize} -p 'run: '
+dmenu_run -nb "#1c1c1c" -nf "#$cdarkfont" -sf "#ffffff" -sb "#$cdarkpurple" -fn monospace:bold:size=${pixelsize} -p '  :  '
 

@@ -15,7 +15,7 @@
 source ${OCELOT_PATH}bin/outils.sh
 
 # element order
-ELEMENT_ORDER=("dayweek" "time" "date" "year" "volume" "brightness" "desktops" "desktop" "window" "battery" "updates" "net" "disk_home" "disk_root" "nolock" "lock")
+ELEMENT_ORDER=("dayweek" "time" "date" "year" "volume" "brightness" "desktops" "desktop" "window" "load" "health_cpu" "battery" "updates" "net" "memory_ram" "memory_swap" "disk_home" "disk_root" "nolock" "lock")
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
     if [[ -n "$element_order" ]] ; then
@@ -113,14 +113,6 @@ format_element() {
     echo "$output"
 }
 
-# get status about:
-# - system load 1, 5, 15
-get_status() {
-    status="$oload"
-
-    echo -n "$status"
-}
-
 # initialize box colors of side-panel elements
 pbc="#1c1c1c" # panel background color
 titlewindow_set=0
@@ -143,15 +135,6 @@ while read -r reply ; do
         _isBox=true
     fi
 
-    # handle each reply type
-        # TODO  replace with new generic implementation
-    if [[ "$replyType" == "oload" ]] ; then
-        oload="$replyContent"
-        ostatus="$( get_status )"
-    elif [[ "$replyType" == "ostatus2" ]] ; then
-        ostatus2="$replyContent"
-    fi
-
     # print out title window (will not be updated again)
     if [[ "$titlewindow_set" -eq 0 ]] ; then
         echo -e "^tw() "
@@ -160,11 +143,6 @@ while read -r reply ; do
 
     # print out child window, jump to first line
     echo -e "^p1()"
-
-    echo -e "$ostatus"
-    echo -e "$ostatus2"
-        # TODO  remove after status* were replaced by new generic
-        # implementation
 
     # gather reply type of element, get order index and store it's content
     # to elements array

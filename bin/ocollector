@@ -78,7 +78,8 @@ fi
 # initialize scaling
 _FP=$(( 9*SCALE ))      # font pixels
 _BP=$(( 4*SCALE ))      # border pixels
-_TOP=$_BP
+_TOP=$(( _BP+1 ))
+    # TODO  add parameter in ~/.ocelotrc for _TOP-correction
 _PW=$(( _PW*SCALE ))
 _PLH=$(( _PLH*SCALE ))
 

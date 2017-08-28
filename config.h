@@ -30,7 +30,7 @@
 #define BORDER_WIDTH    4         /* window border width. choose 8 if you've
                                      set "scale=2" in .ocelotrc */
 #define FOCUS           "#3f3f3f" /* #888888, focused window border color */
-#define UNFOCUS         "#2f2f2f" /* #444444, unfocused window border color */
+#define UNFOCUS         "#373737" /* #444444, unfocused window border color */
 #define MINWSZ          50        /* minimum window size in pixels */
 #define DEFAULT_DESKTOP 0         /* the desktop to focus initially */
 #define DESKTOPS        32        /* number of desktops - edit DESKTOPCHANGE keys to suit */

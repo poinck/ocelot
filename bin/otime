@@ -29,7 +29,7 @@ get_otime() {
 
     otime1_content="time ^fg(#${cfont})$hour^fg(#${cdarkfont}):^fg(#${cfont})$minute ${cdarkgrey} ${hour_percent} $cdarkblue ${minute_percent} $cdarkpurple"
     otime_content="dayweek ^fg(#${cfont})$(date '+%a')_^fg(#${cdarkfont})$(date '+W%-W') $cdarkgrey"
-    otime3_content="date ^fg(#${cfont})${day}_^fg(#${cdarkfont})$(date '+%b') $cdarkgrey ${day_percent} $cdarkblue ${month_percent} $cdarkpurple"
+    otime3_content="date ^fg(#${cfont})${day}_^fg(#${cdarkfont})$(date '+%b') $cdarkgrey ${month_percent} $cdarkblue ${day_percent} $cdarkpurple"
     otime2_content="year ^fg(#${cdarkfont})$(date '+%Y') $cdarkgrey"
 }
 

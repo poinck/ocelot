@@ -23,8 +23,10 @@ get_net() {
     interface_name="off"
     for interfaces in /sys/class/net/*/operstate ; do
         operstate=$( cat "$interfaces" )
+        active_interface=${interfaces%/*}
+        interface_index=$( cat "${active_interface}/ifindex" )
+        interface_name=${active_interface##*/}
         if [[ "$operstate" == "up" ]] ; then
-            active_interface=${interfaces%/*}
             rx_bytes_last=$( cat "${active_interface}/statistics/rx_bytes" )
             tx_bytes_last=$( cat "${active_interface}/statistics/tx_bytes" )
             sleep 1
@@ -39,20 +41,23 @@ get_net() {
             rx_percent="${rx_percent%.*}"
             tx_percent="${tx_percent%.*}"
 
-            interface_name=${active_interface##*/}
-            avg_percent=$(( (rx_percent+tx_percent)/2 ))
-            break
+            net="net_${interface_index} ^fg(#${cdarkfont})N_^fg(#${cfont})${interface_index} ${bgcolor} ${rx_percent} ${rx_color} ${tx_percent} ${tx_color}"
+            echo "[DEBUG] $net"
+            echo "$net" > "$ofifo"
+        else
+            interface_name=${interface_name:0:3}
+            #if [[ "${interface_name}" != "vir" ]] &&
+            if [[ "${interface_name}" != "lo" ]] &&
+               [[ "${interface_name}" != "sit" ]] &&
+               [[ "${operstate}" != "unknown" ]]; then
+                net="net_${interface_index} ^fg(#${cdarkerfont})N_^fg(#${cdarkfont})${interface_index} ${bgcolor}"
+                echo "[DEBUG] $net"
+                echo "$net" > "$ofifo"
+            fi
         fi
+
         interface_number=$(( interface_number+1 ))
     done
-
-    net="net ^fg(#${cfont})${interface_name} ${bgcolor} ${rx_percent} ${rx_color} ${tx_percent} ${tx_color}"
-    if [[ "${interface_name}" == "off" ]] ; then
-        net="net ^fg(#${cdarkfont})${interface_name} ${bgcolor}"
-    fi
-
-    echo "[DEBUG] $net"
-    echo "$net" > "$ofifo"
 }
 
 while true ; do

@@ -15,13 +15,17 @@
 source ${OCELOT_PATH}bin/outils.sh
 
 # element order
-ELEMENT_ORDER=("dayweek" "time" "date" "year" "volume" "brightness" "desktops" "desktop" "window" "load" "health_cpu" "battery" "updates" "net" "memory_ram" "memory_swap" "disk_home" "disk_root" "nolock" "lock")
+ELEMENT_ORDER=("dayweek" "time" "date" "year" "volume" "brightness" "desktops" "desktop" "window" "load" "health_cpu" "battery" "updates" "net_3" "memory_ram" "memory_swap" "disk_home" "disk_root" "nolock" "lock")
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
-    if [[ -n "$element_order" ]] ; then
-        ELEMENT_ORDER="$element_order"
+    if [[ -n "${element_order}" ]] ; then
+        echo "[DEBUG] custom element order set"
+        unset ELEMENT_ORDER
+        ELEMENT_ORDER="${element_order[*]}"
     fi
 fi
+
+echo "[DEBUG] element_order = ${ELEMENT_ORDER[*]}"
 
 # content of elements
 declare -a elements
@@ -38,6 +42,16 @@ get_type_index() {
         fi
         ii=$(( ii+1 ))
     done
+
+    if [[ "$index" -eq 99 ]] ; then
+        # add unknown elements if < 99 present
+        ii=$(( ii+1 ))
+        echo "[DEBUG] element_type = ${element_type}" >> /tmp/ocelot.log
+        echo "[DEBUG] element_order(before) = ${ELEMENT_ORDER[*]}" >> /tmp/ocelot.log
+        ELEMENT_ORDER+=("${element_type}")
+        export ELEMENT_ORDER
+        index=$ii
+    fi
 
     echo "$index"
 }
@@ -122,6 +136,10 @@ ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
 tail -f $ofifo | \
 while read -r reply ; do
+    #if [[ -n "${local_element_order}" ]] ; then
+    #    local_element_order="${ELEMENT_ORDER[*]}"
+    #fi
+
     # parse input from fifo
     replyType=${reply%%:=*} # use first part of reply seperated by :=
     replyContent=${reply#*:=} # use last part of reply seperated by :=
@@ -149,6 +167,8 @@ while read -r reply ; do
     # to elements array
     current_type=${reply%%\ *}
     current_index=$( get_type_index "$current_type" )
+    echo "[DEBUG] current_index = ${current_index}" >> /tmp/ocelot.log
+    echo "[DEBUG] element_order(after) = ${ELEMENT_ORDER[*]}" >> /tmp/ocelot.log
     elements[$current_index]=$( format_element $reply )
 
     # loop over all elements and echo out

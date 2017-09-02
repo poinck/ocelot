@@ -34,8 +34,8 @@ while read -r reply ; do
     # get window title
     desktopReply=${reply%%|*} # use first part of reply seperated by |
     title=${reply#*|} # use last part of reply seperated by |
-    windowTitle=${title:0:6} # use just first 6 chars
-    window_title=${windowTitle%% *} # throw away everything after first space
+    window_title=${title:0:6} # use first 6 chars
+    window_title=${window_title%% *} # throw away everything after first space
 
     # debug
     #echo "desktopReply = $desktopReply"

@@ -193,7 +193,7 @@ static int xerrorstart(Display *dis, XErrorEvent *ee);
  */
 static Bool running = True;
 static int wh, ww, currdeskidx, prevdeskidx, retval;
-static unsigned int numlockmask, win_unfocus, win_focus;
+static unsigned int numlockmask, win_unfocus, win_focus, win_unfocus_bash, win_focus_bash;
 static Display *dis;
 static Window root;
 static Atom wmatoms[WM_COUNT], netatoms[NET_COUNT];
@@ -542,11 +542,13 @@ void focus(Client *c, Desktop *d) {
     Window w[n];
     w[(d->curr->isfloat || d->curr->istrans) ? 0:ft] = d->curr->win;
     for (fl += !ISFFT(d->curr) ? 1:0, c = d->head; c; c = c->next) {
-        XSetWindowBorder(dis, c->win, c == d->curr ? win_focus:win_unfocus);
-        /*
-         * a window should have borders in any case, except if
-         *  - the window is fullscreen
-         */
+        // use different border-colors if title of current window is "bash"
+        if (strncmp(d->curr->title, "bash", 4) != 0) {
+            XSetWindowBorder(dis, c->win, c == d->curr ? win_focus:win_unfocus);
+        }
+        else {
+            XSetWindowBorder(dis, c->win, c == d->curr ? win_focus_bash:win_unfocus_bash);
+        }
         XSetWindowBorderWidth(dis, c->win, c->isfull ? 0:BORDER_WIDTH);
         if (c != d->curr) w[c->isfull ? --fl:ISFFT(c) ? --ft:--n] = c->win;
         if (CLICK_TO_FOCUS || c == d->curr) grabbuttons(c);
@@ -933,13 +935,6 @@ void propertynotify(XEvent *e) {
         XWMHints *wmh = XGetWMHints(dis, c->win);
         c->isurgn = (c != desktops[currdeskidx].curr && wmh && (wmh->flags & XUrgencyHint));
         if (wmh) XFree(wmh);
-    } else if (e->xproperty.atom == XA_WM_NAME) {
-        XTextProperty name;
-        XGetTextProperty(dis, c->win, &name, XA_WM_NAME);
-        if (name.nitems && name.encoding == XA_STRING)
-            strncpy(c->title, (char *)name.value, sizeof(c->title) - 1);
-        c->title[sizeof(c->title) - 1] = '\0';
-        if (name.value) XFree(name.value);
     }
     desktopinfo();
 }
@@ -1064,6 +1059,8 @@ void setup(void) {
     /* get color for focused and unfocused client borders */
     win_focus = getcolor(FOCUS, screen);
     win_unfocus = getcolor(UNFOCUS, screen);
+    win_focus_bash = getcolor(FOCUS_BASH, screen);
+    win_unfocus_bash = getcolor(UNFOCUS_BASH, screen);
 
     /* set numlockmask */
     XModifierKeymap *modmap = XGetModifierMapping(dis);

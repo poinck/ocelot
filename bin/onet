@@ -65,15 +65,5 @@ get_net() {
 while true ; do
     get_net
 
-    # ocollector-api:
-    # - space seperated parameters:
-    #   <type> <label> [<bgcolor> [<percent> <color>]* ..]
-    # - "type" is needed for ordering elements in ocollector
-    # - "label" is text that is displayed
-    # - "bgcolor" is background color of element
-    # - font-color should be set with dzen2-syntax inside "label"
-    # - "percent" is value for grapical represention
-    # - "color" is color for graph
-
     sleep 7
 done

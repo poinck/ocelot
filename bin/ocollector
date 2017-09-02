@@ -130,19 +130,15 @@ ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
 tail -f $ofifo | \
 while read -r reply ; do
-    # parse input from fifo
-    replyType=${reply%%:=*} # use first part of reply seperated by :=
-    replyContent=${reply#*:=} # use last part of reply seperated by :=
-    _tmp1=${replyContent%%;;*} # first
-    if [[ -z "$_tmp1" ]] ; then
-        _isBox=false
-    else
-        _box=${replyContent#*;;} # last
-        replyContent="$_tmp1"
-        boxOutline=${_box%%--*} # first
-        boxFill=${_box#*--} # last
-        _isBox=true
-    fi
+    # ocollector-api:
+    # - space seperated parameters:
+    #   <type> <label> [<bgcolor> [<percent> <color>]* ..]
+    # - "type" is needed for ordering elements in ocollector
+    # - "label" is text that is displayed
+    # - "bgcolor" is background color of element
+    # - font-color should be set with dzen2-syntax inside "label"
+    # - "percent" is value for grapical represention
+    # - "color" is color for graph
 
     # print out title window (will not be updated again)
     if [[ "$titlewindow_set" -eq 0 ]] ; then

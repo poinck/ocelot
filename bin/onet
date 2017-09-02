@@ -1,7 +1,9 @@
 #!/bin/bash
 #
-# onet show online/offline-status, connected ethernet device and in-/outgoing
-# traffic
+# onet shows online/offline-status, network devices and in-/outgoing
+# traffic, exept for "lo" and "sit*". All network cards have to be added
+# explicitly to $element_order in ~/.ocelotrc in the form
+# "net_<ifIndex>", eg. "net_6".
 #
 #    ^   ^
 #  +-------+

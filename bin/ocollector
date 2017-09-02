@@ -66,6 +66,7 @@ SCALE=1
 PANEL_LINE_COUNT=37     # minimum line count
 _PLH=23                 # panel line height
 _PW=64                  # panel width
+element_text_margin_correction=0
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
     if [[ -n "$scale" ]] ; then
@@ -86,8 +87,7 @@ fi
 # initialize scaling
 _FP=$(( 9*SCALE ))      # font pixels
 _BP=$(( 4*SCALE ))      # border pixels
-_TOP=$(( _BP+1 ))
-    # TODO  add parameter in ~/.ocelotrc for _TOP-correction
+_TOP=$(( _BP+element_text_margin_correction ))
 _PW=$(( _PW*SCALE ))
 _PLH=$(( _PLH*SCALE ))
 

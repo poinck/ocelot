@@ -20,7 +20,8 @@ ocelot_path="/home/username/gits/ocelot/"
 # default: "${ocelot_path}/desktop-light.png"
 #lockscreen="/home/username/path/to/lockscreen.jpg"
 
-# set lockscreen timeout other than the default of 10 minutes
+# set lockscreen timeout in minutes
+# default: 10
 #lockscreen_timeout=5
 
 # scale side-panel, terminal and menu
@@ -30,8 +31,14 @@ ocelot_path="/home/username/gits/ocelot/"
 # send video urls to oyay_host with "oray"
 #oyay_host="localhost"
 
-# change volume master, default: "Master"
+# change volume master
+# default: "Master"
 #volume_master="PCM"
+
+# different xserver versions render fonts differently: with this option you
+# can correct the top margin of the element text.
+# default: 0 (no correction, best with current versions of xserver)
+#element_text_margin_correction=0
 
 # removing and reordering elements is currently not supported during runtime,
 # but you can however add new elements during runtime.

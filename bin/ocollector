@@ -67,6 +67,8 @@ PANEL_LINE_COUNT=37     # minimum line count
 _PLH=23                 # panel line height
 _PW=64                  # panel width
 element_text_margin_correction=0
+panel_label_color="^fg(#$cdarkerfont)"
+panel_label="_"
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
     if [[ -n "$scale" ]] ; then
@@ -140,9 +142,12 @@ while read -r reply ; do
     # - "percent" is value for grapical represention
     # - "color" is color for graph
 
+    panel_label="${panel_label:0:6}"
+    label="label ${panel_label_color}${panel_label} $cdarkgrey 100 3f3f3f"
+
     # print out title window (will not be updated again)
     if [[ "$titlewindow_set" -eq 0 ]] ; then
-        echo -e "^tw() "
+        echo -e "^tw()$( format_element $label )"
         titlewindow_set=1
     fi
 

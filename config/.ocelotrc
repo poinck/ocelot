@@ -40,6 +40,10 @@ ocelot_path="/home/username/gits/ocelot/"
 # default: 0 (no correction, best with current versions of xserver)
 #element_text_margin_correction=0
 
+# static panel label; use "_" for spaces.
+# default: (blank)
+#panel_label="_"
+
 # removing and reordering elements is currently not supported during runtime,
 # but you can however add new elements during runtime.
 #element_order=("dayweek" "time" "date" "year" "volume" "brightness" "desktops" "desktop" "window" "load" "health_cpu" "battery" "updates" "net_3" "memory_ram" "memory_swap" "disk_home" "disk_root" "nolock" "lock")

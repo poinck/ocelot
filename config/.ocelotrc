@@ -41,7 +41,7 @@ ocelot_path="/home/username/gits/ocelot/"
 #element_text_margin_correction=0
 
 # static panel label; use "_" for spaces.
-# default: (blank)
+# default: "ocelot"
 #panel_label="_"
 
 # removing and reordering elements is currently not supported during runtime,

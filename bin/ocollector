@@ -68,7 +68,7 @@ _PLH=23                 # panel line height
 _PW=64                  # panel width
 element_text_margin_correction=0
 panel_label_color="^fg(#$cdarkerfont)"
-panel_label="_"
+panel_label="ocelot"
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
     if [[ -n "$scale" ]] ; then

@@ -35,3 +35,6 @@ hi Title ctermfg=236 ctermbg=15
 
 " shortcut to erae bad whitepaces and tabs
 ca ebw EraseBadWhitespace
+
+" always prefer settings the original developer has choosen
+setglobal modeline

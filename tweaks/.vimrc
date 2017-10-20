@@ -1,7 +1,8 @@
 " This is my minimalistic vim-config
 "
 " HOWTO: copy it to your home-directory to use it. Further more, you can use
-" following plugin: "./.vim/plugin/bad-whitespaces.vim"
+" following plugin: "./.vim/plugin/bad-whitespaces.vim". Additionally it uses
+" fugitive for git status.
 "
 "    ^   ^
 "  +-------+
@@ -33,8 +34,8 @@ hi TabLineSel ctermfg=15 ctermbg=236
 
 hi Title ctermfg=236 ctermbg=15
 
-" shortcut to erae bad whitepaces and tabs
+" shortcut to erase bad whitepaces and tabs
 ca ebw EraseBadWhitespace
 
-" always prefer settings the original developer has choosen
+" always prefer settings the original author of a file has choosen
 setglobal modeline

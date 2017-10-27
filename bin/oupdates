@@ -17,9 +17,22 @@ source ${OCELOT_PATH}bin/outils.sh
 
 # check security updates for gentoo
 updates_available_list=$( glsa-check -n -q -l affected )
-updates_available=$( echo "$updates_available_list" | wc -l )
-updates_available_empty=$( echo "$updates_available_list" | wc -w )
-
+rc=$?
+if [[ "${rc}" -eq 0 ]] ; then
+    updates_available=$( echo "$updates_available_list" | wc -l )
+    updates_available_empty=$( echo "$updates_available_list" | wc -w )
+else
+    # check security updates for centos
+    updates_available_list=$( yum check-update --security )
+    rc_yum=$?
+    if [[ "${rc_yum}" -gt 0 ]] ; then
+        updates_available=$( echo "$updates_available_list" | wc -l )
+        updates_available_empty=$( echo "$updates_available_list" | wc -w )
+    else
+        updates_available=0
+        updates_available_empty=0
+    fi
+fi
 
 if [[ "$updates_available" -le 1 ]] && [[ "$updates_available_empty" -le 1 ]] ; then
     updates_available="^fg(#$cdarkerfont)U_^fg(#$cdarkfont)OK $cdarkgrey"

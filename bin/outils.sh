@@ -25,6 +25,8 @@ cyellow="fbf236"
 cdarkyellow="807b1c"
 cblueishgrey="cbdbfc"
 cblueishdarkgrey="9badb7"
+corange="ff683d"
+cred="ff2d2d"
 
 # get color between start and end color
 # - without leading '#'

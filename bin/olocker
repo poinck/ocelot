@@ -27,13 +27,13 @@ onolock=""
 olocker=""
 if [[ "$1" == "disable" ]] ; then
     xautolock -disable
-    onolock="nolock ^fg(#${cdarkyellow})!_^fg(#000000)LOCK $cyellow 100 000000 100 $cdarkyellow"
+    onolock="nolock ^fg(#${corange})nolck $cdarkgrey"
 elif [[ "$1" == "enable" ]] ; then
     xautolock -enable
     onolock="nolock ^fg(#${cdarkgrey})_ $cdarkgrey"
 elif [[ "$1" == "notify" ]] ; then
     for i in 9 8 7 6 5 4 3 2 1 ; do
-        olocker="lock ^fg(#${cdarkyellow})LOCK_^fg(#000000)$i $cyellow 100 000000 100 $cdarkyellow"
+        olocker="lock __^fg(#${corange})${i} $cdarkgrey $(( 10*i )) $corange"
         echo "$olocker" > "$ofifo"
         sleep 1
     done

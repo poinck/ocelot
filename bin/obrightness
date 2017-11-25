@@ -32,7 +32,10 @@ elif [[ "$1" == "down" ]] ; then
         current_brightness=5
     fi
 fi
-echo "[DEBUG] current_brightness = $current_brightness"
+echo "[DEBUG] current_brightness = ${current_brightness}"
+if [[ "${current_brightness}" == "" ]] ; then
+    current_brightness="_"
+fi
 
 brightness_tmp=${current_brightness}
 brightness_label="^fg(#${cdarkfont})P"

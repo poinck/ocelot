@@ -13,34 +13,73 @@
 
 source ${OCELOT_PATH}bin/outils.sh
 
+get_graph() {
+    g16=$1 # 16th part of side-panel element width
+
+    graph=""
+    for (( ii=1 ; ii<=g16 ; ii=ii+1 )) ; do
+        graph+=" 100 $cgrey"
+        #echo "[DEBUG] ii=$ii"
+    done
+
+    echo -e "$graph"
+}
+
 otime_content=""
 get_otime() {
-    #year_left_margin=$(( SCALE*23 ))
-    #time_left_margin=$(( SCALE*20 ))
-    hour=$(date '+%-H')
-    minute=$(date '+%M')
-    minute2=$(date '+%-M')
-    minute_percent=$(( minute2*100/60 ))
-    hour_percent=$(( hour*100/24 ))
-    day=$(date '+%-d')
-    day_percent=$(( day*100/31 ))
-    month=$(date '+%-m')
-    month_percent=$(( month*100/12 ))
+    day=$( date '+%A' )
+    #echo "[DEBUG] day = '$day'"
+    day=${day:0:3}
+    #echo "[DEBUG] day = '$day'"
+    day=${day^^*}
+    #echo "[DEBUG] day = '$day'"
 
-    otime1_content="time ^fg(#${cfont})$hour^fg(#${cdarkfont}):^fg(#${cfont})$minute ${cdarkgrey} ${hour_percent} $cdarkblue ${minute_percent} $cdarkpurple"
-    otime_content="dayweek ^fg(#${cfont})$(date '+%a')_^fg(#${cdarkfont})$(date '+W%-W') $cdarkgrey"
-    otime3_content="date ^fg(#${cfont})${day}_^fg(#${cdarkfont})$(date '+%b') $cdarkgrey ${month_percent} $cdarkblue ${day_percent} $cdarkpurple"
-    otime2_content="year ^fg(#${cdarkfont})$(date '+%Y') $cdarkgrey"
+    hour=$(date '+%-H')
+    hour_graph=$( get_graph "$(( hour*16/24 ))" )
+    hour_percent=$(( hour*100/24 ))
+
+    minute=$(date '+%-M')
+    minute_graph=$( get_graph "$(( minute*16/60 ))" )
+    minute_percent=$(( minute*100/60 ))
+
+    day_in_month=$(date '+%-d')
+    month=$(date '+%b')
+    month=${month:0:3}
+    #echo "[DEBUG] month = '$month'"
+    month=${month^^*}
+    #echo "[DEBUG] month = '$month'"
+
+    year=$(date '+%Y')
+    year2=${year:0:2}
+    year4=${year:2:2}
+
+    otime_hour="time_hour ^fg(#${cdarkfont})T_^fg(#${cfont})${hour} ${cdarkgrey} ${hour_percent} $cdarkblue ${hour_graph}"
+    otime_minute="time_minute ^fg(#${cdarkfont})__^fg(#${cfont})${minute} ${cdarkgrey} ${minute_percent} $cpurple ${minute_graph}"
+    otime_day="day ^fg(#${cdarkerfont})D_^fg(#${cdarkfont})${day} $cdarkgrey"
+    otime_day_in_month="day_in_month ^fg(#${cdarkgrey})__^fg(#${cfont})${day_in_month} $cdarkgrey"
+    otime_month="month ^fg(#${cdarkgrey})__^fg(#${cfont})${month} $cdarkgrey"
+    otime_year="year ^fg(#${cdarkerfont})${year2}^fg(#${cdarkfont})${year4} $cdarkgrey"
+    otime_week="week ^fg(#${cdarkfont})W_^fg(#${cfont})$(date '+%-W') $cdarkgrey"
 }
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 while true ; do
     get_otime
 
-    #echo "[DEBUG] $otime1_content"
-    echo "$otime1_content" > "$ofifo"
-    echo "$otime_content" > "$ofifo"
-    echo "$otime3_content" > "$ofifo"
-    echo "$otime2_content" > "$ofifo"
-    sleep 14
+    #echo "[DEBUG] $otime_day"
+    #echo "[DEBUG] $otime_week"
+    echo "$otime_hour" > "$ofifo"
+    echo "$otime_minute" > "$ofifo"
+    echo "$otime_day" > "$ofifo"
+    echo "$otime_day_in_month" > "$ofifo"
+    echo "$otime_month" > "$ofifo"
+    echo "$otime_year" > "$ofifo"
+    echo "$otime_week" > "$ofifo"
+
+    second=$( date '+%-S' )
+    #echo "[DEBUG] second=$second"
+    delay=$(( 60-second ))
+    #echo "[DEBUG] delay=${delay}"
+
+    sleep "$delay"
 done

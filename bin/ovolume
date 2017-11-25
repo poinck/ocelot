@@ -41,7 +41,6 @@ fi
 echo "[DEBUG] omixer_master_volume = $omixer_master_volume, muted = $muted"
 
 volume_tmp=${omixer_master_volume}
-volume_label="^fg(#${cdarkfont})V"
 volume_label2_color=$cfont
 volume_graph_color=$cfont
 volume_graph2_color=$cgrey
@@ -57,7 +56,12 @@ for (( i=volume_tmp-6 ; i>=6 ; i=$i-6 )) ; do
     volume_graph+="100 ${volume_graph2_color} "
 done
 
-volume="volume ${volume_label}_^fg(#${volume_label2_color})${omixer_master_volume}% ${cdarkgrey} $volume_graph"
+if [[ "${omixer_master_volume}" -lt 10 ]] ; then
+    omixer_master_volume="_${omixer_master_volume}"
+elif [[ "${omixer_master_volume}" -ge 100 ]] ; then
+    omixer_master_volume="FF"
+fi
+volume="volume ^fg(#${cfont})${omixer_master_volume}^fg(#${cdarkfont})VOL ${cdarkgrey} $volume_graph"
 echo "[DEBUG] $volume"
 echo "$volume" > "$ofifo"
 

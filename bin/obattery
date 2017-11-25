@@ -25,15 +25,15 @@ get_battery() {
     bat_font=${cfont}
     bat_darkfont=${cdarkfont}
     bat_percent2=${bat_percent}
-    bat_status2="_"
+    bat_status2="BAT"
     if [[ "$bat_status" == "Charging" ]] ; then
-        bat_status2="C"
+        bat_status2="CRG"
     elif [[ "$bat_status" == "Unknown" ]] ; then
-        bat_status2="N"
+        bat_status2="PWR"
     elif [[ "$bat_status" == "Full" ]] ; then
-        bat_status2="F"
+        bat_status2="BAT"
     else
-        bat_status2="B"
+        bat_status2="BAT"
     fi
 
     if [[ "$bat_percent" -lt 15 ]] ; then
@@ -49,7 +49,12 @@ ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 while true ; do
     get_battery
 
-    battery="battery ^fg(#${bat_darkfont})${bat_status2}_^fg(#${bat_font})${bat_percent}% ${bgcolor} ${bat_percent2} ${bat_graph}"
+    if [[ "${bat_percent}" -lt 10 ]] ; then
+        bat_percent="_${bat_percent}"
+    elif [[ "${bat_percent}" -ge 100 ]] ; then
+        bat_percent="FF"
+    fi
+    battery="battery ^fg(#${cfont})${bat_percent}^fg(#${cdarkfont})${bat_status2} ${bgcolor} ${bat_percent2} ${bat_graph}"
     echo "[DEBUG] $battery"
     echo "$battery" > "$ofifo"
 

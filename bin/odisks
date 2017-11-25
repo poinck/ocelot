@@ -27,6 +27,8 @@ get_disks() {
             disk_root_percent=${disk%%%*}
             if [[ "${disk_root_percent}" -ge 100 ]] ; then
                 disk_root_percent="FF"
+            elif [[ "${disk_root_percent}" -lt 10 ]] ; then
+                disk_root_percent="_${disk_root_percent}"
             fi
             disks="disk_root ^fg(#${cfont})${disk_root_percent}^fg(#${cdarkfont})RT ${bgcolor} ${disk_root_percent} ${cdarkblue}"
             echo "[DEBUG] $disks"

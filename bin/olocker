@@ -27,10 +27,10 @@ onolock=""
 olocker=""
 if [[ "$1" == "disable" ]] ; then
     xautolock -disable
-    onolock="nolock ^fg(#${cdarkfont})NO^fg(#${cfont})LCK $cgrey 100 $corange"
+    onolock="nolock ^fg(#${cfont})NO^fg(#${cdarkfont})LCK $cgrey 100 $corange"
 elif [[ "$1" == "enable" ]] ; then
     xautolock -enable
-    onolock="nolock ^fg(#${cdarkerfont})__^fg(#${cdarkfont})LCK $cdarkgrey"
+    onolock="nolock ^fg(#${cdarkerfont})__^fg(#${cdarkerfont})LCK $cdarkgrey"
 elif [[ "$1" == "notify" ]] ; then
     for i in 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 ; do
         i_f=${i}

@@ -27,20 +27,27 @@ onolock=""
 olocker=""
 if [[ "$1" == "disable" ]] ; then
     xautolock -disable
-    onolock="nolock ^fg(#${corange})nolck $cdarkgrey"
+    onolock="nolock ^fg(#${cdarkfont})L_^fg(#${cfont})OFF $cgrey 100 $corange"
 elif [[ "$1" == "enable" ]] ; then
     xautolock -enable
-    onolock="nolock ^fg(#${cdarkgrey})_ $cdarkgrey"
+    onolock="nolock ^fg(#${cdarkerfont})L_^fg(#${cdarkfont})ON $cdarkgrey"
 elif [[ "$1" == "notify" ]] ; then
-    for i in 9 8 7 6 5 4 3 2 1 ; do
-        olocker="lock __^fg(#${corange})${i} $cdarkgrey $(( 10*i )) $corange"
-        echo "$olocker" > "$ofifo"
+    for i in 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 ; do
+        olocker="lock ^fg(#${cdarkfont})L_^fg(#${cfont})${i}s $cdarkgrey $(( 100*i/15 )) $corange"
+
+        locker_graph=""
+        for (( ii=1 ; ii<=i ; ii=ii+1 )) ; do
+            locker_graph+=" 100 $cgrey"
+            #echo "[DEBUG] ii=$ii"
+        done
+
+        echo "${olocker}${locker_graph}" > "$ofifo"
         sleep 1
     done
     olocker="lock ^fg(#${cdarkgrey})_ $cdarkgrey"
 else
     # default: start xautolock
-    xautolock -time $LOCKSCREEN_TIMEOUT -locker "olock" -notifier "olocker notify" -notify 10 &
+    xautolock -time $LOCKSCREEN_TIMEOUT -locker "olock" -notifier "olocker notify" -notify 16 &
 fi
 
 if [[ -n "$olocker" ]] ; then

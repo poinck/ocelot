@@ -37,12 +37,22 @@ get_otime() {
     hour=$(date '+%-H')
     hour_graph=$( get_graph "$(( hour*16/24 ))" )
     hour_percent=$(( hour*100/24 ))
+    hour_f="${hour}"
+    if [[ "${hour}" -lt 10 ]] ; then
+        hour_f="0${hour}"
+    fi
 
     minute=$(date '+%-M')
-    minute_graph=$( get_graph "$(( minute*16/60 ))" )
-    minute_percent=$(( minute*100/60 ))
+    minute_f="${minute}"
+    if [[ "${minute}" -lt 10 ]] ; then
+        minute_f="0${minute}"
+    fi
 
     day_in_month=$(date '+%-d')
+    day_in_month_f=${day_in_month}
+    if [[ "${day_in_month}" -lt 10 ]] ; then
+        day_in_month_f=i"_${day_in_month}"
+    fi
     month=$(date '+%b')
     month=${month:0:3}
     #echo "[DEBUG] month = '$month'"
@@ -53,13 +63,11 @@ get_otime() {
     year2=${year:0:2}
     year4=${year:2:2}
 
-    otime_hour="time_hour ^fg(#${cdarkfont})T_^fg(#${cfont})${hour} ${cdarkgrey} ${hour_percent} $cdarkblue ${hour_graph}"
-    otime_minute="time_minute ^fg(#${cdarkfont})__^fg(#${cfont})${minute} ${cdarkgrey} ${minute_percent} $cpurple ${minute_graph}"
-    otime_day="day ^fg(#${cdarkerfont})D_^fg(#${cdarkfont})${day} $cdarkgrey"
-    otime_day_in_month="day_in_month ^fg(#${cdarkgrey})__^fg(#${cfont})${day_in_month} $cdarkgrey"
-    otime_month="month ^fg(#${cdarkgrey})__^fg(#${cfont})${month} $cdarkgrey"
+    otime_time="time ^fg(#${cfont})${hour_f}^fg(#${cdarkfont})${minute_f} ${cdarkgrey} ${hour_percent} $cdarkblue ${hour_graph}"
+    otime_day="day ^fg(#${cdarkerfont})__^fg(#${cdarkfont})${day} $cdarkgrey"
+    otime_date="date ^fg(#${cfont})${day_in_month_f}^fg(#${cdarkfont})${month} $cdarkgrey"
     otime_year="year ^fg(#${cdarkerfont})${year2}^fg(#${cdarkfont})${year4} $cdarkgrey"
-    otime_week="week ^fg(#${cdarkfont})W_^fg(#${cfont})$(date '+%-W') $cdarkgrey"
+    otime_week="week ^fg(#${cdarkfont})_W^fg(#${cfont})$(date '+%-W') $cdarkgrey"
 }
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
@@ -68,11 +76,9 @@ while true ; do
 
     #echo "[DEBUG] $otime_day"
     #echo "[DEBUG] $otime_week"
-    echo "$otime_hour" > "$ofifo"
-    echo "$otime_minute" > "$ofifo"
+    echo "$otime_time" > "$ofifo"
     echo "$otime_day" > "$ofifo"
-    echo "$otime_day_in_month" > "$ofifo"
-    echo "$otime_month" > "$ofifo"
+    echo "$otime_date" > "$ofifo"
     echo "$otime_year" > "$ofifo"
     echo "$otime_week" > "$ofifo"
 

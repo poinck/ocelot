@@ -34,8 +34,9 @@ while read -r reply ; do
     # get window title
     desktopReply=${reply%%|*} # use first part of reply seperated by |
     title=${reply#*|} # use last part of reply seperated by |
-    window_title=${title:0:6} # use first 6 chars
+    window_title=${title:0:3} # use first 6 chars
     window_title=${window_title%% *} # throw away everything after first space
+    window_title=${title^^*} # all caps
 
     # debug
     #echo "desktopReply = $desktopReply"
@@ -74,8 +75,8 @@ while read -r reply ; do
         fi
     done
 
-    desktop="desktop ^fg(#${cfont})${i}_^fg(#ffffff)${current_d} ${cdarkblue} 100 ${cblue}"
-    window="window ^fg(#${cblue})${window_title} ${cdarkgrey}"
+    desktop="desktop ^fg(#${cfont})_${i}^fg(#ffffff)${current_d} ${cdarkblue} 100 ${cblue}"
+    window="window ^fg(#${cblue})__${window_title} ${cdarkgrey}"
     desktops="desktops _ ${cdarkgrey} $r"
     echo "[DEBUG] $desktops"
     echo "$desktops" > "$ofifo"

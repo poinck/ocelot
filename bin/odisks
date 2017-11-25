@@ -17,6 +17,7 @@ bgcolor=$cdarkgrey
 
 get_disks() {
     disks_now=$( df --output=target,pcent / /home | tail -n 2 )
+        # FIXME get all local partitions dynamicly
 
     p=0
     #echo "[DEBUG] disks_now = ${disks_now}"
@@ -24,12 +25,20 @@ get_disks() {
         p=$(( p+1 ))
         if [[ "$p" -eq 2 ]] ; then
             disk_root_percent=${disk%%%*}
-            disks="disk_root ^fg(#${cdarkfont})R_^fg(#${cfont})${disk_root_percent}% ${bgcolor} ${disk_root_percent} ${cdarkblue}"
+            if [[ "${disk_root_percent}" -ge 100 ]] ; then
+                disk_root_percent="FF"
+            fi
+            disks="disk_root ^fg(#${cfont})${disk_root_percent}^fg(#${cdarkfont})RT ${bgcolor} ${disk_root_percent} ${cdarkblue}"
             echo "[DEBUG] $disks"
             echo "$disks" > "$ofifo"
         elif [[ "$p" -eq 4 ]] ; then
             disk_home_percent=${disk%%%*}
-            disks="disk_home ^fg(#${cdarkfont})H_^fg(#${cfont})${disk_home_percent}% ${bgcolor} ${disk_home_percent} ${cdarkblue}"
+            if [[ "${disk_home_percent}" -ge 100 ]] ; then
+                disk_home_percent="FF"
+            elif [[ "${disk_home_percent}" -lt 10 ]] ; then
+                disk_home_percent="_${disk_home_percent}"
+            fi
+            disks="disk_home ^fg(#${cfont})${disk_home_percent}^fg(#${cdarkfont})HME ${bgcolor} ${disk_home_percent} ${cdarkblue}"
             echo "[DEBUG] $disks"
             echo "$disks" > "$ofifo"
         fi

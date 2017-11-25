@@ -27,6 +27,10 @@ get_net() {
         operstate=$( cat "$interfaces" )
         active_interface=${interfaces%/*}
         interface_index=$( cat "${active_interface}/ifindex" )
+        interface_index_f="${interface_index}"
+        if [[ "${interface_index}" -lt 10 ]] ; then
+            interface_index_f="_${interface_index}"
+        fi
         interface_name=${active_interface##*/}
         if [[ "$operstate" == "up" ]] ; then
             rx_bytes_last=$( cat "${active_interface}/statistics/rx_bytes" )
@@ -43,7 +47,9 @@ get_net() {
             rx_percent="${rx_percent%.*}"
             tx_percent="${tx_percent%.*}"
 
-            net="net_${interface_index} ^fg(#${cdarkfont})N_^fg(#${cfont})${interface_index} ${bgcolor} ${rx_percent} ${rx_color} ${tx_percent} ${tx_color}"
+            interface_name=${interface_name:0:3}
+            interface_name_f=${interface_name^^*}
+            net="net_${interface_index} ^fg(#${cdarkfont})${interface_index_f}^fg(#${cfont})${interface_name_f} ${bgcolor} ${rx_percent} ${rx_color} ${tx_percent} ${tx_color}"
             echo "[DEBUG] $net"
             echo "$net" > "$ofifo"
         else
@@ -52,7 +58,8 @@ get_net() {
             if [[ "${interface_name}" != "lo" ]] &&
                [[ "${interface_name}" != "sit" ]] &&
                [[ "${operstate}" != "unknown" ]]; then
-                net="net_${interface_index} ^fg(#${cdarkerfont})N_^fg(#${cdarkfont})${interface_index} ${bgcolor}"
+                interface_name_f=${interface_name^^*}
+                net="net_${interface_index} ^fg(#${cdarkerfont})${interface_index_f}^fg(#${cdarkfont})${interface_name_f} ${bgcolor}"
                 echo "[DEBUG] $net"
                 echo "$net" > "$ofifo"
             fi

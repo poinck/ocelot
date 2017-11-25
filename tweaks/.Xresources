@@ -45,7 +45,8 @@ URxvt.keysym.M-C-5: command:\033]50;xft:Monospace:pixelsize=26\007
 *color8: #7f827c
 ! red
 *color1: #ff683d
-*color9: #ff2d2d
+!*color9: #ff2d2d
+*color9: #ff683d
 ! green
 *color2: #43d827
 *color10: #8AE234

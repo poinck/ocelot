@@ -37,7 +37,7 @@ elif [[ "$1" == "notify" ]] ; then
         if [[ "${i}" -lt 10 ]] ; then
             i_f="_${i}"
         fi
-        olocker="lock ^fg(#${cdarkfont})${i_f}^fg(#${cfont})LCK $cdarkgrey $(( 100*i/15 )) $corange"
+        olocker="lock ^fg(#${cfont})${i_f}^fg(#${cdarkfont})LCK $cdarkgrey $(( 100*i/15 )) $corange"
 
         locker_graph=""
         for (( ii=1 ; ii<=i ; ii=ii+1 )) ; do

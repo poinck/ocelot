@@ -20,10 +20,9 @@ get_battery() {
     bat_full=$(cat /sys/class/power_supply/BAT0/energy_full)
     bat_percent=$(( bat_now*100/bat_full ))
     bat_now_mAh=$(( bat_now/10000 ))
-    bat_graph=$cdarkpurple
+    bat_graph=$cdarkblue
     bgcolor=$cdarkgrey
     bat_font=${cfont}
-    bat_darkfont=${cdarkfont}
     bat_percent2=${bat_percent}
     bat_status2="BAT"
     if [[ "$bat_status" == "Charging" ]] ; then
@@ -36,16 +35,17 @@ get_battery() {
         bat_status2="BAT"
     fi
 
+    blink=0
     if [[ "$bat_percent" -lt 15 ]] ; then
-        #bat_percent2=100
-        bgcolor=$cyellow
-        bat_graph=${cdarkgrey}
-        bat_font=${cdarkgrey}
-        bat_darkfont=${cdarkyellow}
+        bgcolor=$cgrey
+        bat_graph=${corange}
+        bat_percent2=100
+        blink=1
     fi
 }
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
+blinked=0
 while true ; do
     get_battery
 
@@ -54,9 +54,21 @@ while true ; do
     elif [[ "${bat_percent}" -ge 100 ]] ; then
         bat_percent="FF"
     fi
-    battery="battery ^fg(#${cfont})${bat_percent}^fg(#${cdarkfont})${bat_status2} ${bgcolor} ${bat_percent2} ${bat_graph}"
-    echo "[DEBUG] $battery"
-    echo "$battery" > "$ofifo"
 
-    sleep 60
+    battery="battery ^fg(#${cfont})${bat_percent}^fg(#${cdarkfont})${bat_status2} ${bgcolor} ${bat_percent2} ${bat_graph}"
+    if [[ "$blink" -eq 1 ]] && [[ "$blinked" -eq 0 ]]; then
+        blinked=1
+        echo "$battery" > "$ofifo"
+        sleep 30
+    elif [[ "$blink" -eq 1 ]] && [[ "$blinked" -eq 1 ]] ; then
+        blinked=0
+        battery="battery ^fg(#ffffff)${bat_percent}^fg(#${cfont})${bat_status2} ${bgcolor} ${bat_percent2} ${bat_graph}"
+        echo "[DEBUG] $battery"
+        echo "$battery" > "$ofifo"
+        sleep 1
+    else
+        echo "[DEBUG] $battery"
+        echo "$battery" > "$ofifo"
+        sleep 60
+    fi
 done

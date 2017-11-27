@@ -47,7 +47,7 @@ volume_graph2_color=$cgrey
 if [[ "$muted" -eq 1 ]] ; then
     volume_label="^fg(#$cdarkerfont)V"
     volume_label2_color=$cdarkfont
-    volume_graph_color=$cdarkblue
+    volume_graph_color=$corange
     volume_graph2_color=$cgrey
 fi
 volume_graph="${omixer_master_volume} ${volume_graph_color} "

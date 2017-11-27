@@ -15,8 +15,8 @@
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 source ${OCELOT_PATH}bin/outils.sh
-rx_color=$cdarkblue
-tx_color=$cdarkpurple
+rx_color=$cblue
+tx_color=$cdarkblue
 bgcolor=$cdarkgrey
 
 get_net() {

@@ -51,7 +51,7 @@ get_otime() {
     day_in_month=$(date '+%-d')
     day_in_month_f=${day_in_month}
     if [[ "${day_in_month}" -lt 10 ]] ; then
-        day_in_month_f=i"_${day_in_month}"
+        day_in_month_f="_${day_in_month}"
     fi
     month=$(date '+%b')
     month=${month:0:3}

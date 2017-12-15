@@ -42,7 +42,7 @@ else
     elif [[ "${updates_available}" -ge 100 ]] ; then
         updates_available="FF"
     fi
-    updates_available="^fg(#$cfont)${updates_available}^fg(#${cdarkfont})SEC $cdarkpurple 100 $cfont 100 $cpurple"
+    updates_available="^fg(#$cfont)${updates_available}^fg(#${cdarkfont})SEC ${cgrey} 100 ${corange}"
 fi
 
 updates="updates ${updates_available}"

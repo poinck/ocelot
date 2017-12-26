@@ -57,7 +57,7 @@ get_net() {
             #if [[ "${interface_name}" != "vir" ]] &&
             if [[ "${interface_name}" != "lo" ]] &&
                [[ "${interface_name}" != "sit" ]] &&
-               [[ "${operstate}" != "unknown" ]]; then
+               [[ "${operstate}" != "unknown" ]] ; then
                 interface_name_f=${interface_name^^*}
                 net="net_${interface_index} ^fg(#${cdarkerfont})${interface_index_f}^fg(#${cdarkfont})${interface_name_f} ${bgcolor}"
                 echo "[DEBUG] $net"

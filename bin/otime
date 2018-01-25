@@ -62,12 +62,15 @@ get_otime() {
     year=$(date '+%Y')
     year2=${year:0:2}
     year4=${year:2:2}
+    week="$(date '+%_W')"
+    if [[ "${week}" -lt 10 ]] ; then
+        week="_${week}"
+    fi
 
     otime_time="time ^fg(#${cfont})${hour_f}^fg(#${cdarkfont})${minute_f} ${cdarkgrey} ${hour_percent} $cdarkblue ${hour_graph}"
-    otime_day="day ^fg(#${cdarkerfont})__^fg(#${cdarkfont})${day} $cdarkgrey"
+    otime_weekday="weekday ^fg(#${cfont})${week}^fg(#${cdarkfont})${day} $cdarkgrey"
     otime_date="date ^fg(#${cfont})${day_in_month_f}^fg(#${cdarkfont})${month} $cdarkgrey"
     otime_year="year ^fg(#${cdarkerfont})${year2}^fg(#${cdarkfont})${year4} $cdarkgrey"
-    otime_week="week ^fg(#${cdarkfont})_W^fg(#${cfont})$(date '+%-W') $cdarkgrey"
 }
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
@@ -75,12 +78,12 @@ while true ; do
     get_otime
 
     #echo "[DEBUG] $otime_day"
-    #echo "[DEBUG] $otime_week"
+    echo "[DEBUG] $otime_weekday"
     echo "$otime_time" > "$ofifo"
-    echo "$otime_day" > "$ofifo"
+    echo "$otime_weekday" > "$ofifo"
     echo "$otime_date" > "$ofifo"
     echo "$otime_year" > "$ofifo"
-    echo "$otime_week" > "$ofifo"
+    #echo "$otime_week" > "$ofifo"
 
     second=$( date '+%-S' )
     #echo "[DEBUG] second=$second"

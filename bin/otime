@@ -11,6 +11,9 @@
 #
 # ocelot by André Klausnitzer, CC0
 
+# TODO
+# - try to call `date` only once per refresh
+
 source ${OCELOT_PATH}bin/outils.sh
 
 get_graph() {
@@ -25,7 +28,6 @@ get_graph() {
     echo -e "$graph"
 }
 
-otime_content=""
 get_otime() {
     day=$( date '+%A' )
     #echo "[DEBUG] day = '$day'"
@@ -34,7 +36,7 @@ get_otime() {
     day=${day^^*}
     #echo "[DEBUG] day = '$day'"
 
-    hour=$(date '+%-H')
+    hour=$( date '+%-H' )
     hour_graph=$( get_graph "$(( hour*16/24 ))" )
     hour_percent=$(( hour*100/24 ))
     hour_f="${hour}"
@@ -42,27 +44,27 @@ get_otime() {
         hour_f="0${hour}"
     fi
 
-    minute=$(date '+%-M')
+    minute=$( date '+%-M' )
     minute_f="${minute}"
     if [[ "${minute}" -lt 10 ]] ; then
         minute_f="0${minute}"
     fi
 
-    day_in_month=$(date '+%-d')
+    day_in_month=$( date '+%-d' )
     day_in_month_f=${day_in_month}
     if [[ "${day_in_month}" -lt 10 ]] ; then
         day_in_month_f="_${day_in_month}"
     fi
-    month=$(date '+%b')
+    month=$( date '+%b' )
     month=${month:0:3}
     #echo "[DEBUG] month = '$month'"
     month=${month^^*}
     #echo "[DEBUG] month = '$month'"
 
-    year=$(date '+%Y')
+    year=$( date '+%Y' )
     year2=${year:0:2}
     year4=${year:2:2}
-    week="$(date '+%_W')"
+    week="$( date '+%-W' )"
     if [[ "${week}" -lt 10 ]] ; then
         week="_${week}"
     fi
@@ -78,7 +80,7 @@ while true ; do
     get_otime
 
     #echo "[DEBUG] $otime_day"
-    echo "[DEBUG] $otime_weekday"
+    #echo "[DEBUG] $otime_weekday"
     echo "$otime_time" > "$ofifo"
     echo "$otime_weekday" > "$ofifo"
     echo "$otime_date" > "$ofifo"

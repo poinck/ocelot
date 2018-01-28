@@ -44,7 +44,7 @@ make
 ```
 
 ## Local Install
-- it is recommended to not install ocelot system-wide because every user might want to have their own configuration
+- it is recommended to *NOT* install ocelot system-wide because every user might want to have their own configuration
 - in the future Gentoo-users may get "savedconfig"-useflag support
 ```.sh
 make local_install

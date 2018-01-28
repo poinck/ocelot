@@ -2,7 +2,7 @@
 # monsterwm (original) by c00kiemon5ter, MIT (see LICENSE-mit)
 # Makefile for ocelot
 
-VERSION = 1.0.1
+VERSION = 1.0.2
 WMNAME  = ocelot
 
 PREFIX ?= /usr/local
@@ -24,7 +24,9 @@ EXEC = ${WMNAME}
 SRC = ${WMNAME}.c
 OBJ = ${SRC:.c=.o}
 
-ADDITIONAL_BINARIES=obattery obrightness ocelot2dzen2 ocelotbar ocollector odesktop oload olock olocker omenu oray oterminal otest otime otmc oupdates ovolume oyay reset-ocollector.sh startocelot
+SCRIPTS = obattery obrightness ocollector odesktop oload olock olocker omenu oterminal otime oupdates ovolume startocelot onet
+SCRIPTS_DEST = ${HOME}/bin
+SCRIPTS_SRC = ${PWD}/bin
 
 all: CFLAGS += -Os
 all: LDFLAGS += -s
@@ -40,35 +42,30 @@ options:
 	@echo "CC       = ${CC}"
 
 .c.o:
-	@echo CC $<
-	@${CC} -c ${CFLAGS} $<
+	${CC} -c ${CFLAGS} $<
 
 ${OBJ}: config.h
 
-config.h:
-	@echo creating $@ from config.def.h
-	@cp config.def.h $@
-
 ${WMNAME}: ${OBJ}
-	@echo CC -o $@
-	@${CC} -o $@ ${OBJ} ${LDFLAGS}
+	${CC} -o $@ ${OBJ} ${LDFLAGS}
 
 clean:
-	@echo cleaning
-	@rm -fv ${WMNAME} ${OBJ} ${WMNAME}-${VERSION}.tar.gz
+	rm -fv ${WMNAME} ${OBJ}
 
-install: all
-	@echo installing executable files to ${DESTDIR}${PREFIX}/bin
-	@install -Dm755 ${WMNAME} ${DESTDIR}${PREFIX}/bin/${WMNAME}
-	@for binary in ${ADDITIONAL_BINARIES}; do install -Dm755 bin/$$binary ${DESTDIR}${PREFIX}/bin/$$binary; done
-	@echo installing manual page to ${DESTDIR}${MANPREFIX}/man.1
-	@install -Dm644 ${WMNAME}.1 ${DESTDIR}${MANPREFIX}/man1/${WMNAME}.1
+local_install: all
+	ln -sf ${PWD}/${WMNAME} ${SCRIPTS_DEST}/${WMNAME}
+	for script in ${SCRIPTS} ; do ln -sf ${SCRIPTS_SRC}/$$script ${SCRIPTS_DEST}/$$script ; done
+
+install:
+	install -D -m 644 ${WMNAME}.1 ${DESTDIR}${MANPREFIX}/man1/${WMNAME}.1
 
 uninstall:
-	@echo removing executable files from ${DESTDIR}${PREFIX}/bin
-	@rm -f ${DESTDIR}${PREFIX}/bin/${WMNAME}
-	@for binary in ${ADDITIONAL_BINARIES}; do rm -f ${DESTDIR}${PREFIX}/bin/$$binary; done
-	@echo removing manual page from ${DESTDIR}${MANPREFIX}/man1
-	@rm -f ${DESTDIR}${MANPREFIX}/man1/${WMNAME}.1
+	rm -fv ${SCRIPTS_DEST}/${WMNAME}
+	for script in ${SCRIPTS} ; do rm -f ${SCRIPTS_DESTDIR}/$$script ; done
+	rm -fv ${DESTDIR}${MANPREFIX}/man1/${WMNAME}.1
 
-.PHONY: all options clean install uninstall
+help:
+	@echo type \"make\" to compile ${WMNAME} with your current configuration
+	@echo type \"make local_install\" to install ${WMNAME} and create symlinks for
+	@echo ${WMNAME}-scripts to ${SCRIPTS_DEST}
+	@echo type \"make install\" to only copy man-page

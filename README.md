@@ -22,7 +22,7 @@ Following dependencies are required to get the intended look and feel:
 - `xrandr` to guess display height
 
 Following is *optional*:
-- `youtube-dl` and `omxplayer` to use "oyay" to play from video-url supported by youtube-dl on raspberry pi without pre-downloading.
+- n/a
 
 Things to come (order is priority):
 - lock screen on lid-close (provided as systemd.unit-file or something else that might do the trick)
@@ -43,27 +43,13 @@ vim config.h  # look, (change) and :wq
 make
 ```
 
-## Install
-If you do not plan to install ocelot system-wide, make sure "/home/$USER/bin" is in your `$PATH` and create at least following symlinks:
+## Local Install
+- it is recommended to not install ocelot system-wide because every user might want to have their own configuration
+- in the future Gentoo-users may get "savedconfig"-useflag support
 ```.sh
-ln -s /home/$USER/gits/ocelot/bin/obrightness ~/bin/obrightness
-ln -s /home/$USER/gits/ocelot/bin/ovolume ~/bin/ovolume
-ln -s /home/$USER/gits/ocelot/bin/olock ~/bin/olock
-ln -s /home/$USER/gits/ocelot/bin/obattery ~/bin/obattery
-ln -s /home/$USER/gits/ocelot/bin/startocelot ~/bin/startocelot
-ln -s /home/$USER/gits/ocelot/bin/oload ~/bin/oload
-ln -s /home/$USER/gits/ocelot/bin/oterminal ~/bin/oterminal
-ln -s /home/$USER/gits/ocelot/bin/omenu ~/bin/omenu
-ln -s /home/$USER/gits/ocelot/bin/oupdates ~/bin/oupdates
-ln -s /home/$USER/gits/ocelot/bin/oyay ~/bin/oyay
-ln -s /home/$USER/gits/ocelot/bin/oray ~/bin/oray
-ln -s /home/$USER/gits/ocelot/bin/olocker ~/bin/olocker
-ln -s /home/$USER/gits/ocelot/bin/ocollector ~/bin/ocollector
-ln -s /home/$USER/gits/ocelot/bin/odesktop ~/bin/odesktop
-ln -s /home/$USER/gits/ocelot/bin/otime ~/bin/otime
+make local_install
 ```
 - additionally you should configure `OCELOT_PATH` in "~/.ocelotrc"
-- otherwise, if you want to install ocelot for every user, call `make install` as root.
 
 ## Configuration
 "ocelot" has one user config-file; create it if you want to change default
@@ -88,11 +74,10 @@ Things to come (order is priority):
 - disk- and swap-usage (ram, swap, `/` and `/home` as graphs; additional status(?) as box; below cpu-temperature-graph), see [#12](https://github.com/poinck/ocelot/issues/12)
 - support more than just "BAT0" from `/proc/sys`, see [#14](https://github.com/poinck/ocelot/issues/14)
 - `thunderbird` notifications for new mail
-- update-indication for `yum` if you are a CentOS-user
-- Xinerama-support
+- update-indication for `yum` if you are a CentOS-user, partly done
 
 ### Start ocelot
-Currently I can only describe the option to use `startx`.
+The preferred method to start ocelot is to use "~/.xinitrc".
 
 **`~/.xinitrc`, start with `startx`:**
 ```.sh

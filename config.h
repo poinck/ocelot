@@ -17,7 +17,11 @@
 #define TOP_PANEL       True      /* False means panel is on bottom */
     /* TODO
      * - rename to TOP_PANEL to LEFT_PANEL, if set to "False", panel should
-     *   appear on right side
+     *   appear on right side.
+     * - remove PANEL_HEIGHT and code-paths to remove support for top/bottom
+     *   panel completly
+     * - not shure whether I should do both previous todos, would PANEL_TYPE
+     *   be better and support all 4 panel positions?
      **/
 #define PANEL_HEIGHT    21        /* 0 for no space for panel, thus no panel */
 #define PANEL_WIDTH     64        /* 0 for no space for side-panel, thus

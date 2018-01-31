@@ -10,9 +10,15 @@
 #define SHIFT           ShiftMask   /* Shift key */
 
 /** generic settings **/
-#define MASTER_SIZE     0.60
+#define MASTER_SIZE     0.60      /* fraction of space the master window
+                                     occupies when layout is other than FLOAT
+                                     or MONOCLE */
 #define SHOW_PANEL      True      /* show panel by default on exec */
 #define TOP_PANEL       True      /* False means panel is on bottom */
+    /* TODO
+     * - rename to TOP_PANEL to LEFT_PANEL, if set to "False", panel should
+     *   appear on right side
+     **/
 #define PANEL_HEIGHT    21        /* 0 for no space for panel, thus no panel */
 #define PANEL_WIDTH     64        /* 0 for no space for side-panel, thus
                                      fallback to top-panel. otherwise space
@@ -29,7 +35,11 @@
 #define FOCUS_BUTTON    Button3   /* mouse button to be used along with CLICK_TO_FOCUS */
 #define BORDER_WIDTH    4         /* window border width. choose 8 if you've
                                      set "scale=2" in .ocelotrc */
-#define FOCUS           "#6767a1" /* #3f3f74, focused window border color */
+#define FOCUS           "#6767a1" /* focused window border color */
+#define FOCUS_MONO      "#3f3f74" /* focused window border color when layout MONOCLE */
+    /* TODO
+     * - implement FOCUS_MONO
+     **/
 #define UNFOCUS         "#373737" /* unfocused window border color */
 #define FOCUS_BASH      "#3f3f3f" /* focused terminal border color */
 #define UNFOCUS_BASH    "#373737" /* unfocused border color if a terminal is focused */

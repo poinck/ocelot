@@ -41,9 +41,6 @@
                                      set "scale=2" in .ocelotrc */
 #define FOCUS           "#6767a1" /* focused window border color */
 #define FOCUS_MONO      "#3f3f74" /* focused window border color when layout MONOCLE */
-    /* TODO
-     * - implement FOCUS_MONO
-     **/
 #define UNFOCUS         "#373737" /* unfocused window border color */
 #define FOCUS_BASH      "#3f3f3f" /* focused terminal border color */
 #define UNFOCUS_BASH    "#373737" /* unfocused border color if a terminal is focused */

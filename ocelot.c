@@ -193,7 +193,7 @@ static int xerrorstart(Display *dis, XErrorEvent *ee);
  */
 static Bool running = True;
 static int wh, ww, currdeskidx, prevdeskidx, retval;
-static unsigned int numlockmask, win_unfocus, win_focus, win_unfocus_bash, win_focus_bash;
+static unsigned int numlockmask, win_unfocus, win_focus, win_unfocus_bash, win_focus_bash, win_focus_mono;
 static Display *dis;
 static Window root;
 static Atom wmatoms[WM_COUNT], netatoms[NET_COUNT];
@@ -544,7 +544,12 @@ void focus(Client *c, Desktop *d) {
     for (fl += !ISFFT(d->curr) ? 1:0, c = d->head; c; c = c->next) {
         // use different border-colors if title of current window is "bash"
         if (strncmp(d->curr->title, "bash", 4) != 0) {
-            XSetWindowBorder(dis, c->win, c == d->curr ? win_focus:win_unfocus);
+            if (d->mode != MONOCLE) {
+                XSetWindowBorder(dis, c->win, c == d->curr ? win_focus_mono:win_unfocus);
+            }
+            else {
+                XSetWindowBorder(dis, c->win, c == d->curr ? win_focus:win_unfocus);
+            }
         }
         else {
             XSetWindowBorder(dis, c->win, c == d->curr ? win_focus_bash:win_unfocus_bash);
@@ -1061,6 +1066,7 @@ void setup(void) {
     win_unfocus = getcolor(UNFOCUS, screen);
     win_focus_bash = getcolor(FOCUS_BASH, screen);
     win_unfocus_bash = getcolor(UNFOCUS_BASH, screen);
+    win_focus_mono = getcolor(FOCUS_MONO, screen);
 
     /* set numlockmask */
     XModifierKeymap *modmap = XGetModifierMapping(dis);
@@ -1207,7 +1213,7 @@ void switch_mode(const Arg *arg) {
 
 /**
  * tile clients of the given desktop with the desktop's mode/layout
- * call the tiling handler fucntion taking account the panel height
+ * call the tiling handler function taking account the panel height
  */
 void tile(Desktop *d) {
     if (!d->head || d->mode == FLOAT) return; /* nothing to arange */

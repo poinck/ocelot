@@ -542,9 +542,10 @@ void focus(Client *c, Desktop *d) {
     Window w[n];
     w[(d->curr->isfloat || d->curr->istrans) ? 0:ft] = d->curr->win;
     for (fl += !ISFFT(d->curr) ? 1:0, c = d->head; c; c = c->next) {
-        // use different border-colors if title of current window is "bash"
+        // set different border-colors if title of current window is "bash"
         if (strncmp(d->curr->title, "bash", 4) != 0) {
-            if (d->mode != MONOCLE) {
+            // set different border-colors if window-mode is MONOCLE
+            if (d->mode == MONOCLE) {
                 XSetWindowBorder(dis, c->win, c == d->curr ? win_focus_mono:win_unfocus);
             }
             else {

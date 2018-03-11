@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# olock locks the display using "i3lock".
+# olock locks the display using "ocelot-slock".
 #
 #    ^   ^
 #  +-------+
@@ -17,15 +17,15 @@ if [[ -f ~/.ocelotrc ]] ; then
     if [[ -n "$ocelot_path" ]] ; then
         OCELOT_PATH="$ocelot_path"
     fi
-    if [[ -n "$lockscreen" ]] ; then
-        #echo "lockscreen=$lockscreen"
-        :
-    else
-        echo "lockscreen not set, using default lockscreen"
-        lockscreen="${OCELOT_PATH}desktop-light.png"
-    fi
+    #if [[ -n "$lockscreen" ]] ; then
+    #    #echo "lockscreen=$lockscreen"
+    #    :
+    #else
+    #    echo "lockscreen not set, using default lockscreen"
+    #    lockscreen="${OCELOT_PATH}desktop-light.png"
+    #fi
 else
     echo "~/.ocelotrc does not exist"
 fi
 
-i3lock -u -p default -i "$lockscreen"
+ocelot-slock

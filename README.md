@@ -11,11 +11,11 @@
 - X11-header files to compile ocelot
 
 Following dependencies are required to get the intended look and feel:
-- `xsetbg` (part of xloadimage) to set a wallpaper
 - `ocelot-dzen` for side-panel, see [ocelot-dzen](https://github.com/poinck/ocelot-dzen)
+- `ocelot-slock` to lock your screen, see [ocelot-slock]((https://github.com/poinck/ocelot-slock)
+- `xsetbg` (part of xloadimage) to set a wallpaper
 - `dmenu` to run stuff
 - `urxvt` to have a terminal
-- `i3lock` to lock your screen
 - `xautolock` to lock screen after some idle time (10 minutes)
 - `xbacklight` to control backlight of your notebook screen
 - `amixer` from alsa to control volume

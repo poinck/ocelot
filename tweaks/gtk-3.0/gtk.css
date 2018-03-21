@@ -1,0 +1,26 @@
+
+*:selected {
+    background-color: #6767a1;
+}
+
+entry:focus {
+	border-color: #6767a1;
+	box-shadow: 0 0 0 1px rgb(103,103,161) inset;
+}
+
+selection {
+	background-color: #6767a1;
+	color: #ffffff;
+}
+
+.suggested-action {
+	background-image: linear-gradient(rgb(103,103,161), rgb(63,63,116));
+}
+
+.suggested-action:hover {
+	background-image: linear-gradient(rgba(103,103,161, 0.9), rgba(63,63,116,0.9));
+}
+
+menuitem:hover {
+	background-color: #6767a1;
+}

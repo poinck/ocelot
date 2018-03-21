@@ -111,6 +111,9 @@ Copy paste from "tweaks/.Xresources": This will lighten font colors in the termi
 **adjust and preserve keyrate in `~/.bashrc`:**
 use `exec startx -- -ardelay 300 -arinterval 50` to start X, see [this question at UNIX-stackexchange](http://unix.stackexchange.com/questions/85504/setting-repeat-rate-of-usb-keyboard-automatically)
 
+**still using gtk-apps and want ocelot-colors? this is for you**
+Copy "tweaks/gtk-3.0/gtk.css" to "~/.config/gtk-3.0/" or add it's content to your existing theme style-sheet.
+
 ## Keys
 How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs recompile and restart):
 

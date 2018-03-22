@@ -24,3 +24,8 @@ selection {
 menuitem:hover {
 	background-color: #6767a1;
 }
+
+slider:active {
+	background-color: #6767a1;
+}
+

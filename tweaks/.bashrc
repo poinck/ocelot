@@ -6,6 +6,12 @@
 # |  >.<  |__/
 # +-------+
 
+# ls alias:
+# - sorted by block size (largest last)
+# - no control chars
+# - use escapes for quoting
+alias ls='ls -srS --color=auto -q --quoting-style=escape'
+
 # load a prompt that fits to "ocelot"
 if [[ -f ~/.bash_functions ]] ; then
 	. ~/.bash_functions

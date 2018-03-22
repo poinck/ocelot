@@ -17,15 +17,16 @@ if [[ -f ~/.ocelotrc ]] ; then
     if [[ -n "$ocelot_path" ]] ; then
         OCELOT_PATH="$ocelot_path"
     fi
-    #if [[ -n "$lockscreen" ]] ; then
-    #    #echo "lockscreen=$lockscreen"
-    #    :
-    #else
-    #    echo "lockscreen not set, using default lockscreen"
-    #    lockscreen="${OCELOT_PATH}desktop-light.png"
-    #fi
+    if [[ -n "$lockscreen" ]] ; then
+        #echo "lockscreen=$lockscreen"
+        :
+    else
+        echo "lockscreen not set, using default lockscreen"
+        lockscreen="${OCELOT_PATH}desktop-light.png"
+    fi
 else
     echo "~/.ocelotrc does not exist"
 fi
 
-ocelot-slock
+$( $lockscreen )
+

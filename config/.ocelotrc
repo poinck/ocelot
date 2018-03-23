@@ -20,6 +20,9 @@ ocelot_path="/home/username/gits/ocelot/"
 # default: "ocelot-slock"
 #lockscreen="ocelot-slock"
 
+# hibernate programm when locked
+#lockscreen_hibernate="systemctl hibernate -i"
+
 # set lockscreen timeout in minutes
 # default: 10
 #lockscreen_timeout=5

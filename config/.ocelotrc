@@ -16,10 +16,9 @@ ocelot_path="/home/username/gits/ocelot/"
 # default: "${ocelot_path}/desktop.png"
 #wallpaper="/home/username/path/to/desktop.jpg"
 
-# lockscreen pictures are also a good thing,
-# default: "${ocelot_path}/desktop-light.png"
-# - currently disabled, switched to ocelot-slock which has no image-support
-#lockscreen="/home/username/path/to/lockscreen.jpg"
+# lockscreen program
+# default: "ocelot-slock"
+#lockscreen="ocelot-slock"
 
 # set lockscreen timeout in minutes
 # default: 10

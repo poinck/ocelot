@@ -18,15 +18,29 @@ if [[ -f ~/.ocelotrc ]] ; then
         OCELOT_PATH="$ocelot_path"
     fi
     if [[ -n "$lockscreen" ]] ; then
-        #echo "lockscreen=$lockscreen"
         :
     else
         echo "lockscreen not set, using default lockscreen"
-        lockscreen="${OCELOT_PATH}desktop-light.png"
+        lockscreen="ocelot-slock"
+    fi
+    if [[ -n "$lockscreen_hibernate" ]] ; then
+        :
+    else
+        lockscreen_hibernate="systemctl hibernate -i"
     fi
 else
     echo "~/.ocelotrc does not exist"
 fi
 
-$( $lockscreen )
+if [[ "$1" == "hibernate" ]] ; then
+    :
+    $( $lockscreen $lockscreen_hibernate )
+elif [[ "$1" == "suspend" ]] ; then
+    echo "not implemented"
+elif [[ "$1" == "ask" ]] ; then
+    echo "not implemented"
+else
+    $( $lockscreen )
+fi
+
 

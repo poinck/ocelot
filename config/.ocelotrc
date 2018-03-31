@@ -23,6 +23,9 @@ ocelot_path="/home/username/gits/ocelot/"
 # hibernate programm when locked
 #lockscreen_hibernate="systemctl hibernate -i"
 
+# suspend programm when locked
+#lockscreen_suspend="systemctl suspend -i"
+
 # set lockscreen timeout in minutes
 # default: 10
 #lockscreen_timeout=5

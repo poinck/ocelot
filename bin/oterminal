@@ -22,7 +22,7 @@ else
     echo "~/.ocelotrc does not exist"
 fi
 
-pixelsize=$(( 13*SCALE ))
+pixelsize=$(( 12*SCALE ))
 borderpixels=$(( 4*SCALE ))
-urxvt +sb -fade 25 -fadecolor '#1f1f1f' -sk -si -bg '#3f3f3f' -fg white -fn "xft:Monospace:pixelsize=${pixelsize}" -b ${borderpixels} -pr '#fbf236' -pr2 '#444444' -cr '#fbf236' -bc -title "bash"
+urxvt +sb -fade 25 -fadecolor '#1f1f1f' -sk -si -bg '#3f3f3f' -fg white -fn "xft:Monoid:pixelsize=${pixelsize}" -b ${borderpixels} -pr '#fbf236' -pr2 '#444444' -cr '#fbf236' -bc -title "bash"
 

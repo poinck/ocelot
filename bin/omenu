@@ -22,6 +22,6 @@ else
     echo "~/.ocelotrc does not exist"
 fi
 
-pixelsize=$(( 12*SCALE ))
-dmenu_run -nb "#$cdarkgrey" -nf "#$cdarkfont" -sf "#$cfont" -sb "#$cdarkblue" -fn Monoid:bold:pixelsize=${pixelsize} -p ''
+pixelsize=$(( 14*SCALE ))
+dmenu_run -nb "#$cdarkgrey" -nf "#$cdarkfont" -sf "#$cfont" -sb "#$cdarkblue" -fn Monoid:pixelsize=${pixelsize} -p ''
 

@@ -20,6 +20,6 @@ fi
 
 # autostart X after login and takeover process of shell
 if [[ ! ${DISPLAY} && ${XDG_VTNR} == 1 ]]; then
-    exec startx
+    exec startx -- -ardelay 300 -arinterval 50
 fi
 

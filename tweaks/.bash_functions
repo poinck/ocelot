@@ -83,5 +83,5 @@ function get_username() {
 }
 
 #\[\$(get_time)\]
-PS1="\[\$(get_exit_code)\]${MR}${C7}$(get_username)$(get_hostname) ${C7}$(pwd1) $(get_gitprompt)${MR}\n ! "
+PS1="\[\$(get_exit_code)\]${MR}${C7}$(get_username)$(get_hostname) ${C7}\[\$(pwd1)\] $(get_gitprompt)${MR}\n ! "
 

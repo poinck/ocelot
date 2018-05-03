@@ -1,5 +1,5 @@
 # HOWTO: copy this file in your home-directory if you want the same shell
-# prompt as shown in in the screenshot "../ocelot.png"
+# prompt as shown in the screenshot "../ocelot.png"
 #
 #   ^   ^
 # +-------+
@@ -25,7 +25,7 @@ MI='\e[3m' # italic
 
 function get_gitprompt() {
     branch="$(git branch 2>/dev/null|grep '*'|awk '{ print $2 }')"
-    [[ ! -z "$branch" ]] && echo -en "${C2} ${branch}${MR}"
+    [[ ! -z "$branch" ]] && echo -en "${MR}${branch}${MR}"
 }
 
 function pwd1 {
@@ -35,13 +35,13 @@ function pwd1 {
 function get_exit_code {
 	local e=$(echo "$?")
 	if [[ "$e" -gt 0 ]] ; then
-		echo -en "${C3}$e${MR} "
+		echo -en "${MB}$e${MR} "
 	fi
 }
 
 function get_time() {
     local daytime=$( date '+%-d %^b %0H %0M' )
-    local formatted_dt="${MR}"
+    local formatted_dt="${MR}${MI}${MB}${C0}"
 
     local i=0
     for dt in $daytime ; do
@@ -50,13 +50,13 @@ function get_time() {
             formatted_dt="${formatted_dt}${dt}"
         elif [[ "$i" -eq 1 ]] ; then
             # month
-            formatted_dt="${formatted_dt}${C7}${dt:0:3}"
+            formatted_dt="${formatted_dt}${C0}${dt:0:3}"
         elif [[ "$i" -eq 2 ]] ; then
             # hour
-            formatted_dt="${formatted_dt} ${MR}${dt}"
+            formatted_dt="${formatted_dt} ${MR}${MI}${MB}${C0}${dt}"
         elif [[ "$i" -eq 3 ]] ; then
             # minute
-            formatted_dt="${formatted_dt}${C7}${dt}"
+            formatted_dt="${formatted_dt}${C0}${dt}"
         fi
         i=$(( i+1 ))
     done
@@ -66,16 +66,22 @@ function get_time() {
 function get_hostname() {
     local hostname="${HOSTNAME}"
     hostname="${hostname^^*}"
-    #hostname="${hostname:0:1}"
-    echo -en "$hostname"
+    hostname="${hostname:0:1}"
+    if [[ "${USER}" == "root" ]] ; then
+        echo -en "${C1}"
+    else
+        echo -en "${C4}"
+    fi
+    echo -en "$hostname${MR}"
 }
 
 function get_username() {
     local username="${USER}"
     username="${username^^*}"
-    #username="${username:0:1}"
-    echo -en "$username"
+    username="${username:0:1}"
+    echo -en "$username${MR}"
 }
 
-PS1="\[${C4}\]\[$(get_username)\]${MR} > \[\$(get_exit_code)\]\[\$(get_time)\] \[${MR}\]\[\$(get_hostname)\] \[${C7}\]\[\$(pwd1)\]\[${MR}\]\[\$(get_gitprompt)\]${MR} >\n>> "
+#\[\$(get_time)\]
+PS1="\[\$(get_exit_code)\]${MR}${C7}$(get_username)$(get_hostname) ${C7}$(pwd1) $(get_gitprompt)${MR}\n ! "
 

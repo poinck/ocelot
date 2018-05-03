@@ -64,7 +64,7 @@ guess_display_height() {
 # load user settings, if any
 SCALE=1
 PANEL_LINE_COUNT=37     # minimum line count
-_PLH=23                 # panel line height
+_PLH=25                 # panel line height
 _PW=64                  # panel width
 element_text_margin_correction=0
 panel_label_color="^fg(#$cdarkerfont)"
@@ -87,9 +87,9 @@ if [[ -f ~/.ocelotrc ]] ; then
 fi
 
 # initialize scaling
-_FP=$(( 9*SCALE ))      # font pixels
+_FP=$(( 9*SCALE ))      # font points (pt)
 _BP=$(( 4*SCALE ))      # border pixels
-_TOP=$(( _BP+element_text_margin_correction ))
+_TOP=$(( 1+_BP+element_text_margin_correction ))
 _PW=$(( _PW*SCALE ))
 _PLH=$(( _PLH*SCALE ))
 
@@ -170,5 +170,5 @@ while read -r reply ; do
     echo "^fg() "  # blank last line to clear old content
 
     refresh_element_order
-done | ocelot-dzen -p -l "$PANEL_LINE_COUNT" -h "${_PLH}" -ta l -w "${_PW}" -fn "monospace:bold:size=${_FP}" -e 'onstart=uncollapse' -bg "$pbc"
+done | ocelot-dzen -p -l "$PANEL_LINE_COUNT" -h "${_PLH}" -ta l -w "${_PW}" -fn "Monoid:bold:size=${_FP}" -e 'onstart=uncollapse' -bg "$pbc"
 

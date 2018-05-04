@@ -15,7 +15,7 @@
 source ${OCELOT_PATH}bin/outils.sh
 
 # element order
-ELEMENT_ORDER=("time" "weekday" "date" "year" "volume" "brightness" "desktops" "desktop" "window" "load" "health_cpu" "battery" "updates" "net_3" "memory_ram" "memory_swap" "disk_home" "disk_root" "nolock" "lock")
+ELEMENT_ORDER=("time" "weekday" "date" "year" "volume" "brightness" "desktops" "desktop" "window" "load" "health_cpu" "battery" "updates" "net_3" "memory_ram" "memory_swap" "disk_da5" "disk_da3" "nolock" "lock")
 
 refresh_element_order() {
     if [[ -f ~/.ocelotrc ]] ; then
@@ -68,7 +68,7 @@ _PLH=25                 # panel line height
 _PW=64                  # panel width
 element_text_margin_correction=0
 panel_label_color="^fg(#$cdarkerfont)"
-panel_label="__O"
+panel_label="__./"
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
     if [[ -n "$scale" ]] ; then
@@ -99,7 +99,7 @@ format_element() {
     for e in $@ ; do
         if [[ "$i" -eq 1 ]] ; then
             e=${e//_/ }
-            label="  $e"
+            label=" $e"
         elif [[ "$i" -eq 2 ]] ; then
             background="^fg(#$e)^r(${_PW}x${_PLH})"
         elif [[ "$(( i%2 ))" -eq 1 ]] ; then
@@ -143,7 +143,7 @@ while read -r reply ; do
     # - "color" is color for graph
 
     panel_label="${panel_label:0:6}"
-    label="label ${panel_label_color}${panel_label} $cdarkgrey 100 3f3f3f"
+    label="label ${panel_label_color}${panel_label} $cdarkgrey"
 
     # print out title window (will not be updated again)
     if [[ "$titlewindow_set" -eq 0 ]] ; then

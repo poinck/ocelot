@@ -1,7 +1,8 @@
 #!/bin/bash
 #
-# odisks uses output from `df` Currently
-# only / and /home are supported.
+# odisks uses output from `df`. Set mountpoints/targets at $disks in ~/.ocelotrc
+# and corresponding source at $element_order like "disk_db1" for sdb1 (last 3 chars)
+# to show disk-usage not only for / and /home.
 #
 #    ^   ^
 #  +-------+
@@ -15,36 +16,42 @@ ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 source ${OCELOT_PATH}bin/outils.sh
 bgcolor=$cdarkgrey
 
+DISKS="/ /home"
+if [[ -f ~/.ocelotrc ]] ; then
+    . ~/.ocelotrc
+    if [[ -n "$disks" ]] ; then
+        echo "[DEBUG] disks = $disks"
+        DISKS=$disks
+    fi
+fi
+
 get_disks() {
-    disks_now=$( df --output=target,pcent / /home | tail -n 2 )
-        # FIXME get all local partitions dynamicly
+    disks_now=$( df --output=source,pcent ${DISKS} )
+    disks_lines=$( echo "${disks_now}" | wc -l )
+    disks_count=$(( disks_lines-1 ))
+    disks_now=$( echo "${disks_now}" | tail -n ${disks_count} )
 
     p=0
     #echo "[DEBUG] disks_now = ${disks_now}"
     for disk in ${disks_now} ; do
         p=$(( p+1 ))
-        if [[ "$p" -eq 2 ]] ; then
-            disk_root_percent=${disk%%%*}
-            if [[ "${disk_root_percent}" -ge 100 ]] ; then
-                disk_root_percent="FF"
-            elif [[ "${disk_root_percent}" -lt 10 ]] ; then
-                disk_root_percent="_${disk_root_percent}"
+        is_label=$(( p%2 ))
+        if [[ ${is_label} -eq 1 ]] ; then
+            disk_label="${disk:0-3}"
+            disk_labels="${disk_label^^*}"
+        else
+            disk_percent=${disk%%%*}
+            if [[ "${disk_percent}" -lt 10 ]] ; then
+                disk_percents="__${disk_percent}"
+            elif [[ "${disk_percent}" -lt 100 ]] ; then
+                disk_percents="_${disk_percent}"
+            else
+                disk_percents="${disk_percent}"
             fi
-            disks="disk_root ^fg(#${cfont})${disk_root_percent}^fg(#${cdarkfont})RT ${bgcolor} ${disk_root_percent} ${cdarkblue}"
-            echo "[DEBUG] $disks"
-            echo "$disks" > "$ofifo"
-        elif [[ "$p" -eq 4 ]] ; then
-            disk_home_percent=${disk%%%*}
-            if [[ "${disk_home_percent}" -ge 100 ]] ; then
-                disk_home_percent="FF"
-            elif [[ "${disk_home_percent}" -lt 10 ]] ; then
-                disk_home_percent="_${disk_home_percent}"
-            fi
-            disks="disk_home ^fg(#${cfont})${disk_home_percent}^fg(#${cdarkfont})HME ${bgcolor} ${disk_home_percent} ${cdarkblue}"
-            echo "[DEBUG] $disks"
-            echo "$disks" > "$ofifo"
+            odisks="disk_${disk_label} ^fg(#${cfont})${disk_percents}^fg(#${cdarkfont})${disk_labels} ${bgcolor} ${disk_percent} ${cdarkblue}"
+            echo "[DEBUG] $odisks"
+            echo "$odisks" > "$ofifo"
         fi
-        #echo "[DEBUG] $p -> $disk"
     done
 }
 

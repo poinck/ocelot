@@ -22,10 +22,9 @@ Following dependencies are required to get the intended look and feel:
 - `xrandr` to guess display height
 
 Following is *optional*:
-- n/a
+- font recommendations: Monoid L 12px/9pt for terminal and side-panel; Gidole 11pt for everything else
 
 Things to come (order is priority):
-- lock screen on lid-close (provided as systemd.unit-file or something else that might do the trick)
 - take screenshot, using `scrot`
 
 Things *NOT* to come:

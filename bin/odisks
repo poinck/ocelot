@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# odisks uses output from `df`. Set mountpoints/targets at $disks in ~/.ocelotrc
-# and corresponding source at $element_order like "disk_db1" for sdb1 (last 3 chars)
-# to show disk-usage not only for / and /home.
+# odisks uses output from `df`. Set mountpoints/targets/sources/devices at $disks
+# in ~/.ocelotrc and corresponding source at $element_order like "disk_a5" for
+# sda5 (last 2 chars) to show disk-usage not only for / and /home.
 #
 #    ^   ^
 #  +-------+
@@ -34,10 +34,11 @@ get_disks() {
     p=0
     #echo "[DEBUG] disks_now = ${disks_now}"
     for disk in ${disks_now} ; do
+        disk_color="${cdarkerfont}"
         p=$(( p+1 ))
         is_label=$(( p%2 ))
         if [[ ${is_label} -eq 1 ]] ; then
-            disk_label="${disk:0-3}"
+            disk_label="${disk:0-2}"
             disk_labels="${disk_label^^*}"
         else
             disk_percent=${disk%%%*}
@@ -48,7 +49,15 @@ get_disks() {
             else
                 disk_percents="${disk_percent}"
             fi
-            odisks="disk_${disk_label} ^fg(#${cfont})${disk_percents}^fg(#${cdarkfont})${disk_labels} ${bgcolor} ${disk_percent} ${cdarkblue}"
+            graphs=$(( disk_percent*15/100 ))
+            graph=""
+            for (( i=1 ; i<=$graphs ; i=$i+1 )) ; do
+                graph+="100 ${cdarkgrey2} "
+            done
+            if [[ "${disk_percent}" -ge 90  ]] ; then
+                disk_color="${corange}"
+            fi
+            odisks="disk_${disk_label} ^fg(#${cfont})${disk_percents}^fg(#${cdarkfont})${disk_labels} ${bgcolor} ${disk_percent} ${disk_color} ${graph}"
             echo "[DEBUG] $odisks"
             echo "$odisks" > "$ofifo"
         fi

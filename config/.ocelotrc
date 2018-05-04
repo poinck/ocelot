@@ -46,11 +46,11 @@ ocelot_path="/home/username/gits/ocelot/"
 # default: 0 (no correction, best with current versions of xserver)
 #element_text_margin_correction=0
 
-# disks-usage; by default none of the following disks (targes, mountpoints)
-# maybe shown because device names (sources) are only avaliable at runtime.
-# Element names are, e.g. "disk_da1"; to retrieve element names for
-# $element_order-entry run 'odisks' once manually.
-#disks="/ /home"
+# disks-usage; by default none of the following disks (targes, mountpoints,
+# sources or device names) maybe shown because device names (sources) are
+# only avaliable at runtime. Element names are, e.g. "disk_a1"; to retrieve
+# element names for $element_order-entry run 'odisks' once manually.
+#disks="/ /dev/sda5"
 
 # static panel label; use "_" for spaces.
 # default: "__./"

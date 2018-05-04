@@ -69,10 +69,10 @@ get_otime() {
         week="_${week}"
     fi
 
-    otime_time="time ^fg(#${cfont})${hour_f}^fg(#${cdarkfont})${minute_f} ${cdarkgrey} ${hour_percent} $cdarkblue ${hour_graph}"
-    otime_weekday="weekday ^fg(#${cfont})${week}^fg(#${cdarkfont})${day} $cdarkgrey"
-    otime_date="date ^fg(#${cfont})${day_in_month_f}^fg(#${cdarkfont})${month} $cdarkgrey"
-    otime_year="year ^fg(#${cdarkerfont})${year2}^fg(#${cdarkfont})${year4} $cdarkgrey"
+    otime_time="time _^fg(#${cfont})${hour_f}^fg(#${cdarkfont})${minute_f} ${cdarkgrey} ${hour_percent} $cdarkblue ${hour_graph}"
+    otime_weekday="weekday _^fg(#${cfont})${week}^fg(#${cdarkfont})${day} $cdarkgrey"
+    otime_date="date _^fg(#${cfont})${day_in_month_f}^fg(#${cdarkfont})${month} $cdarkgrey"
+    otime_year="year _^fg(#${cdarkfont})${year2}^fg(#${cdarkfont})${year4} $cdarkgrey"
 }
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"

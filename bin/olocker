@@ -27,17 +27,17 @@ onolock=""
 olocker=""
 if [[ "$1" == "disable" ]] ; then
     xautolock -disable
-    onolock="nolock ^fg(#${cfont})NO^fg(#${cdarkfont})LCK $cgrey 100 $corange"
+    onolock="nolock _^fg(#${cfont})NO^fg(#${cdarkfont})LCK $cgrey 100 $corange"
 elif [[ "$1" == "enable" ]] ; then
     xautolock -enable
-    onolock="nolock ^fg(#${cdarkerfont})__^fg(#${cdarkerfont})LCK $cdarkgrey"
+    onolock="nolock _^fg(#${cdarkerfont})__^fg(#${cdarkerfont})LCK $cdarkgrey"
 elif [[ "$1" == "notify" ]] ; then
     for i in 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 ; do
         i_f=${i}
         if [[ "${i}" -lt 10 ]] ; then
             i_f="_${i}"
         fi
-        olocker="lock ^fg(#${cfont})${i_f}^fg(#${cdarkfont})LCK $cdarkgrey $(( 100*i/15 )) $corange"
+        olocker="lock _^fg(#${cfont})${i_f}^fg(#${cdarkfont})LCK $cdarkgrey $(( 100*i/15 )) $corange"
 
         locker_graph=""
         for (( ii=1 ; ii<=i ; ii=ii+1 )) ; do
@@ -48,7 +48,7 @@ elif [[ "$1" == "notify" ]] ; then
         echo "${olocker}${locker_graph}" > "$ofifo"
         sleep 1
     done
-    olocker="lock ^fg(#${cdarkgrey})_ $cdarkgrey"
+    olocker="lock _^fg(#${cdarkgrey})_ $cdarkgrey"
 else
     # default: start xautolock
     xautolock -time $LOCKSCREEN_TIMEOUT -locker "olock" -notifier "olocker notify" -notify 16 &

@@ -49,9 +49,9 @@ for (( i=brightness_tmp-6 ; i>=6 ; i=$i-6 )) ; do
 done
 
 if [[ "${current_brightness}" -lt 10 ]] ; then
+    current_brightness="__${current_brightness}"
+elif [[ "${current_brightness}" -lt 100 ]] ; then
     current_brightness="_${current_brightness}"
-elif [[ "${current_brightness}" -ge 100 ]] ; then
-    current_brightness="FF"
 fi
 brightness="brightness ^fg(#${cfont})${current_brightness}^fg(#${cdarkfont})BRI ${cdarkgrey} $brightness_graph"
 echo "[DEBUG] $brightness"

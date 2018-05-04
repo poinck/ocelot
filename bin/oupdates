@@ -35,12 +35,12 @@ else
 fi
 
 if [[ "$updates_available" -le 1 ]] && [[ "$updates_available_empty" -le 1 ]] ; then
-    updates_available="^fg(#$cdarkerfont)__^fg(#$cdarkerfont)SEC $cdarkgrey"
+    updates_available="^fg(#$cdarkerfont)___^fg(#$cdarkerfont)SEC $cdarkgrey"
 else
     if [[ "${updates_available}" -lt 10 ]] ; then
+        updates_available="__${updates_available}"
+    elif [[ "${updates_available}" -lt 100 ]] ; then
         updates_available="_${updates_available}"
-    elif [[ "${updates_available}" -ge 100 ]] ; then
-        updates_available="FF"
     fi
     updates_available="^fg(#$cfont)${updates_available}^fg(#${cdarkfont})SEC ${cgrey} 100 ${corange}"
 fi

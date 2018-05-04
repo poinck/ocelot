@@ -57,9 +57,9 @@ for (( i=volume_tmp-6 ; i>=6 ; i=$i-6 )) ; do
 done
 
 if [[ "${omixer_master_volume}" -lt 10 ]] ; then
+    omixer_master_volume="__${omixer_master_volume}"
+elif [[ "${omixer_master_volume}" -lt 100 ]] ; then
     omixer_master_volume="_${omixer_master_volume}"
-elif [[ "${omixer_master_volume}" -ge 100 ]] ; then
-    omixer_master_volume="FF"
 fi
 volume="volume ^fg(#${cfont})${omixer_master_volume}^fg(#${cdarkfont})VOL ${cdarkgrey} $volume_graph"
 echo "[DEBUG] $volume"

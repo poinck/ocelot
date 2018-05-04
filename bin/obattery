@@ -50,9 +50,9 @@ while true ; do
     get_battery
 
     if [[ "${bat_percent}" -lt 10 ]] ; then
+        bat_percent="__${bat_percent}"
+    elif [[ "${bat_percent}" -lt 100 ]] ; then
         bat_percent="_${bat_percent}"
-    elif [[ "${bat_percent}" -ge 100 ]] ; then
-        bat_percent="FF"
     fi
 
     battery="battery ^fg(#${cfont})${bat_percent}^fg(#${cdarkfont})${bat_status2} ${bgcolor} ${bat_percent2} ${bat_graph}"

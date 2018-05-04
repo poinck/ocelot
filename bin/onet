@@ -29,6 +29,8 @@ get_net() {
         interface_index=$( cat "${active_interface}/ifindex" )
         interface_index_f="${interface_index}"
         if [[ "${interface_index}" -lt 10 ]] ; then
+            interface_index_f="__${interface_index}"
+        elif [[ "${interface_index}" -lt 100 ]] ; then
             interface_index_f="_${interface_index}"
         fi
         interface_name=${active_interface##*/}

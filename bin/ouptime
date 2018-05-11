@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # optime uses information from /proc/uptime to show uptime and
-# uptime/usage-ratio in percent.
+# idle-ratio in percent.
 #
 #    ^   ^
 #  +-------+
@@ -15,7 +15,7 @@ source ${OCELOT_PATH}bin/outils.sh
 
 get_uptimes() {
     up_days=0
-    up_ratio=0
+    idle_ratio=0
 
     local r_proc_uptime="$( cat /proc/uptime )"
     local i=0
@@ -26,7 +26,7 @@ get_uptimes() {
             up_days="$(( t_proc_uptime/60/60/24 ))"
             local days_in_s=${t_proc_uptime}
         elif [[ "$i" -eq 1 ]] ; then
-            up_ratio="$(( t_proc_uptime*100/days_in_s ))"
+            idle_ratio="$(( t_proc_uptime*100/days_in_s ))"
         fi
         i=$(( i+1 ))
     done
@@ -46,20 +46,20 @@ while true ; do
     echo "${uptime_days}" > "$ofifo"
     echo "[DUBUG] ${uptime_days}"
 
-    # UR: uptime ratio, percentage of real usage since last restart
-    ur_ratio=""
-    for (( i=10 ; i<=$up_ratio ; i=$i+10 )) ; do
-        ur_graph+="100 ${cdarkgrey2} "
+    # UIR: idle-ratio, percentage of real usage since last restart
+    idle_graph=""
+    for (( i=10 ; i<=$idle_ratio ; i=$i+10 )) ; do
+        idle_graph+="100 ${cdarkgrey2} "
     done
-    up_ratio_f="${up_ratio}"
-    if [[ "${up_ratio}" -lt 10 ]] ; then
-        up_ratio_f="__${up_ratio}"
-    elif [[ "${up_ratio}" -lt 100 ]] ; then
-        up_ratio_f="_${up_ratio}"
+    idle_ratio_f="${idle_ratio}"
+    if [[ "${idle_ratio}" -lt 10 ]] ; then
+        idle_ratio_f="__${idle_ratio}"
+    elif [[ "${idle_ratio}" -lt 100 ]] ; then
+        idle_ratio_f="_${idle_ratio}"
     fi
-    uptime_ratio="upratio ^fg(#${cfont})${up_ratio_f}^fg(#${cdarkfont})UR ${cdarkgrey} ${up_ratio} ${cdarkerfont} ${ur_graph}"
-    echo "${uptime_ratio}" > "$ofifo"
-    echo "[DUBUG] ${uptime_ratio}"
+    idle_ratio="idleratio ^fg(#${cfont})${idle_ratio_f}^fg(#${cdarkfont})IDL ${cdarkgrey} ${idle_ratio} ${cdarkerfont} ${idle_graph}"
+    echo "${idle_ratio}" > "$ofifo"
+    echo "[DUBUG] ${idle_ratio}"
 
     sleep 3600
 done

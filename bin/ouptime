@@ -1,6 +1,7 @@
 #!/bin/bash
 #
-# optime uses information /proc/uptime.
+# optime uses information from /proc/uptime to show uptime and
+# uptime/usage-ratio in percent.
 #
 #    ^   ^
 #  +-------+

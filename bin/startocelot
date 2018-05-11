@@ -55,6 +55,7 @@ ${OCELOT_PATH}bin/obattery &
 ${OCELOT_PATH}bin/oupdates &
 ${OCELOT_PATH}bin/odisks &
 ${OCELOT_PATH}bin/onet &
+${OCELOT_PATH}bin/ouptime &
 
 # start ocelot desktop
 ${OCELOT_PATH}bin/odesktop

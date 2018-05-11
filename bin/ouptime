@@ -1,0 +1,64 @@
+#!/bin/bash
+#
+# optime uses information /proc/uptime.
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
+
+source ${OCELOT_PATH}bin/outils.sh
+
+get_uptimes() {
+    up_days=0
+    up_ratio=0
+
+    local r_proc_uptime="$( cat /proc/uptime )"
+    local i=0
+    for t_proc_uptime in $r_proc_uptime ; do
+        t_proc_uptime="${t_proc_uptime%.*}"
+        #echo "[DEBUG] ${t_proc_uptime}"
+        if [[ "$i" -eq 0 ]] ; then
+            up_days="$(( t_proc_uptime/60/60/24 ))"
+            local days_in_s=${t_proc_uptime}
+        elif [[ "$i" -eq 1 ]] ; then
+            up_ratio="$(( t_proc_uptime*100/days_in_s ))"
+        fi
+        i=$(( i+1 ))
+    done
+}
+
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
+while true ; do
+    get_uptimes
+
+    # UP: uptime in days
+    if [[ "${up_days}" -lt 10 ]] ; then
+        up_days="__${up_days}"
+    elif [[ "${up_days}" -lt 100 ]] ; then
+        up_days="_${up_days}"
+    fi
+    uptime_days="uptime ^fg(#${cfont})${up_days}^fg(#${cdarkfont})UP ${cdarkgrey}"
+    echo "${uptime_days}" > "$ofifo"
+    echo "[DUBUG] ${uptime_days}"
+
+    # UR: uptime ratio, percentage of real usage since last restart
+    ur_ratio=""
+    for (( i=10 ; i<=$up_ratio ; i=$i+10 )) ; do
+        ur_graph+="100 ${cdarkgrey2} "
+    done
+    up_ratio_f="${up_ratio}"
+    if [[ "${up_ratio}" -lt 10 ]] ; then
+        up_ratio_f="__${up_ratio}"
+    elif [[ "${up_ratio}" -lt 100 ]] ; then
+        up_ratio_f="_${up_ratio}"
+    fi
+    uptime_ratio="upratio ^fg(#${cfont})${up_ratio_f}^fg(#${cdarkfont})UR ${cdarkgrey} ${up_ratio} ${cdarkerfont} ${ur_graph}"
+    echo "${uptime_ratio}" > "$ofifo"
+    echo "[DUBUG] ${uptime_ratio}"
+
+    sleep 3600
+done

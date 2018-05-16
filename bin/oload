@@ -67,13 +67,18 @@ get_load() {
     echo "[DEBUG] load1 = $load1,$load1_graph load5 = $load5,$load5_graph load15 = $load15,$load15_graph load_max = $load_max"
     load_graph="${load1_graph} ${cblue} ${load5_graph} ${cdarkblue} ${load15_graph} ${cdarkblue}"
     load1_f=$(( load1/100 ))
+    if [[ "${load1_f}" -lt 10 ]] ; then
+        load1_f="__${load1_f}"
+    elif [[ "${load1_f}" -lt 100 ]] ; then
+        load1_f="_${load1_f}"
+    fi
 }
 
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 while true ; do
     get_load
-    load="load ^fg(#${cdarkfont})__L^fg(#${cfont})${load1_f} ${cdarkgrey} ${load_graph}"
+    load="load ^fg(#${cfont})${load1_f}^fg(#${cdarkfont})L ${cdarkgrey} ${load_graph}"
     echo "[DEBUG] $load"
     echo "$load" > "$ofifo"
 

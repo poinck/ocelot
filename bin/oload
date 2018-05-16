@@ -29,6 +29,16 @@ remove_leading_zeros() {
     echo "$number"
 }
 
+# historic loads 15-minute interval (195 minutes in total)
+declare -a load15s
+load15s_i=4                                     # start interval
+load15s_ist=900                                 # interval step: 900s = 15 minutes
+#load15s_ist=14
+load15s_ni="$(( $( date '+%s' )+load15s_ist ))" # next interval
+for (( i=${load15s_i} ; i<17 ; i=i+1 )) ; do
+    load15s[$i]=0
+done
+
 get_load() {
     content=""
 
@@ -72,15 +82,30 @@ get_load() {
     elif [[ "${load1_f}" -lt 100 ]] ; then
         load1_f="_${load1_f}"
     fi
+
+    # generate 15-minute interval graph
+    t_now=$( date '+%s' )
+    load15s_graph=""
+    if [[ "${load15s_ni}" -lt "${t_now}" ]] ; then
+        load15s_ni="$(( $( date '+%s' )+load15s_ist ))"
+        for (( ii=15 ; ii>=${load15s_i} ; ii=ii-1 )) ; do
+            local n=$(( ii+1 ))
+            load15s[$n]=${load15s[$ii]}
+        done
+        load15s[4]=${load15_graph}
+        for (( ii=${load15s_i} ; ii<17 ; ii=ii+1 )) ; do
+            load15s_graph+="${load15s[$ii]} ${cdarkgrey2} "
+        done
+    fi
 }
 
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 while true ; do
     get_load
-    load="load ^fg(#${cfont})${load1_f}^fg(#${cdarkfont})L ${cdarkgrey} ${load_graph}"
+    load="load ^fg(#${cfont})${load1_f}^fg(#${cdarkfont})L ${cdarkgrey} ${load_graph} ${load15s_graph}"
     echo "[DEBUG] $load"
     echo "$load" > "$ofifo"
 
-    sleep 14
+    sleep 15
 done

@@ -70,7 +70,11 @@ while read -r reply ; do
         fi
     done
 
-    desktop="desktop ^fg(#${cfont})__${i}^fg(#ffffff)${current_d} ${cdarkblue} 100 ${cblue}"
+    if [[ "${current_d}" -lt 10 ]] ; then
+        current_d="_${current_d}"
+    fi
+
+    desktop="desktop ^fg(#${cfont})_${current_d}^fg(#ffffff)${i} ${cdarkblue} 100 ${cblue}"
     desktops="desktops _ ${cdarkgrey} $r"
     echo "[DEBUG] $desktops"
     echo "$desktops" > "$ofifo"

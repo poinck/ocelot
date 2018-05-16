@@ -85,7 +85,6 @@ get_load() {
 
     # generate 15-minute interval graph
     t_now=$( date '+%s' )
-    load15s_graph=""
     if [[ "${load15s_ni}" -lt "${t_now}" ]] ; then
         load15s_ni="$(( $( date '+%s' )+load15s_ist ))"
         for (( ii=15 ; ii>=${load15s_i} ; ii=ii-1 )) ; do
@@ -93,6 +92,7 @@ get_load() {
             load15s[$n]=${load15s[$ii]}
         done
         load15s[4]=${load15_graph}
+        load14s_graph=""
         for (( ii=${load15s_i} ; ii<17 ; ii=ii+1 )) ; do
             load15s_graph+="${load15s[$ii]} ${cdarkgrey2} "
         done

@@ -27,7 +27,7 @@ onolock=""
 olocker=""
 if [[ "$1" == "disable" ]] ; then
     xautolock -disable
-    onolock="nolock _^fg(#${cfont})NO^fg(#${cdarkfont})LCK $cgrey 100 $corange"
+    onolock="nolock _^fg(#${cfont})NO^fg(#${cdarkfont})LCK $cgrey 100 $cdarkblue"
 elif [[ "$1" == "enable" ]] ; then
     xautolock -enable
     onolock="nolock _^fg(#${cdarkerfont})__^fg(#${cdarkerfont})LCK $cdarkgrey"

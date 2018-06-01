@@ -55,7 +55,7 @@ get_disks() {
                 graph+="100 ${cdarkgrey2} "
             done
             if [[ "${disk_percent}" -ge 90  ]] ; then
-                disk_color="${corange}"
+                disk_color="${cdarkblue}"
             fi
             odisks="disk_${disk_label} ^fg(#${cfont})${disk_percents}^fg(#${cdarkfont})${disk_labels} ${bgcolor} ${disk_percent} ${disk_color} ${graph}"
             echo "[DEBUG] $odisks"

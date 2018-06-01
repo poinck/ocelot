@@ -47,10 +47,11 @@ volume_graph2_color=$cgrey
 if [[ "$muted" -eq 1 ]] ; then
     volume_label="^fg(#$cdarkerfont)V"
     volume_label2_color=$cdarkfont
-    volume_graph_color=$corange
+    volume_graph_color=$cdarkblue
     volume_graph2_color=$cgrey
 fi
-volume_graph="${omixer_master_volume} ${volume_graph_color} "
+
+volume_graph=""
 for (( i=volume_tmp-6 ; i>=6 ; i=$i-6 )) ; do
     #echo "[DEBUG] i = $i"
     volume_graph+="100 ${volume_graph2_color} "
@@ -61,6 +62,14 @@ if [[ "${omixer_master_volume}" -lt 10 ]] ; then
 elif [[ "${omixer_master_volume}" -lt 100 ]] ; then
     omixer_master_volume="_${omixer_master_volume}"
 fi
+
+if [[ "$muted" -eq 1 ]] ; then
+    omixer_master_volume="_NO"
+    volume_graph="100 ${volume_graph_color} ${volume_graph}"
+else
+    volume_graph="${omixer_master_volume} ${volume_graph_color} ${volume_graph}"
+fi
+
 volume="volume ^fg(#${cfont})${omixer_master_volume}^fg(#${cdarkfont})VOL ${cdarkgrey} $volume_graph"
 echo "[DEBUG] $volume"
 echo "$volume" > "$ofifo"

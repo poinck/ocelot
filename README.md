@@ -16,7 +16,7 @@ Following dependencies are required to get the intended look and feel:
 - `xsetbg` (part of xloadimage) to set a wallpaper
 - `dmenu` to run stuff
 - `urxvt` to have a terminal
-- `xautolock` to lock screen after some idle time (10 minutes)
+- `xss-lock` and `xset` to lock screen after some idle time and on hibernate/sleep
 - `xbacklight` to control backlight of your notebook screen
 - `amixer` from alsa to control volume
 - `xrandr` to guess display height

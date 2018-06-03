@@ -21,23 +21,22 @@ if [[ -f ~/.ocelotrc ]] ; then
         lockscreen="ocelot-slock"
     fi
     if [[ -z "$lockscreen_hibernate" ]] ; then
-        lockscreen_hibernate="systemctl hibernate -i"
+        lockscreen_hibernate="systemctl hibernate --no-wall -i"
     fi
     if [[ -z "$lockscreen_suspend" ]] ; then
-        lockscreen_suspend="systemctl suspend -i"
+        lockscreen_suspend="systemctl suspend --no-wall -i"
     fi
 else
     echo "~/.ocelotrc does not exist"
 fi
 
 if [[ "$1" == "hibernate" ]] ; then
-    $( $lockscreen $lockscreen_hibernate )
+    $( $lockscreen_hibernate )
 elif [[ "$1" == "suspend" ]] ; then
-    $( $lockscreen $lockscreen_suspend )
+    $( $lockscreen_suspend )
 elif [[ "$1" == "ask" ]] ; then
     echo "not implemented"
 else
     $( $lockscreen )
 fi
-
 

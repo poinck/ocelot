@@ -20,38 +20,49 @@ if [[ -f ~/.ocelotrc ]] ; then
         LOCKSCREEN_TIMEOUT=$lockscreen_timeout
     fi
 fi
+LOCKSCREEN_TIMEOUT=$(( LOCKSCREEN_TIMEOUT*60 ))
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 
 onolock=""
 olocker=""
+clear_locker=0
 if [[ "$1" == "disable" ]] ; then
-    xautolock -disable
+    xset s off
     onolock="nolock _^fg(#${cfont})NO^fg(#${cdarkfont})LCK $cgrey 100 $cdarkblue"
 elif [[ "$1" == "enable" ]] ; then
-    xautolock -enable
+    xset s $LOCKSCREEN_TIMEOUT 15
     onolock="nolock _^fg(#${cdarkerfont})__^fg(#${cdarkerfont})LCK $cdarkgrey"
 elif [[ "$1" == "notify" ]] ; then
+    # trap signal 15 from xss-lock to clear lock countdown
+    trap 'clear_locker=1' 15
+
     for i in 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 ; do
-        i_f=${i}
-        if [[ "${i}" -lt 10 ]] ; then
-            i_f="_${i}"
+        if [[ "${clear_locker}" -eq 0 ]] ; then
+            i_f=${i}
+            if [[ "${i}" -lt 10 ]] ; then
+                i_f="_${i}"
+            fi
+            olocker="lock _^fg(#${cfont})${i_f}^fg(#${cdarkfont})LCK $cdarkgrey $(( 100-(100*i/15) )) $corange"
+
+            locker_graph=""
+            for (( ii=1 ; ii<=15-i ; ii=ii+1 )) ; do
+                locker_graph+=" 100 $cgrey"
+                #echo "[DEBUG] ii=$ii"
+            done
+
+            echo "${olocker}${locker_graph}" > "$ofifo"
+            sleep 1
+        else
+            # clear lock countdown on signal 15
+            break
         fi
-        olocker="lock _^fg(#${cfont})${i_f}^fg(#${cdarkfont})LCK $cdarkgrey $(( 100*i/15 )) $corange"
-
-        locker_graph=""
-        for (( ii=1 ; ii<=i ; ii=ii+1 )) ; do
-            locker_graph+=" 100 $cgrey"
-            #echo "[DEBUG] ii=$ii"
-        done
-
-        echo "${olocker}${locker_graph}" > "$ofifo"
-        sleep 1
     done
     olocker="lock _^fg(#${cdarkgrey})_ $cdarkgrey"
 else
-    # default: start xautolock
-    xautolock -time $LOCKSCREEN_TIMEOUT -locker "olock" -notifier "olocker notify" -notify 16 &
+    # default: set timeout and start xss-lock
+    xset s $LOCKSCREEN_TIMEOUT 15
+    xss-lock -n "olocker notify" -- olock &
 fi
 
 if [[ -n "$olocker" ]] ; then

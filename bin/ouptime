@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# optime uses information from /proc/uptime to show uptime and
+# ouptime uses information from /proc/uptime to show uptime and
 # idle-ratio in percent.
 #
 #    ^   ^
@@ -17,6 +17,13 @@ get_uptimes() {
     up_days=0
     idle_ratio=0
 
+    # get virtual cpu count from proc-filesystem
+    proc_cpuinfo_processor=$( cat /proc/cpuinfo | grep processor | tail -n 1 )
+    if [[ -z "$proc_cpuinfo_processor" ]] ; then
+        proc_cpuinfo_processor=0
+    fi
+    proc_cpuinfo_processor=${proc_cpuinfo_processor#*: }
+
     local r_proc_uptime="$( cat /proc/uptime )"
     local i=0
     for t_proc_uptime in $r_proc_uptime ; do
@@ -26,7 +33,7 @@ get_uptimes() {
             up_days="$(( t_proc_uptime/60/60/24 ))"
             local days_in_s=${t_proc_uptime}
         elif [[ "$i" -eq 1 ]] ; then
-            idle_ratio="$(( t_proc_uptime*100/days_in_s ))"
+            idle_ratio="$(( t_proc_uptime*100/days_in_s/(proc_cpuinfo_processor+1) ))"
         fi
         i=$(( i+1 ))
     done

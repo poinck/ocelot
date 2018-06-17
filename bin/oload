@@ -45,7 +45,7 @@ get_load() {
     # get virtual cpu count and loadavg from proc-filesystem
     proc_cpuinfo_processor=$( cat /proc/cpuinfo | grep processor | tail -n 1 )
     if [[ -z "$proc_cpuinfo_processor" ]] ; then
-        proc_cpuinfo_processor=1
+        proc_cpuinfo_processor=0
     fi
     proc_loadavg=$( cat /proc/loadavg )
 

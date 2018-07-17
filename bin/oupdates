@@ -34,19 +34,30 @@ else
     fi
 fi
 
+# test
+#updates_available=4
+
 if [[ "$updates_available" -le 1 ]] && [[ "$updates_available_empty" -le 1 ]] ; then
-    updates_available="^fg(#$cdarkerfont)___^fg(#$cdarkerfont)SEC $cdarkgrey"
+    updates_available_f="^fg(#$cdarkerfont)___^fg(#$cdarkerfont)SEC $cdarkgrey"
+    updates_available=0
 else
     if [[ "${updates_available}" -lt 10 ]] ; then
-        updates_available="__${updates_available}"
+        updates_available_f="__${updates_available}"
     elif [[ "${updates_available}" -lt 100 ]] ; then
-        updates_available="_${updates_available}"
+        updates_available_f="_${updates_available}"
     fi
-    updates_available="^fg(#$cfont)${updates_available}^fg(#${cdarkfont})SEC ${cgrey} 100 ${corange}"
+    updates_available_f="^fg(#$cfont)${updates_available_f}^fg(#ffffff)SEC ${cgrey} 100 ${corange}"
 fi
 
-updates="updates ${updates_available}"
+if [[ "${updates_available}" -gt 0 ]] ; then
+    update_c="${C1}${MB}"
+else
+    update_c="${C2}"
+fi
+
+updates="updates ${updates_available_f}"
 #echo -e "[DEBUG] updates empty = $updates_available_empty"
-echo "${updates_available_list}"
-#echo "[DEBUG] $updates"
+echo -n "${updates_available_list}"
+echo -e "${update_c}${updates_available}${MR} security update(s) available"
 echo "$updates" > "$ofifo"
+

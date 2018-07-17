@@ -12,6 +12,7 @@
 #
 # ocelot by André Klausnitzer, CC0
 
+# panel colors
 cfont="aaaaaa"
 cdarkfont="777777"
 cdarkerfont="555555"
@@ -28,6 +29,22 @@ cblueishgrey="cbdbfc"
 cblueishdarkgrey="9badb7"
 corange="ff683d"
 cred="ff2d2d"
+
+# shell colors
+#             MR:      MB:
+C0='\e[30m' # *color0, *color8,  gray/
+C1='\e[31m' # *color1, *color9,  orange/ (red)
+C2='\e[32m' # *color2, *color10, green/
+C3='\e[33m' # *color3, *color11, yellow/
+C4='\e[34m' # *color4, *color12, blue/
+C5='\e[35m' # *color5, *color13, purple/
+C6='\e[36m' # *color6, *color14, cyan/
+C7='\e[37m' # *color7, *color15, white/
+
+# shell modifiers
+MR='\e[0m' # reset
+MB='\e[1m' # bold (lighter)
+MI='\e[3m' # italic
 
 # get color between start and end color
 # - without leading '#'

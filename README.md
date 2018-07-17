@@ -27,7 +27,7 @@ Following is *optional*:
 Things to come (order is priority):
 - take screenshot, using `scrot`
 
-Things *NOT* to come: 
+Things *NOT* to come:
 - Powermanagement: please use your existing setup; ocelot should have no impact on it.
 - save session and restore open application, etc: please use hibernate (suspend to disk) or standby (suspend).
 

@@ -14,7 +14,7 @@ set tabstop=4 softtabstop=4 expandtab
 set noautoindent
 set hlsearch
 
-hi CursorLine cterm=NONE ctermfg=NONE ctermbg=236
+hi CursorLine cterm=NONE ctermfg=15 ctermbg=236
 set cursorline
 
 " show statusline always
@@ -23,7 +23,7 @@ set laststatus=2
 " show git status via fugitive and more in statusline
 set statusline=\ %n\ %v\ %l\/%L
 set statusline+=\ %y\ %{strlen(&fenc)?&fenc:&enc}
-set statusline+=\ %F%m%r%h%w
+set statusline+=\ %f%m%r%h%w
 set statusline+=\ %{fugitive#statusline()}
 
 hi StatusLine cterm=NONE ctermbg=236 ctermfg=7

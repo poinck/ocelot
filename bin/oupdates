@@ -50,7 +50,7 @@ else
 fi
 
 if [[ "${updates_available}" -gt 0 ]] ; then
-    update_c="${C1}${MB}"
+    update_c="\n${C1}${MB}"
 else
     update_c="${C2}"
 fi

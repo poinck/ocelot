@@ -11,8 +11,8 @@
 - X11-header files to compile ocelot
 
 Following dependencies are required to get the intended look and feel:
-- `ocelot-dzen` for side-panel, see [ocelot-dzen](https://github.com/poinck/ocelot-dzen)
-- `ocelot-slock` to lock your screen, see [ocelot-slock]((https://github.com/poinck/ocelot-slock)
+- `ocelot-dzen` for side-panel, see [ocelot-dzen](https://gitlab.com/poinck/ocelot-dzen)
+- `ocelot-slock` to lock your screen, see [ocelot-slock]((https://gitlab.com/poinck/ocelot-slock)
 - `xsetbg` (part of xloadimage) to set a wallpaper
 - `dmenu` to run stuff
 - `urxvt` to have a terminal
@@ -70,8 +70,8 @@ Use "config/systemd/user/olock.service" to lock your screen before your computer
 
 ### side-panel TODOs
 Things to come (order is priority):
-- disk- and swap-usage (ram, swap, `/` and `/home` as graphs; additional status(?) as box; below cpu-temperature-graph), see [#12](https://github.com/poinck/ocelot/issues/12)
-- support more than just "BAT0" from `/proc/sys`, see [#14](https://github.com/poinck/ocelot/issues/14)
+- disk- and swap-usage (ram, swap, `/` and `/home` as graphs; additional status(?) as box; below cpu-temperature-graph), see [#12](https://gitlab.com/poinck/ocelot/issues/12)
+- support more than just "BAT0" from `/proc/sys`, see [#14](https://gitlab.com/poinck/ocelot/issues/14)
 - `thunderbird` notifications for new mail
 - update-indication for `yum` if you are a CentOS-user, partly done
 

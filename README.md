@@ -65,9 +65,6 @@ If you did not install ocelot system-wide but want security update checking on y
 export OCELOT_PATH='/home/user/gits/ocelot/'
 ```
 
-**Lock screen with `olock.service`**
-Use "config/systemd/user/olock.service" to lock your screen before your computer goes to sleep (standby).
-
 ### side-panel TODOs
 Things to come (order is priority):
 - disk- and swap-usage (ram, swap, `/` and `/home` as graphs; additional status(?) as box; below cpu-temperature-graph), see [#12](https://gitlab.com/poinck/ocelot/issues/12)

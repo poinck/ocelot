@@ -36,7 +36,7 @@ Things *NOT* to come:
 cd /home/$USER
 mkdir gits
 cd gits
-git clone https://github.com/poinck/ocelot.git
+git clone https://gitlab.com/poinck/ocelot.git
 cd ocelot
 vim config.h  # look, (change) and :wq
 make

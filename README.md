@@ -12,7 +12,7 @@
 
 Following dependencies are required to get the intended look and feel:
 - `ocelot-dzen` for side-panel, see [ocelot-dzen](https://gitlab.com/poinck/ocelot-dzen)
-- `ocelot-slock` to lock your screen, see [ocelot-slock]((https://gitlab.com/poinck/ocelot-slock)
+- `ocelot-slock` to lock your screen, see [ocelot-slock](https://gitlab.com/poinck/ocelot-slock)
 - `xsetbg` (part of xloadimage) to set a wallpaper
 - `dmenu` to run stuff
 - `urxvt` to have a terminal

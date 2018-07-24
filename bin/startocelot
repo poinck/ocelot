@@ -24,8 +24,8 @@ if [[ -f ~/.ocelotrc ]] ; then
         xsetbg "$wallpaper"
         echo "wallpaper=$wallpaper"
     else
-        echo "wallpaper not set, setting default wallpaper"
-        xsetbg "${OCELOT_PATH}desktop.png"
+        echo "wallpaper not set, set default gradient"
+        xsri --color="#${cdarkblue}" --color2="#${cdarktuerkis}" --hgradient
     fi
 else
     echo "~/.ocelotrc does not exist"
@@ -36,9 +36,11 @@ source ${OCELOT_PATH}bin/outils.sh
 # load xresources again if not already done in "~/.xinitrc"
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 
-# create a fifo to send output
+# create a fifo to send output (remove any pre-existing file or fifo with same name)
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
+rm "/tmp/ocollector.fifo$OCELOT_INSTANCE"
 [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
+sleep 1
 
 # start screen locker
 ${OCELOT_PATH}bin/olocker
@@ -49,7 +51,7 @@ sleep 1
 
 # start ocelot side-panel elements (in background)
 ${OCELOT_PATH}bin/otime &
-sleep 1
+#sleep 1
 ${OCELOT_PATH}bin/oload &
 ${OCELOT_PATH}bin/obattery &
 ${OCELOT_PATH}bin/oupdates &

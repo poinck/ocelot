@@ -79,13 +79,14 @@ ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 while true ; do
     get_otime
 
-    #echo "[DEBUG] $otime_day"
+    #echo "[DEBUG] $otime_time"
     #echo "[DEBUG] $otime_weekday"
+    #echo "[DEBUG] $otime_date"
+    #echo "[DEBUG] $otime_year"
     echo "$otime_time" > "$ofifo"
     echo "$otime_weekday" > "$ofifo"
     echo "$otime_date" > "$ofifo"
     echo "$otime_year" > "$ofifo"
-    #echo "$otime_week" > "$ofifo"
 
     second=$( date '+%-S' )
     #echo "[DEBUG] second=$second"

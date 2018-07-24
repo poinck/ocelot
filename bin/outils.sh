@@ -29,6 +29,8 @@ cblueishgrey="cbdbfc"
 cblueishdarkgrey="9badb7"
 corange="ff683d"
 cred="ff2d2d"
+cdarkgreen="17451b"
+cdarktuerkis="174345"
 
 # shell colors
 #             MR:      MB:

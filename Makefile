@@ -24,7 +24,7 @@ EXEC = ${WMNAME}
 SRC = ${WMNAME}.c
 OBJ = ${SRC:.c=.o}
 
-SCRIPTS = obattery obrightness ocollector odesktop oload olock olocker omenu oterminal otime oupdates ovolume startocelot onet ouptime odisks
+SCRIPTS = obattery obrightness ocollector odesktop oload olock olocker omenu oterminal otime oupdates ovolume startocelot onet ouptime odisks ocputemp
 SCRIPTS_DEST = ${HOME}/bin
 SCRIPTS_SRC = ${PWD}/bin
 

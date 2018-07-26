@@ -1,0 +1,97 @@
+#!/bin/bash
+#
+# ocpu uses the kernel-interface at /sys/class/thermal to read temperature of the CPU
+# - thermal_tone?/type = "x86_pkg_temp"
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
+
+source ${OCELOT_PATH}bin/outils.sh
+
+# historic loads 15-minute interval (195 minutes in total)
+declare -a cputemp15s
+cputemp15s_i=2                                          # start interval
+cputemp15s_ist=900                                      # interval step: 900s = 15 minutes
+#cputemp15s_ist=60
+cputemp15s_ni="$(( $( date '+%s' )+cputemp15s_ist ))"   # next interval
+for (( i=${cputemp15s_i} ; i<17 ; i=i+1 )) ; do
+    cputemp15s[$i]=0
+done
+
+temp=0
+get_cputemp() {
+    temps=$( cat /sys/class/thermal/thermal_zone?/temp )
+    temp_types=$( cat /sys/class/thermal/thermal_zone?/type )
+
+    local thermal_zone_index=1
+    for t in ${temp_types} ; do
+        #echo "[DEBUG] type[${thermal_zone_index}] = $t"
+        if [[ "${t}" == "x86_pkg_temp" ]] ; then
+            cpu_type_index=${thermal_zone_index}
+        fi
+        thermal_zone_index=$(( thermal_zone_index+1 ))
+    done
+
+    #echo "[DEBUG] cpu_type_index = ${cpu_type_index}"
+
+    local temp_index=1
+    for tt in ${temps} ; do
+        #echo "[DEBUG] temp[${temp_index}] = $tt"
+        if [[ "${temp_index}" -eq "${cpu_type_index}" ]] ; then
+            temp=$tt
+            break
+        fi
+        temp_index=$(( temp_index+1 ))
+    done
+
+    temp=$(( temp/1000 ))
+    #echo "[DEBUG] temp = $temp"
+
+    if [[ "${temp}" -lt 10 ]] ; then
+        temp_f="__${temp}"
+    elif [[ "${temp}" -lt 100 ]] ; then
+        temp_f="_${temp}"
+    fi
+    cputemp_graph="$temp $cdarkerfont"
+    if [[ "$temp" -ge 90 ]] ; then
+        cputemp_graph="$temp $cdarkblue"
+    fi
+
+    # generate 15-minute interval graph
+    t_now=$( date '+%s' )
+    if [[ "${cputemp15s_ni}" -lt "${t_now}" ]] ; then
+        cputemp15s_ni="$(( $( date '+%s' )+cputemp15s_ist ))"
+        for (( ii=15 ; ii>=${cputemp15s_i} ; ii=ii-1 )) ; do
+            local n=$(( ii+1 ))
+            cputemp15s[$n]=${cputemp15s[$ii]}
+        done
+        cputemp15s[2]=$(( avg_temp/1000 ))
+        cputemp15s_graph=""
+        for (( ii=${cputemp15s_i} ; ii<17 ; ii=ii+1 )) ; do
+            cputemp15s_graph+="${cputemp15s[$ii]} ${cdarkgrey2} "
+        done
+
+        # reset average
+        avg_temp=$(( temp*1000 ))
+        avg_n=1
+    else
+        new_temp=$(( temp*1000 ))
+        avg_n=$(( avg_n+1 ))
+        avg_temp=$(( (avg_temp*(avg_n-1)+new_temp)/avg_n ))
+    fi
+}
+
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
+while true ; do
+    get_cputemp
+    cputemp="cputemp ^fg(#${cfont})${temp_f}^fg(#${cdarkfont})C ${cdarkgrey} ${cputemp_graph} ${cputemp15s_graph}"
+    echo "[DEBUG] $cputemp"
+    echo "$cputemp" > "$ofifo"
+
+    sleep 15
+done

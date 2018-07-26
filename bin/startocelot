@@ -58,6 +58,7 @@ ${OCELOT_PATH}bin/oupdates &
 ${OCELOT_PATH}bin/odisks &
 ${OCELOT_PATH}bin/onet &
 ${OCELOT_PATH}bin/ouptime &
+${OCELOT_PATH}bin/ocputime &
 
 # start ocelot desktop
 ${OCELOT_PATH}bin/odesktop

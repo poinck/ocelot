@@ -30,6 +30,14 @@ ocelot_path="/home/username/gits/ocelot/"
 # default: 10
 #lockscreen_timeout=5
 
+# enable or disable(0) dpms (display power management):
+# - dpms disabled: "olocker" will disable DPMS when user disables lockscreen,
+#   but leave it as-is (disabled) when lockscreen is enabled.
+# - dpms enabled: "olocker" will disable DPMS when user disables lockscreen and
+#   enable DPMS when user enables lockscreen
+# default: 1 (enabled)
+#dpms=0
+
 # scale side-panel, terminal and menu
 # default: 1
 #scale=2

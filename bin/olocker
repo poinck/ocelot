@@ -13,25 +13,40 @@
 source ${OCELOT_PATH}bin/outils.sh
 
 LOCKSCREEN_TIMEOUT=10
+DPMS=1
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
     if [[ -n "$lockscreen_timeout" ]] ; then
         echo "[DEBUG] lockscreen_timeout = $lockscreen_timeout"
         LOCKSCREEN_TIMEOUT=$lockscreen_timeout
     fi
+    if [[ -n "$dpms" ]] ; then
+        echo "[DEBUG] dpms = $dpms"
+        DPMS=$dpms
+    fi
 fi
 LOCKSCREEN_TIMEOUT=$(( LOCKSCREEN_TIMEOUT*60 ))
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
+
+switch_dpms(){
+    if [[ "${DPMS}" -eq 1 ]] ; then
+        xset +dpms
+    else
+        xset -dpms
+    fi
+}
 
 onolock=""
 olocker=""
 clear_locker=0
 if [[ "$1" == "disable" ]] ; then
     xset s off
+    xset -dpms
     onolock="nolock _^fg(#${cfont})NO^fg(#${cdarkfont})LCK $cgrey 100 $cdarkblue"
 elif [[ "$1" == "enable" ]] ; then
     xset s $LOCKSCREEN_TIMEOUT 15
+    switch_dpms
     onolock="nolock _^fg(#${cdarkerfont})__^fg(#${cdarkerfont})LCK $cdarkgrey"
 elif [[ "$1" == "notify" ]] ; then
     # trap signal 15 from xss-lock to clear lock countdown
@@ -62,6 +77,7 @@ elif [[ "$1" == "notify" ]] ; then
 else
     # default: set timeout and start xss-lock
     xset s $LOCKSCREEN_TIMEOUT 15
+    switch_dpms
     xss-lock -n "olocker notify" -- olock &
 fi
 

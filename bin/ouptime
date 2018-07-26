@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# ouptime uses information from /proc/uptime to show uptime and
-# idle-ratio in percent.
+# ouptime uses information from /proc/uptime to show uptime.
 #
 #    ^   ^
 #  +-------+
@@ -31,9 +30,6 @@ get_uptimes() {
         #echo "[DEBUG] ${t_proc_uptime}"
         if [[ "$i" -eq 0 ]] ; then
             up_days="$(( t_proc_uptime/60/60/24 ))"
-            local days_in_s=${t_proc_uptime}
-        elif [[ "$i" -eq 1 ]] ; then
-            idle_ratio="$(( t_proc_uptime*100/days_in_s/(proc_cpuinfo_processor+1) ))"
         fi
         i=$(( i+1 ))
     done
@@ -53,20 +49,5 @@ while true ; do
     echo "${uptime_days}" > "$ofifo"
     echo "[DUBUG] ${uptime_days}"
 
-    # UIR: idle-ratio, percentage of real usage since last restart
-    idle_graph=""
-    for (( i=10 ; i<=$idle_ratio ; i=$i+10 )) ; do
-        idle_graph+="100 ${cdarkgrey2} "
-    done
-    idle_ratio_f="${idle_ratio}"
-    if [[ "${idle_ratio}" -lt 10 ]] ; then
-        idle_ratio_f="__${idle_ratio}"
-    elif [[ "${idle_ratio}" -lt 100 ]] ; then
-        idle_ratio_f="_${idle_ratio}"
-    fi
-    idle_ratio="idleratio ^fg(#${cfont})${idle_ratio_f}^fg(#${cdarkfont})IDL ${cdarkgrey} ${idle_ratio} ${cdarkerfont} ${idle_graph}"
-    echo "${idle_ratio}" > "$ofifo"
-    echo "[DUBUG] ${idle_ratio}"
-
-    sleep 3600
+    sleep 300
 done

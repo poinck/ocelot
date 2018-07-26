@@ -28,14 +28,6 @@
 # set color profile
 #xcalib -d :0 /usr/share/color/icc/colord/Gamma5500K.icc
 
-# disable DPMS if your monitor has other means to save energy (e.g presense
-# sensor)
-# - unfortunatly this needs to be off, so that screensaver stays off when
-#   disabled
-# FIXME  dpms should be enabled/disabled by ocelot configuration to have
-# more control over it
-xset -dpms
-
 # improve keyboard rate
 xset r rate 300 45
 

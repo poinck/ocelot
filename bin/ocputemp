@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # ocpu uses the kernel-interface at /sys/class/thermal to read temperature of the CPU
-# - thermal_tone?/type = "x86_pkg_temp"
+# - thermal_zone?/type = "x86_pkg_temp"
 #
 #    ^   ^
 #  +-------+

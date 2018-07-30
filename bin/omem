@@ -1,0 +1,138 @@
+#!/bin/bash
+#
+# omem reads RAM and SWAP-usage from "/proc/meminfo"
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
+
+source ${OCELOT_PATH}bin/outils.sh
+
+# historic mems 15-minute interval (195 minutes in total)
+declare -a ram15s
+declare -a swap15s
+mem15s_i=2                                      # start interval
+mem15s_ist=900                                  # interval step: 900s = 15 minutes
+#mem15s_ist=14
+mem15s_ni="$(( $( date '+%s' )+mem15s_ist ))"   # next interval
+for (( i=${mem15s_i} ; i<17 ; i=i+1 )) ; do
+    ram15s[$i]=0
+    swap15s[$i]=0
+done
+
+get_mem() {
+    # get ram and swap usage from proc-filesystem
+    proc_meminfo=$( cat /proc/meminfo )
+
+    # defaults (1 kB -> 100%)
+    mt=1
+    mf=1
+    st=1
+    sf=1
+
+    # init
+    mt_is_next=0
+    mf_is_next=0
+    st_is_next=0
+    sf_is_next=0
+    local i=0
+    for m in ${proc_meminfo} ; do
+        #echo "[DEBUG] m = $m"
+        i=$(( i+1 ))
+        if [[ "${mt_is_next}" -eq 1 ]] ; then
+            mt="$m"
+            mt_is_next=0
+        elif [[ "${mf_is_next}" -eq 1 ]] ; then
+            mf="$m"
+            mf_is_next=0
+        elif [[ "${st_is_next}" -eq 1 ]] ; then
+            st="$m"
+            st_is_next=0
+        elif [[ "${sf_is_next}" -eq 1 ]] ; then
+            sf="$m"
+            sf_is_next=0
+        fi
+        mtm=".*MemTotal.*"
+        mfm=".*MemFree.*"
+        stm=".*SwapTotal.*"
+        sfm=".*SwapFree.*"
+        if [[ "$m" =~ $mtm ]] ; then
+            #echo "[DEBUG] matched: $m"
+            mt_is_next=1
+        elif [[ "$m" =~ $mfm ]] ; then
+            #echo "[DEBUG] matched: $m"
+            mf_is_next=1
+        elif [[ "$m" =~ $stm ]] ; then
+            #echo "[DEBUG] matched: $m"
+            st_is_next=1
+        elif [[ "$m" =~ $sfm ]] ; then
+            #echo "[DEBUG] matched: $m"
+            sf_is_next=1
+        fi
+    done
+
+    #echo "[DEBUG] mt = ${mt}"
+    #echo "[DEBUG] mf = ${mf}"
+    #echo "[DEBUG] st = ${st}"
+    #echo "[DEBUG] sf = ${sf}"
+
+    mp=$(( (mt-mf)*100/mt ))
+    sp=$(( (st-sf)*100/st ))
+    #echo "[DEBUG]  ram = ${mp}"
+    #echo "[DEBUG] swap = ${sp}"
+
+    if [[ "${mp}" -lt 10 ]] ; then
+        mp_f="__${mp}"
+    elif [[ "${mp}" -lt 100 ]] ; then
+        mp_f="_${mp}"
+    fi
+    mp_graph="$mp $cdarkerfont"
+    if [[ "$mp" -ge 90 ]] ; then
+        mp_graph="$mp $cdarkblue"
+    fi
+    if [[ "${sp}" -lt 10 ]] ; then
+        sp_f="__${sp}"
+    elif [[ "${sp}" -lt 100 ]] ; then
+        sp_f="_${sp}"
+    fi
+    sp_graph="$sp $cdarkerfont"
+    if [[ "$sp" -ge 90 ]] ; then
+        sp_graph="$sp $cdarkblue"
+    fi
+
+    # generate 15-minute interval graph
+    t_now=$( date '+%s' )
+    if [[ "${mem15s_ni}" -lt "${t_now}" ]] ; then
+        mem15s_ni="$(( $( date '+%s' )+mem15s_ist ))"
+        for (( ii=15 ; ii>=${mem15s_i} ; ii=ii-1 )) ; do
+            local n=$(( ii+1 ))
+            ram15s[$n]=${ram15s[$ii]}
+            swap15s[$n]=${swap15s[$ii]}
+        done
+        ram15s[2]=${mp}
+        swap15s[2]=${sp}
+        ram15s_graph=""
+        swap15s_graph=""
+        for (( ii=${mem15s_i} ; ii<17 ; ii=ii+1 )) ; do
+            ram15s_graph+="${ram15s[$ii]} ${cdarkgrey2} "
+            swap15s_graph+="${swap15s[$ii]} ${cdarkgrey2} "
+        done
+    fi
+}
+
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
+while true ; do
+    get_mem
+    ram="ram ^fg(#${cfont})${mp_f}^fg(#${cdarkfont})RAM ${cdarkgrey} ${mp_graph} ${ram15s_graph}"
+    swap="swap ^fg(#${cfont})${sp_f}^fg(#${cdarkfont})SWP ${cdarkgrey} ${sp_graph} ${swap15s_graph}"
+    echo "[DEBUG] $ram"
+    echo "[DEBUG] $swap"
+    echo "$ram" > "$ofifo"
+    echo "$swap" > "$ofifo"
+
+    sleep 15
+done

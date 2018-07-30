@@ -21,6 +21,7 @@ Following dependencies are required to get the intended look and feel:
 - `xbacklight` to control backlight of your notebook screen
 - `amixer` from alsa to control volume
 - `xrandr` to guess display height
+- `xsetroot` to set a different default xcursor
 
 Following is *optional*:
 - font recommendations: Monoid L 12px/9pt for terminal and side-panel; Gidole 11pt for everything else

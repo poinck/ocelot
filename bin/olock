@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# olock locks the display using "ocelot-slock".
+# olock locks the display using "slock" (default).
 #
 #    ^   ^
 #  +-------+
@@ -18,7 +18,7 @@ if [[ -f ~/.ocelotrc ]] ; then
         OCELOT_PATH="$ocelot_path"
     fi
     if [[ -z "$lockscreen" ]] ; then
-        lockscreen="ocelot-slock"
+        lockscreen="slock"
     fi
     if [[ -z "$lockscreen_hibernate" ]] ; then
         lockscreen_hibernate="systemctl hibernate --no-wall -i"

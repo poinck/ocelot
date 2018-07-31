@@ -17,8 +17,8 @@ ocelot_path="/home/username/gits/ocelot/"
 #wallpaper="/home/username/path/to/desktop.jpg"
 
 # lockscreen program
-# default: "ocelot-slock"
-#lockscreen="ocelot-slock"
+# default: "slock"
+#lockscreen="slock"
 
 # hibernate programm when locked
 #lockscreen_hibernate="systemctl hibernate --no-wall -i"

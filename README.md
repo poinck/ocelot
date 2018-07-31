@@ -12,7 +12,7 @@
 
 Following dependencies are required to get the intended look and feel:
 - `ocelot-dzen` for side-panel, see [ocelot-dzen](https://gitlab.com/poinck/ocelot-dzen)
-- `ocelot-slock` to lock your screen, see [ocelot-slock](https://gitlab.com/poinck/ocelot-slock)
+- `slock` to lock your screen (see “tweaks“ for color-customizations)
 - `xsetbg` (part of xloadimage) to set a wallpaper
 - `xsri` to set default background gradient
 - `dmenu` to run stuff
@@ -111,6 +111,9 @@ use `exec startx -- -ardelay 300 -arinterval 50` to start X, see [this question 
 
 **still using gtk-apps and want ocelot-colors? this is for you**
 Copy "tweaks/gtk-3.0/gtk.css" to "~/.config/gtk-3.0/" or add it's content to your existing theme style-sheet.
+
+**slock colors**
+If you want a ocelot color theme for your lock screen, you can use the config from “tweaks/slock-1.4_config.h“.
 
 ## Keys
 How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs recompile and restart):

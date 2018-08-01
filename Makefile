@@ -2,7 +2,7 @@
 # monsterwm (original) by c00kiemon5ter, MIT (see LICENSE-mit)
 # Makefile for ocelot
 
-VERSION = 1.0.2
+VERSION = 1.0.3
 WMNAME  = ocelot
 
 PREFIX ?= /usr/local
@@ -24,7 +24,7 @@ EXEC = ${WMNAME}
 SRC = ${WMNAME}.c
 OBJ = ${SRC:.c=.o}
 
-SCRIPTS = obattery obrightness ocollector odesktop oload olock olocker omenu oterminal otime oupdates ovolume startocelot onet ouptime odisks ocputemp omem
+SCRIPTS = obattery obrightness ocollector odesktop oload olock olocker omenu oterminal otime oupdates ovolume startocelot onet ouptime odisks ocputemp omem owterminal
 SCRIPTS_DEST = ${HOME}/bin
 SCRIPTS_SRC = ${PWD}/bin
 

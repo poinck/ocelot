@@ -1,0 +1,47 @@
+! xressources for white terminal
+!
+!   ^   ^
+! +-------+
+! |  o_O  |
+! |  >.<  |__/
+! +-------+
+
+
+! black
+!*color0: #2e3436
+*color8: #2e3436
+!*color8: #7f827c
+*color0: #5c615d
+! orange (red)
+*color1: #ff683d
+*color9: #ff683d
+! green
+!*color2: #43d827
+*color2: #32a21d
+!*color10: #8AE234
+*color10: #45711a
+! yellow
+*color3: #d7d827
+*color11: #FCE94F
+! blue
+!*color4:  #3465A4
+!*color4: #8484C4
+*color4: #636393
+!*color12: #8484C4
+*color12: #636393
+! purple
+!*color5:  #75507B
+*color5:  #573c5c
+!*color13: #e0a1ff
+*color13: #a878bf
+! cyan
+!*color6: #00bfbf
+*color6: #008f8f
+!*color14: #00bfbf
+*color14: #008f8f
+! white
+!*color7: #babdb9
+*color7: #5d5e5c
+!*color15: #eeeeec
+*color15: #b2b2b1
+

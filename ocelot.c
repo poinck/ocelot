@@ -193,7 +193,7 @@ static int xerrorstart(Display *dis, XErrorEvent *ee);
  */
 static Bool running = True;
 static int wh, ww, currdeskidx, prevdeskidx, retval;
-static unsigned int numlockmask, win_unfocus, win_focus, win_unfocus_bash, win_focus_bash, win_focus_mono;
+static unsigned int numlockmask, win_unfocus, win_focus, win_unfocus_bash, win_focus_bash, win_focus_mono, win_unfocus_wash, win_focus_wash;
 static Display *dis;
 static Window root;
 static Atom wmatoms[WM_COUNT], netatoms[NET_COUNT];
@@ -542,14 +542,19 @@ void focus(Client *c, Desktop *d) {
     Window w[n];
     w[(d->curr->isfloat || d->curr->istrans) ? 0:ft] = d->curr->win;
     for (fl += !ISFFT(d->curr) ? 1:0, c = d->head; c; c = c->next) {
-        // set different border-colors if title of current window is "bash"
+        // set different border-colors if title of current window is "bash" or "wash"
         if (strncmp(d->curr->title, "bash", 4) != 0) {
-            // set different border-colors if window-mode is MONOCLE
-            if (d->mode == MONOCLE) {
-                XSetWindowBorder(dis, c->win, c == d->curr ? win_focus_mono:win_unfocus);
+            if (strncmp(d->curr->title, "wash", 4) != 0) {
+                // set different border-colors if window-mode is MONOCLE
+                if (d->mode == MONOCLE) {
+                    XSetWindowBorder(dis, c->win, c == d->curr ? win_focus_mono:win_unfocus);
+                }
+                else {
+                    XSetWindowBorder(dis, c->win, c == d->curr ? win_focus:win_unfocus);
+                }
             }
             else {
-                XSetWindowBorder(dis, c->win, c == d->curr ? win_focus:win_unfocus);
+                XSetWindowBorder(dis, c->win, c == d->curr ? win_focus_wash:win_unfocus_wash);
             }
         }
         else {
@@ -1067,6 +1072,8 @@ void setup(void) {
     win_unfocus = getcolor(UNFOCUS, screen);
     win_focus_bash = getcolor(FOCUS_BASH, screen);
     win_unfocus_bash = getcolor(UNFOCUS_BASH, screen);
+    win_focus_wash = getcolor(FOCUS_WASH, screen);
+    win_unfocus_wash = getcolor(UNFOCUS_WASH, screen);
     win_focus_mono = getcolor(FOCUS_MONO, screen);
 
     /* set numlockmask */

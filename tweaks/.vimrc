@@ -14,9 +14,9 @@ set tabstop=4 softtabstop=4 expandtab
 set noautoindent
 set hlsearch
 
-hi CursorLine cterm=none ctermbg=NONE ctermfg=7
+"hi CursorLine cterm=none ctermbg=NONE ctermfg=7
 "hi CursorLine cterm=NONE ctermfg=NONE ctermbg=NONE
-set cursorline
+"set cursorline
 
 " show statusline always
 set laststatus=2

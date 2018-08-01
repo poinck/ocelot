@@ -119,6 +119,7 @@ If you want a ocelot color theme for your lock screen, you can use the config fr
 How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs recompile and restart):
 
 - **open terminal** SUPER+SHIFT+ENTER
+- **open white terminal** SUPER+CONTROL+ENTER
 - **open menu** ALT+F2, SUPER+MOUSE_RIGHT
 - **switch desktop** SUPER+LEFT|RIGHT, SUPER+UP|DOWN, SUPER+1|2|3|4|5|6|7|8|9|0
 - **switch desktop with windows** SUPER+SHIFT+LEFT|RIGHT, SUPER+SHIFT+UP|DOWN

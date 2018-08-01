@@ -25,6 +25,7 @@ if [[ -f ~/.ocelotrc ]] ; then
         echo "wallpaper=$wallpaper"
     else
         echo "wallpaper not set, set default gradient"
+        source ${OCELOT_PATH}bin/outils.sh
         xsri --color="#${cdarkblue}" --color2="#${cdarktuerkis}" --hgradient
     fi
 else
@@ -58,7 +59,7 @@ ${OCELOT_PATH}bin/oupdates &
 ${OCELOT_PATH}bin/odisks &
 ${OCELOT_PATH}bin/onet &
 ${OCELOT_PATH}bin/ouptime &
-${OCELOT_PATH}bin/ocputime &
+${OCELOT_PATH}bin/ocputemp &
 ${OCELOT_PATH}bin/omem &
 
 # start ocelot desktop

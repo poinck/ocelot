@@ -130,8 +130,6 @@ pbc="#1c1c1c" # panel background color
 titlewindow_set=0
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
-#[[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
-    # XXX   the fifo should've been already created by startocelot
 tail -f $ofifo | \
 while read -r reply ; do
     # ocollector-api:

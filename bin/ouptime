@@ -46,8 +46,9 @@ while true ; do
         up_days="_${up_days}"
     fi
     uptime_days="uptime ^fg(#${cfont})${up_days}^fg(#${cdarkfont})UP ${cdarkgrey}"
-    echo "${uptime_days}" > "$ofifo"
     echo "[DUBUG] ${uptime_days}"
+    [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
+    echo "${uptime_days}" > "$ofifo"
 
     sleep 300
 done

@@ -83,6 +83,7 @@ while true ; do
     #echo "[DEBUG] $otime_weekday"
     #echo "[DEBUG] $otime_date"
     #echo "[DEBUG] $otime_year"
+    [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
     echo "$otime_time" > "$ofifo"
     echo "$otime_weekday" > "$ofifo"
     echo "$otime_date" > "$ofifo"

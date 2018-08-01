@@ -131,6 +131,7 @@ while true ; do
     swap="swap ^fg(#${cfont})${sp_f}^fg(#${cdarkfont})SWP ${cdarkgrey} ${sp_graph} ${swap15s_graph}"
     echo "[DEBUG] $ram"
     echo "[DEBUG] $swap"
+    [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
     echo "$ram" > "$ofifo"
     echo "$swap" > "$ofifo"
 

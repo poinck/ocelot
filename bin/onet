@@ -72,6 +72,7 @@ get_net() {
 }
 
 while true ; do
+    [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
     get_net
 
     sleep 7

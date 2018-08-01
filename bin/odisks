@@ -59,6 +59,7 @@ get_disks() {
             fi
             odisks="disk_${disk_label} ^fg(#${cfont})${disk_percents}^fg(#${cdarkfont})${disk_labels} ${bgcolor} ${disk_percent} ${disk_color} ${graph}"
             echo "[DEBUG] $odisks"
+            [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
             echo "$odisks" > "$ofifo"
         fi
     done

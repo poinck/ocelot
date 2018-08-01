@@ -81,6 +81,7 @@ else
     xss-lock -n "olocker notify" -- olock &
 fi
 
+[[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
 if [[ -n "$olocker" ]] ; then
     echo "$olocker" > "$ofifo"
     echo "[DEBUG] $olocker"

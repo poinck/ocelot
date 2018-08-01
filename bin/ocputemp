@@ -91,6 +91,7 @@ while true ; do
     get_cputemp
     cputemp="cputemp ^fg(#${cfont})${temp_f}^fg(#${cdarkfont})C ${cdarkgrey} ${cputemp_graph} ${cputemp15s_graph}"
     echo "[DEBUG] $cputemp"
+    [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
     echo "$cputemp" > "$ofifo"
 
     sleep 15

@@ -56,6 +56,7 @@ while true ; do
     fi
 
     battery="battery ^fg(#${cfont})${bat_percent}^fg(#${cdarkfont})${bat_status2} ${bgcolor} ${bat_percent2} ${bat_graph}"
+    [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
     if [[ "$blink" -eq 1 ]] && [[ "$blinked" -eq 0 ]]; then
         blinked=1
         echo "$battery" > "$ofifo"

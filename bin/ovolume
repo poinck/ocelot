@@ -72,5 +72,6 @@ fi
 
 volume="volume ^fg(#${cfont})${omixer_master_volume}^fg(#${cdarkfont})VOL ${cdarkgrey} $volume_graph"
 echo "[DEBUG] $volume"
+[[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
 echo "$volume" > "$ofifo"
 

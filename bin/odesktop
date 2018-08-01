@@ -28,6 +28,7 @@ ${OCELOT_PATH}ocelot > "$odfifo" &
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 while read -r reply ; do
+    [[ -p $odfifo ]] || mkfifo -m 600 "$odfifo"
     # debug
     #echo "reply = $reply"
 
@@ -77,8 +78,9 @@ while read -r reply ; do
     desktop="desktop ^fg(#${cfont})_${current_d}^fg(#ffffff)${i} ${cdarkblue} 100 ${cblue}"
     desktops="desktops _ ${cdarkgrey} $r"
     echo "[DEBUG] $desktops"
-    echo "$desktops" > "$ofifo"
     echo "[DEBUG] $desktop"
+    [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
+    echo "$desktops" > "$ofifo"
     echo "$desktop" > "$ofifo"
     unset r
 done < "$odfifo"

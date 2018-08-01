@@ -105,6 +105,7 @@ while true ; do
     get_load
     load="load ^fg(#${cfont})${load1_f}^fg(#${cdarkfont})L ${cdarkgrey} ${load_graph} ${load15s_graph}"
     echo "[DEBUG] $load"
+    [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
     echo "$load" > "$ofifo"
 
     sleep 15

@@ -21,10 +21,13 @@
 !*color10: #8AE234
 *color10: #45711a
 ! yellow
-*color3: #d7d827
+!*color3: #d7d827
+*color3: #a1a21d
 *color11: #FCE94F
+!*color11: #bdae3b
+!*color11: #ffffff
+!*color11: #00bfbf
 ! blue
-!*color4:  #3465A4
 !*color4: #8484C4
 *color4: #636393
 !*color12: #8484C4

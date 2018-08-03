@@ -44,8 +44,8 @@
 #define UNFOCUS         "#373737" /* unfocused window border color */
 #define FOCUS_BASH      "#3f3f3f" /* focused terminal border color */
 #define UNFOCUS_BASH    "#373737" /* unfocused border color if a terminal is focused */
-#define FOCUS_WASH      "#c8c8c8" /* focused whiteterminal border color */
-#define UNFOCUS_WASH    "#c0c0c0" /* unfocused border color if a white terminal is focused */
+#define FOCUS_WASH      "#e8e8e7" /* focused whiteterminal border color */
+#define UNFOCUS_WASH    "#c8c8c7" /* unfocused border color if a white terminal is focused */
 #define MINWSZ          50        /* minimum window size in pixels */
 #define DEFAULT_DESKTOP 0         /* the desktop to focus initially */
 #define DESKTOPS        32        /* number of desktops - edit DESKTOPCHANGE keys to suit */

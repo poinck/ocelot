@@ -18,6 +18,9 @@ set hlsearch
 "hi CursorLine cterm=NONE ctermfg=NONE ctermbg=NONE
 "set cursorline
 
+" set visual line (Markierungen)
+hi Visual term=reverse cterm=NONE ctermbg=15
+
 " show statusline always
 set laststatus=2
 

@@ -23,6 +23,9 @@ MR='\e[0m' # reset
 MB='\e[1m' # bold (lighter)
 MI='\e[3m' # italic
 
+# monochrome kernel config
+export MENUCONFIG_COLOR=mono
+
 function get_gitprompt() {
     branch="$(git branch 2>/dev/null|grep '*'|awk '{ print $2 }')"
     [[ ! -z "$branch" ]] && echo -en "${MR}${branch}${MR}"
@@ -66,9 +69,11 @@ function get_time() {
 function get_hostname() {
     local hostname="${HOSTNAME}"
     hostname="${hostname^^*}"
-    hostname="${hostname:0:1}"
+    #hostname="${hostname:0:1}"
     if [[ "${USER}" == "root" ]] ; then
         echo -en "${C1}"
+    elif [[ "${USER}" == "steam" ]] ; then
+        echo -en "${C6}"
     else
         echo -en "${C4}"
     fi
@@ -77,11 +82,11 @@ function get_hostname() {
 
 function get_username() {
     local username="${USER}"
-    username="${username^^*}"
-    username="${username:0:1}"
+    #username="${username^^*}"
+    #username="${username:0:1}"
     echo -en "$username${MR}"
 }
 
 #\[\$(get_time)\]
-PS1="\[\$(get_exit_code)\]${MR}${C7}$(get_username)$(get_hostname) ${C7}\[\$(pwd1)\] $(get_gitprompt)${MR}\n ! "
+PS1="\[\$(get_exit_code)\]${MR}${C7}$(get_hostname) \[\$(get_username)\] ${C7}\[\$(pwd1)\] \[\$(get_gitprompt)\]${MR}\n ! "
 

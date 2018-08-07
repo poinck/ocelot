@@ -15,7 +15,7 @@ X11LIB = -L/usr/X11R6/lib -lX11
 INCS = -I. -I/usr/include ${X11INC}
 LIBS = -L/usr/lib -lc ${X11LIB}
 
-CFLAGS   = -std=c99 -pedantic -Wall -Wextra ${INCS} -DVERSION=\"${VERSION}\"
+CFLAGS   = -std=c99 -pedantic -Wall -Wextra ${INCS}
 LDFLAGS  = ${LIBS}
 
 CC 	 = cc

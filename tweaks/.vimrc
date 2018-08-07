@@ -2,7 +2,7 @@
 "
 " HOWTO: copy it to your home-directory to use it. Further more, you can use
 " following plugin: "./.vim/plugin/bad-whitespaces.vim". Additionally it uses
-" fugitive for git status.
+" fugitive for git status and syntastic for linting.
 "
 "    ^   ^
 "  +-------+
@@ -29,6 +29,19 @@ set statusline=\ %n\ %v\ %l\/%L
 set statusline+=\ %y\ %{strlen(&fenc)?&fenc:&enc}
 set statusline+=\ %f%m%r%h%w
 set statusline+=\ %{fugitive#statusline()}
+
+" linter
+set statusline+=\ %#warningmsg#
+set statusline+=\ %{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list=1
+let g:syntastic_auto_loc_list=1
+let g:syntastic_check_on_open=1
+let g:syntastic_check_on_wq=0
+let g:syntastic_enable_r_lintr_checker=1
+
+let g:syntastic_r_checkers= ['lintr']
 
 hi StatusLine cterm=NONE ctermbg=NONE ctermfg=7
 

@@ -5,7 +5,7 @@
 **ocelot:**
 "ocelot" is a minimal tiling window manager bundle forked from "monsterwm" with a customized "config.h" and a side-panel instead of a top-panel.
 
-![ocelot](/ocelot.png)
+![ocelot](/ocelot3.png)
 
 ![ocelot2](/ocelot2.png)
 

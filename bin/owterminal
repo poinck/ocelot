@@ -10,7 +10,7 @@
 #
 # ocelot by André Klausnitzer, CC0
 
-source ${OCELOT_PATH}bin/outils.sh
+. ${OCELOT_PATH}bin/outils.sh
 
 SCALE=1
 if [[ -f ~/.ocelotrc ]] ; then
@@ -25,7 +25,7 @@ fi
 pixelsize=$(( 12*SCALE ))
 borderpixels=$(( 4*SCALE ))
 xrdb -merge ${OCELOT_PATH}config/wterminal_xresources
-urxvt +sb -fade 25 -fadecolor '#707070' -sk -si -bg '#e8e8e7' -fg black -fn "xft:Monoid:pixelsize=${pixelsize}" -b ${borderpixels} -cr '#7f827c' -bc -title "wash" &
+urxvt +sb -fade 25 -fadecolor '#6a6a6a' -sk -si -bg '#e8e8e7' -fg black -fn "xft:Monoid:pixelsize=${pixelsize}" -b ${borderpixels} -cr '#7f827c' -bc -title "wash" &
 
 # switch back to xressources optimized for dark terminals
 xrdb -merge ~/.Xresources

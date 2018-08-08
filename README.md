@@ -7,6 +7,8 @@
 
 ![ocelot](/ocelot.png)
 
+![ocelot2](/ocelot2.png)
+
 ## Dependencies
 - X11-header files to compile ocelot
 

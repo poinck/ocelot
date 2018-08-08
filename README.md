@@ -1,6 +1,6 @@
 # Readme: ocelot
 - *forked from [monsterwm](https://github.com/c00kiemon5ter/monsterwm)*
-- *"monsterwm" is similar to [catwm](https://github.com/pyknite/catwm) and "dwm"*
+- *"monsterwm" is similar to [catwm](https://github.com/pyknite/catwm) and was forked from "dwm"*
 
 **ocelot:**
 "ocelot" is a minimal tiling window manager bundle forked from "monsterwm" with a customized "config.h" and a side-panel instead of a top-panel.
@@ -59,20 +59,12 @@ behavior:
 **`~/.ocelotrc` for general settings:**
 See "config/.ocelotrc" for help adjusting the variables.
 
-**Security updates with `oupdates.service`**
-If you use systemd you can check for security-updates every time the computer resumes from sleep (hibernate); see "config/systemd/system/oupdates.service". Currently only Gentoo GLSA is supported. Syncing the portage-tree has to be done seperately.
-
-If you did not install ocelot system-wide but want security update checking on your gentoo-install, please export `OCELOT_PATH` in "/root/.bashrc":
-```.sh
-export OCELOT_PATH='/home/user/gits/ocelot/'
-```
+**Check for security updates with `oupdates`**
+Currently only Gentoo GLSA is supported. Syncing the portage-tree has to be done seperately.
 
 ### side-panel TODOs
 Things to come (order is priority):
-- disk- and swap-usage (ram, swap, `/` and `/home` as graphs; additional status(?) as box; below cpu-temperature-graph), see [#12](https://gitlab.com/poinck/ocelot/issues/12)
 - support more than just "BAT0" from `/proc/sys`, see [#14](https://gitlab.com/poinck/ocelot/issues/14)
-- `thunderbird` notifications for new mail
-- update-indication for `yum` if you are a CentOS-user, partly done
 
 ### Start ocelot
 The preferred method to start ocelot is to use "~/.xinitrc".
@@ -99,9 +91,12 @@ Many thanks go to the Gentoo- and Arch-wiki:
 
 **tweaks you can put in `~/.xinitrc`:**
 Copy paste from "tweaks/.xinitrc" for following:
-- natural scrolling (for synaptics and libxinput)
-- disable right-click on touchpad (for synaptics and libxinput)
+- improve keyboard rate
+- set different X-cursor and size
+- GDK/GTK HiDPI-scaling
 - load different ICC-profile from colord
+- natural scrolling (for synaptics and libxinput),
+- disable right-click on touchpad (for synaptics and libxinput)
 
 **better reading with `~/.Xresources`:**
 Copy paste from "tweaks/.Xresources": This will lighten font colors in the terminal and adds hinting and antialiasing to all applications.
@@ -118,8 +113,8 @@ If you want a ocelot color theme for your lock screen, you can use the config fr
 ## Keys
 How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs recompile and restart):
 
-- **open terminal** SUPER+SHIFT+ENTER
-- **open white terminal** SUPER+CONTROL+ENTER
+- **open dark terminal** SUPER+SHIFT+ENTER
+- **open light terminal** SUPER+CONTROL+ENTER
 - **open menu** ALT+F2, SUPER+MOUSE_RIGHT
 - **switch desktop** SUPER+LEFT|RIGHT, SUPER+UP|DOWN, SUPER+1|2|3|4|5|6|7|8|9|0
 - **switch desktop with windows** SUPER+SHIFT+LEFT|RIGHT, SUPER+SHIFT+UP|DOWN

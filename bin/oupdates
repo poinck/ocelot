@@ -13,7 +13,7 @@
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 
 #echo "[DEBUG] ocelot_path = '$OCELOT_PATH'"
-source ${OCELOT_PATH}bin/outils.sh
+. ${OCELOT_PATH}bin/outils.sh
 
 # check security updates for gentoo
 updates_available_list=$( glsa-check -n -q -l affected )

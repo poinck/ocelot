@@ -21,7 +21,7 @@ if [[ -f ~/.ocelotrc ]] ; then
     fi
     echo "[DEBUG] ocelot_path = '$OCELOT_PATH'"
     if [[ -n "$wallpaper" ]] ; then
-        xsetbg "$wallpaper"
+        xsri --tile="$wallpaper" --color="#${cdarktuerkis}" --tile-alpha=32
         echo "wallpaper=$wallpaper"
     else
         echo "wallpaper not set, set default background color"

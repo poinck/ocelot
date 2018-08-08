@@ -13,8 +13,7 @@
 Following dependencies are required to get the intended look and feel:
 - `ocelot-dzen` for side-panel, see [ocelot-dzen](https://gitlab.com/poinck/ocelot-dzen)
 - `slock` to lock your screen (see “tweaks“ for color-customizations)
-- `xsetbg` (part of xloadimage) to set a wallpaper
-- `xsri` to set default background gradient
+- `xsri` to set default background color or custom image
 - `dmenu` to run stuff
 - `urxvt` to have a terminal
 - `xss-lock` and `xset` to lock screen after some idle time and on hibernate/sleep

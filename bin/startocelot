@@ -24,15 +24,15 @@ if [[ -f ~/.ocelotrc ]] ; then
         xsetbg "$wallpaper"
         echo "wallpaper=$wallpaper"
     else
-        echo "wallpaper not set, set default gradient"
-        source ${OCELOT_PATH}bin/outils.sh
-        xsri --color="#${cdarkblue}" --color2="#${cdarktuerkis}" --hgradient
+        echo "wallpaper not set, set default background color"
+        . ${OCELOT_PATH}bin/outils.sh
+        xsri --color="#${cdarktuerkis}"
     fi
 else
     echo "~/.ocelotrc does not exist"
 fi
 
-source ${OCELOT_PATH}bin/outils.sh
+. ${OCELOT_PATH}bin/outils.sh
 
 # load xresources again if not already done in "~/.xinitrc"
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources

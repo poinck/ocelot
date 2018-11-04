@@ -43,6 +43,10 @@ xset r rate 300 45
 #export GDK_SCALE=2
 #export GDL_DPI_SCALE=0.5
 
+# qt scaling for HiDPI devices
+# - works for QT-applications like QGIS
+#export QT_SCALE_FACTOR=2
+
 # start ocelot
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 exec /home/poinck/gits/ocelot/bin/startocelot

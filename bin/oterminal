@@ -10,7 +10,7 @@
 #
 # ocelot by André Klausnitzer, CC0
 
-source ${OCELOT_PATH}bin/outils.sh
+. ${OCELOT_PATH}bin/outils.sh
 
 SCALE=1
 if [[ -f ~/.ocelotrc ]] ; then
@@ -24,5 +24,6 @@ fi
 
 pixelsize=$(( 12*SCALE ))
 borderpixels=$(( 4*SCALE ))
+xrdb -merge ~/.Xresources
 urxvt +sb -fade 25 -fadecolor '#1f1f1f' -sk -si -bg '#3f3f3f' -fg white -fn "xft:Monoid:pixelsize=${pixelsize}" -b ${borderpixels} -pr '#fbf236' -pr2 '#444444' -cr '#7f827c' -bc -title "bash"
 

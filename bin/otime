@@ -14,7 +14,7 @@
 # TODO
 # - try to call `date` only once per refresh
 
-source ${OCELOT_PATH}bin/outils.sh
+. ${OCELOT_PATH}bin/outils.sh
 
 get_graph() {
     g16=$1 # 16th part of side-panel element width
@@ -64,7 +64,7 @@ get_otime() {
     year=$( date '+%Y' )
     year2=${year:0:2}
     year4=${year:2:2}
-    week="$( date '+%-W' )"
+    week="$( date '+%-V' )"
     if [[ "${week}" -lt 10 ]] ; then
         week="_${week}"
     fi

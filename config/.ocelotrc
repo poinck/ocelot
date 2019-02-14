@@ -54,11 +54,12 @@ ocelot_path="/home/username/gits/ocelot/"
 # default: 0 (no correction, best with current versions of xserver)
 #element_text_margin_correction=0
 
-# disks-usage; by default none of the following disks (targes, mountpoints,
-# sources or device names) maybe shown because device names (sources) are
-# only avaliable at runtime. Element names are, e.g. "disk_a1"; to retrieve
-# element names for $element_order-entry run 'odisks' once manually.
-#disks="/ /dev/sda5"
+# disks-usage; by default / and /home will be listed. There is currently
+# nothing that prevents you from choosing disk names with more than 3 letters.
+# In the following default configuration "/" corresponds to "rt" with element
+# name "disk_rt" and "/home" corresponds to "hme" with element name "disk_hme".
+#disks="/ /home"
+#disk_names=("rt" "hme")
 
 # static panel label; use "_" for spaces.
 # default: "__./"
@@ -66,4 +67,4 @@ ocelot_path="/home/username/gits/ocelot/"
 
 # removing and reordering elements is currently not supported during runtime,
 # but you can however add new elements during runtime.
-#element_order=("time" "weekday" "date" "year" "volume" "brightness" "desktops" "desktop" "window" "load" "battery" "updates" "net_3" "memory_ram" "memory_swap" "disk_da1" "disk_da3" "uptime" "cputemp" "ram" "swap" "nolock" "lock")
+#element_order=("time" "weekday" "date" "year" "volume" "brightness" "desktops" "desktop" "window" "load" "battery" "updates" "net_3" "memory_ram" "memory_swap" "disk_rt" "disk_hme" "uptime" "cputemp" "ram" "swap" "nolock" "lock")

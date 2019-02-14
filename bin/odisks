@@ -13,33 +13,42 @@
 # ocelot by André Klausnitzer, CC0
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
-source ${OCELOT_PATH}bin/outils.sh
+. ${OCELOT_PATH}bin/outils.sh
 bgcolor=$cdarkgrey
 
 DISKS="/ /home"
+DISK_NAMES="rt hme"
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
     if [[ -n "$disks" ]] ; then
         echo "[DEBUG] disks = $disks"
         DISKS=$disks
     fi
+    if [[ -n "${disk_names}" ]] ; then
+        echo "[DEBUG] disk_names = ${disk_names[@]}"
+        DISKS_NAMES=${disk_names}
+    fi
 fi
 
 get_disks() {
-    disks_now=$( df --output=source,pcent ${DISKS} )
+    disks_now=$( df --output=target,pcent ${DISKS} )
     disks_lines=$( echo "${disks_now}" | wc -l )
     disks_count=$(( disks_lines-1 ))
     disks_now=$( echo "${disks_now}" | tail -n ${disks_count} )
 
     p=0
     #echo "[DEBUG] disks_now = ${disks_now}"
+    dl=0
     for disk in ${disks_now} ; do
         disk_color="${cdarkerfont}"
         p=$(( p+1 ))
         is_label=$(( p%2 ))
         if [[ ${is_label} -eq 1 ]] ; then
-            disk_label="${disk:0-2}"
+            #disk_label="${disk:0-2}"
+            #echo "$dl"
+            disk_label="${disk_names[${dl}]}"
             disk_labels="${disk_label^^*}"
+            dl=$(( dl+1 ))
         else
             disk_percent=${disk%%%*}
             if [[ "${disk_percent}" -lt 10 ]] ; then
@@ -52,7 +61,7 @@ get_disks() {
             graphs=$(( disk_percent*15/100 ))
             graph=""
             for (( i=1 ; i<=$graphs ; i=$i+1 )) ; do
-                graph+="100 ${cdarkgrey2} "
+                graph="${graph}100 ${cdarkgrey2} "
             done
             if [[ "${disk_percent}" -ge 90  ]] ; then
                 disk_color="${cdarkblue}"

@@ -26,7 +26,7 @@ if [[ -f ~/.ocelotrc ]] ; then
     fi
     if [[ -n "${disk_names}" ]] ; then
         echo "[DEBUG] disk_names = ${disk_names[@]}"
-        DISKS_NAMES=${disk_names}
+        DISK_NAMES=("${disk_names[@]}")
     fi
 fi
 
@@ -45,8 +45,7 @@ get_disks() {
         is_label=$(( p%2 ))
         if [[ ${is_label} -eq 1 ]] ; then
             #disk_label="${disk:0-2}"
-            #echo "$dl"
-            disk_label="${disk_names[${dl}]}"
+            disk_label="${DISK_NAMES[${dl}]}"
             disk_labels="${disk_label^^*}"
             dl=$(( dl+1 ))
         else
@@ -87,5 +86,5 @@ while true ; do
     # - "percent" is value for grapical represention
     # - "color" is color for graph
 
-    sleep 600
+    sleep 300
 done

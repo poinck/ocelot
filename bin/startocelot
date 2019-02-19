@@ -50,6 +50,11 @@ sleep 1
 # start screen locker
 ${OCELOT_PATH}bin/olocker
 
+for hook in $HOOKS ; do
+    ( hook )
+    sleep .23
+done
+
 # start side-panel (in backgroud)
 ${OCELOT_PATH}bin/ocollector &
 sleep .23
@@ -65,11 +70,6 @@ ${OCELOT_PATH}bin/onet &
 ${OCELOT_PATH}bin/ouptime &
 ${OCELOT_PATH}bin/ocputemp &
 ${OCELOT_PATH}bin/omem &
-
-for hook in $HOOKS ; do
-    ( hook )
-    sleep .23
-done
 
 # start ocelot desktop
 ${OCELOT_PATH}bin/odesktop

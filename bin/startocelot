@@ -28,6 +28,10 @@ if [[ -f ~/.ocelotrc ]] ; then
         . ${OCELOT_PATH}bin/outils.sh
         xsri --color="#${cdarktuerkis}"
     fi
+    HOOKS=("")
+    if [[ -n "$hooks" ]] ; then
+        HOOKS=("${hooks[@]}")
+    fi
 else
     echo "~/.ocelotrc does not exist"
 fi
@@ -48,7 +52,7 @@ ${OCELOT_PATH}bin/olocker
 
 # start side-panel (in backgroud)
 ${OCELOT_PATH}bin/ocollector &
-sleep 1
+sleep .23
 
 # start ocelot side-panel elements (in background)
 ${OCELOT_PATH}bin/otime &
@@ -61,6 +65,11 @@ ${OCELOT_PATH}bin/onet &
 ${OCELOT_PATH}bin/ouptime &
 ${OCELOT_PATH}bin/ocputemp &
 ${OCELOT_PATH}bin/omem &
+
+for hook in $HOOKS ; do
+    ( hook )
+    sleep .23
+done
 
 # start ocelot desktop
 ${OCELOT_PATH}bin/odesktop

@@ -12,7 +12,7 @@
 # "ocelot" in a directory inside $PATH
 ocelot_path="/home/username/gits/ocelot/"
 
-# we love wallpapers, even if we can't see them all the time,
+# we love wallpapers, even if we can't see them all the time.
 # default: "${ocelot_path}/desktop.png"
 #wallpaper="/home/username/path/to/desktop.jpg"
 
@@ -64,6 +64,12 @@ ocelot_path="/home/username/gits/ocelot/"
 # static panel label; use "_" for spaces.
 # default: "__./"
 #panel_label="_"
+
+# startup hooks
+# default: empty
+#hooks=(
+#    "ocomp"
+#)
 
 # removing and reordering elements is currently not supported during runtime,
 # but you can however add new elements during runtime.

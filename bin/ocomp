@@ -1,0 +1,4 @@
+#!/bin/bash
+
+compton -czGfb --vsync opengl --shadow-exclude "focused = 1" -D 4 -o .14 --fade-exclude "!name ~= ''"
+

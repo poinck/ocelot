@@ -45,13 +45,13 @@ fi
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 rm "/tmp/ocollector.fifo$OCELOT_INSTANCE"
 [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
-sleep 1
+sleep .23
 
 # start screen locker
 ${OCELOT_PATH}bin/olocker
 
 for hook in $HOOKS ; do
-    ( hook )
+    ( ${hook} )
     sleep .23
 done
 
@@ -61,7 +61,6 @@ sleep .23
 
 # start ocelot side-panel elements (in background)
 ${OCELOT_PATH}bin/otime &
-#sleep 1
 ${OCELOT_PATH}bin/oload &
 ${OCELOT_PATH}bin/obattery &
 ${OCELOT_PATH}bin/oupdates &

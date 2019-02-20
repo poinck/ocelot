@@ -1,4 +1,16 @@
 #!/bin/bash
 
-compton -czGfb --vsync opengl --shadow-exclude "focused = 1" -D 4 -o .14 --fade-exclude "!name ~= ''"
+# normal shadows
+#compton -czGfb --vsync opengl --shadow-exclude "focused = 1" -D 4 -o .11 --fade-exclude "!name ~= ''"
 
+# narrow shadows
+#compton -czGfb --vsync opengl --shadow-exclude "focused = 1" -D 4 -o .11 -r 6 -t -9 -l -9 --fade-exclude "!name ~= ''"
+
+# no shadows
+compton -fb --vsync opengl -D 4 --fade-exclude "!name ~= ''" -O .023 -I .042
+
+# big shadows
+#compton -czGfb --vsync opengl --shadow-exclude "focused = 1" -D 4 -o .14 -r 28 -t -36 -l -36 --fade-exclude "!name ~= ''"
+
+# normal purple shadows
+#compton -czGfb --vsync opengl --shadow-exclude "focused = 1" -D 4 -o .23 --shadow-red .404 --shadow-green .404 --shadow-blue .631 --fade-exclude "!name ~= ''"

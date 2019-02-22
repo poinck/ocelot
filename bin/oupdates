@@ -57,6 +57,7 @@ fi
 
 updates="updates ${updates_available_f}"
 #echo -e "[DEBUG] updates empty = $updates_available_empty"
+echo -e "# available surity updates\nsec=${updates_available}" > ~/.oupdates.sh
 echo -n "${updates_available_list}"
 echo -e "${update_c}${updates_available}${MR} security update(s) available"
 [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"

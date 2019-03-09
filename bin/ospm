@@ -1,0 +1,35 @@
+#!/bin/bash
+
+. ${OCELOT_PATH}/bin/outils.sh
+
+get_latest_measurement() {
+    #sensors_json=$( curl -s "https://api.opensensemap.org/boxes/${spm_boxid}/sensors" )
+    #echo "${sensors_json}" > ~/_tmp/latest_measurement.json
+
+    sensors_json=$( cat ~/_tmp/latest_measurement.json )
+
+    sensorids=$( echo "${sensors_json}" | jq '.sensors[]._id' )
+    echo -e "[DEBUG] sensorids = \n${sensorids}"
+    sensortimes=$( echo "${sensors_json}" | jq '.sensors[].lastMeasurement.createdAt' )
+    #echo -e "[DEBUG] sensortimes = \n${sensortimes}"
+    declare -A sensortime_a
+    for sensortime in "${sensortimes}" ; do
+        #echo "${sensortime}"
+        sensortime_a["${sensorids}"]="${sensortime}"
+    done
+    echo -e "[DEBUG] sensortime_a = \n${sensortime_a[*]}"
+    sensorvalues=$( echo "${sensors_json}" | jq '.sensors[].lastMeasurement.value' )
+    #echo -e "[DEBUG] sensorvalues = \n${sensorvalues}"
+    declare -A sensorvalue_a
+    for sensorvalue in "${sensorvalues}" ; do
+        sensorvalue_a["${sensorids}"]="${sensorvalue}"
+    done
+    echo -e "[DEBUG] sensorvalue_a = \n${sensorvalue_a[*]}"
+}
+
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
+while true ; do
+    get_latest_measurement
+
+    sleep 180
+done

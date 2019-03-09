@@ -1,0 +1,57 @@
+#!/bin/bash
+
+. ${OCELOT_PATH}/bin/outils.sh
+. ~/.ocelotrc
+
+get_latest_measurement() {
+    echo "[DEBUG] boxid = ${osm_boxid}"
+    sensors_json=$( curl -s "https://api.opensensemap.org/boxes/${osm_boxid}/sensors" )
+
+    # testing
+    #echo "${sensors_json}" > ~/_tmp/latest_measurement.json
+    #sensors_json=$( cat ~/_tmp/latest_measurement.json )
+
+    sensorids=$( echo "${sensors_json}" | jq '.sensors[]._id' )
+    if [[ -n "${sensorids}" ]] ; then
+        sensorid_a=(${sensorids})
+        echo -e "[DEBUG] sensorid_a[#${#sensorid_a[*]}] = ${sensorid_a[@]}"
+
+        sensortimes=$( echo "${sensors_json}" | jq '.sensors[].lastMeasurement.createdAt' )
+        sensorvalues=$( echo "${sensors_json}" | jq '.sensors[].lastMeasurement.value' )
+
+        sensortime_ai=(${sensortimes})
+        sensorvalue_ai=(${sensorvalues})
+        for id in ${!sensorid_a[*]} ; do
+            echo "[DEBUG] $id.${sensorid_a[$id]} = ${sensorvalue_ai[$id]}"
+            if [[ "\"${osm_p10id}\"" == "${sensorid_a[$id]}" ]] ; then
+                p10=${sensorvalue_ai[$id]}
+            elif [[ "\"${osm_p25id}\"" == "${sensorid_a[$id]}" ]] ; then
+                p25=${sensorvalue_ai[$id]}
+            elif [[ "\"${osm_tmpid}\"" == "${sensorid_a[$id]}" ]] ; then
+                tmp=${sensorvalue_ai[$id]}
+            elif [[ "\"${osm_humid}\"" == "${sensorid_a[$id]}" ]] ; then
+                hum=${sensorvalue_ai[$id]}
+            fi
+        done
+
+        echo -e "[DEBUG] p10.${osm_p10id} = $p10"
+        echo -e "[DEBUG] p25.${osm_p25id} = $p25"
+        echo -e "[DEBUG] tmp.${osm_tmpid} = $tmp"
+        echo -e "[DEBUG] hum.${osm_humid} = $hum"
+    else
+        echo "[DEBUG] warn: no data received"
+    fi
+}
+
+# initialize sensor values
+p10=0
+p25=0
+tmp=0
+hum=0
+
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
+while true ; do
+    get_latest_measurement
+
+    sleep 180
+done

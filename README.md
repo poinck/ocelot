@@ -140,7 +140,7 @@ How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs 
 ## FAQ
 
 **Does `ocelot` support multiple monitors?**
-Yes and no. Adding Xinerama-support from "monsterwm" is planned. You can at least use `xrandr` to mirror your screen output:
+No, and it is *not* planned as long as Xorg will be used. Here is an example on how to use `xrandr` for mirroring screen output:
 - if output does not support native resolution of LVDS1
 ```.sh
 xrandr --output HDMI2 --mode 1280x720 --fb 1366x768 --panning 1366x768 --same-as LVDS1 # --dryrun

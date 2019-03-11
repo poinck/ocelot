@@ -58,7 +58,7 @@ calculate_so_index() {
 
 get_latest_measurement() {
     echo "[DEBUG] boxid = ${osm_boxid}"
-    sensors_json=$( curl -s "https://api.opensensemap.org/boxes/${osm_boxid}/sensors" )
+    sensors_json=$( curl -s -m 10 "https://api.opensensemap.org/boxes/${osm_boxid}/sensors" )
 
     # testing
     #echo "${sensors_json}" > ~/_tmp/latest_measurement.json
@@ -133,7 +133,11 @@ get_latest_measurement() {
         else
             p25_avg_f="${p25_avg}"
         fi
-        if [[ "${tmp_avg}" -lt 10 ]] ; then
+        if [[ "${tmp_avg}" -lt -9 ]] ; then
+            tmp_avg_f="${tmp_avg}"
+        elif [[ "${tmp_avg}" -lt 0 ]] ; then
+            tmp_avg_f="_${tmp_avg}"
+        elif [[ "${tmp_avg}" -lt 10 ]] ; then
             tmp_avg_f="__${tmp_avg}"
         elif [[ "${tmp_avg}" -lt 100 ]] ; then
             tmp_avg_f="_${tmp_avg}"
@@ -206,8 +210,18 @@ get_latest_measurement() {
             done
         fi
 
+        so_vpart1="so_index ^fg(#ffffff)${so_index_f}^fg(#${cfont})SO ${cdarktuerkis}"
+        so_vpart2="${ctuerkis}"
     else
         echo "[DEBUG] warn: no data received"
+        p10graph="$p10_avg $cgrey"
+        p25_graph="$p25_avg $cgrey"
+        tmp_graph="$(( tmp_avg + 40 )) $cgrey"
+        hum_graph="$hum_avg $cgrey"
+        so_index_graph="$so_index $cgrey"
+
+        so_vpart1="so_index ^fg(#ffffff)${so_index_f}^fg(#${cfont})SO ${cgrey}"
+        so_vpart2="${cdarktuerkis}"
     fi
 }
 
@@ -246,6 +260,17 @@ for (( i=${i60s} ; i<17 ; i=i+1 )) ; do
     so_index60s[$i]=0
 done
 
+so_countdown=100
+
+# initialize formatted strings
+p10_avg_f="___"
+p25_avg_f="___"
+tmp_avg_f="___"
+hum_avg_f="___"
+so_index_f="___"
+#so_vpart1="so_index ^fg(#ffffff)^fg(#${cfont})___SO ${cgrey}"
+#so_vpart2="${cdarktuerkis}"
+
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 while true ; do
     # wait 20 seconds before first measurement ..
@@ -256,7 +281,7 @@ while true ; do
     so_tmp="so_tmp ^fg(#${cfont})${tmp_avg_f}^fg(#${cdarkfont})TC ${cdarkgrey} ${tmp_graph} ${tmp60s_graph}"
     so_hum="so_hum ^fg(#${cfont})${hum_avg_f}^fg(#${cdarkfont})RH ${cdarkgrey} ${hum_graph} ${hum60s_graph}"
     so="so _ ${cdarkgrey} ${so_index_graph} ${so_index60s_graph}"
-    so_value="so_index ^fg(#ffffff)${so_index_f}^fg(#${cfont})SO ${cdarktuerkis} 100 ${ctuerkis}"
+    so_value="${so_vpart1} ${so_countdown} ${so_vpart2}"
     echo "[DEBUG] ${so_p10}"
     echo "[DEBUG] ${so_p25}"
     echo "[DEBUG] ${so_tmp}"
@@ -277,5 +302,13 @@ while true ; do
     echo "[DEBUG] hum_a = ${hum_a[@]}, avg = ${hum_avg}"
 
     # .. and 3 minutes after
-    sleep 180
+    for (( ci=0 ; ci<10 ; ci=ci+1 )) ; do
+        sleep 18
+        so_countdown=$(( so_countdown - 10 ))
+        so_value="${so_vpart1} ${so_countdown} ${so_vpart2}"
+        echo "[DEBUG] ${so_value}"
+        echo "$so_value" > "$ofifo"
+    done
+    so_countdown=100
+    #sleep 180
 done

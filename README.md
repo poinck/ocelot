@@ -23,6 +23,7 @@ Following dependencies are required to get the intended look and feel:
 - `amixer` from alsa to control volume
 - `xrandr` to guess display height
 - `xsetroot` to set a different default xcursor
+- `jq` if you want to use the suspended particulate matter open sense map side-panel element (see “config/.ocelotrc“ for further configuration)
 
 Following is *optional*:
 - font recommendations: Monoid L 12px/9pt for terminal and side-panel; Gidole 11pt for everything else

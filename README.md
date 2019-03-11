@@ -140,7 +140,7 @@ How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs 
 ## FAQ
 
 **Does `ocelot` support multiple monitors?**
-No, and it is *not* planned as long as Xorg will be used. Here is an example on how to use `xrandr` for mirroring screen output:
+No, and it is *not* planned as long as Xorg is being used. Here is an example on how to use `xrandr` for mirroring screen output:
 - if output does not support native resolution of LVDS1
 ```.sh
 xrandr --output HDMI2 --mode 1280x720 --fb 1366x768 --panning 1366x768 --same-as LVDS1 # --dryrun
@@ -151,9 +151,8 @@ xrandr --output HDMI2 --mode 1366x768 --same-as LVDS1 # --dryrun
 ```
 
 ## License
-Licensed under MIT/X Consortium License, see [LICENSE][law] file for more
+All new files added after the fork are licensed under **CC0**. Changed and unchanged files are still licensed under the MIT/X Consortium License, see [LICENSE][law] file for more
 copyright and license information.
-- Changes to existing and new functionality I added after the fork are licensed under CC0 if the MIT-license permits it
 
   [law]: https://raw.github.com/c00kiemon5ter/monsterwm/master/LICENSE
 

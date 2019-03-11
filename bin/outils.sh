@@ -31,6 +31,7 @@ corange="ff683d"
 cred="ff2d2d"
 cdarkgreen="17451b"
 cdarktuerkis="174345"
+ctuerkis="226467"
 
 # shell colors
 #             MR:      MB:

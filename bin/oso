@@ -24,6 +24,38 @@ round_and_int() {
     echo $e
 }
 
+calculate_so_index() {
+    local p10_index=$(( p10_avg * 25 / 40 ))
+    if [[ "${p10_index}" -gt 25 ]] ; then
+        p10_index=25
+    fi
+    local p25_index=$(( p25_avg * 25 / 20 ))
+    if [[ "${p25_index}" -gt 25 ]] ; then
+        p25_index=25
+    fi
+    local tmp_index=$(( tmp_avg - 23 ))
+    if [[ "${tmp_index}" -lt 0 ]] ; then
+        tmp_index=$(( tmp_index * (-1) ))
+    fi
+    if [[ "${tmp_index}" -gt 25 ]] ; then
+        tmp_index=25
+    fi
+    local hum_index=0
+    if [[ "${hum_avg}" -gt 60 ]] ; then
+        hum_index=$(( (hum_avg - 60) * 25 / 40 ))
+    elif [[ "${hum_avg}" -lt 40 ]] ; then
+        hum_index=$(( (40 - hum_avg) * 25 / 40 ))
+    fi
+
+    so_index=$(( p10_index + p25_index + tmp_index + hum_index ))
+
+    echo "[DEBUG] p10_index = ${p10_index}"
+    echo "[DEBUG] p25_index = ${p25_index}"
+    echo "[DEBUG] tmp_index = ${tmp_index}"
+    echo "[DEBUG] hum_index = ${hum_index}"
+    echo "[DEBUG] so_index = ${so_index}"
+}
+
 get_latest_measurement() {
     echo "[DEBUG] boxid = ${osm_boxid}"
     sensors_json=$( curl -s "https://api.opensensemap.org/boxes/${osm_boxid}/sensors" )
@@ -126,6 +158,19 @@ get_latest_measurement() {
         tmp_graph="$(( tmp_avg + 40 )) $cdarktuerkis"
         hum_graph="$hum_avg $cdarktuerkis"
 
+        calculate_so_index
+        so_index_graph="$so_index $cdarktuerkis"
+        if [[ "${so_index}" -gt 50 ]] ; then
+            so_index_graph="$so_index $corange"
+        fi
+        if [[ "${so_index}" -lt 10 ]] ; then
+            so_index_f="__${so_index}"
+        elif [[ "${so_index}" -lt 100 ]] ; then
+            so_index_f="_${so_index}"
+        else
+            so_index_f="${so_index}"
+        fi
+
         # generate 60-minute interval graph
         t_now=$( date '+%s' )
         if [[ "${ni60s}" -lt "${t_now}" ]] ; then
@@ -136,20 +181,28 @@ get_latest_measurement() {
                 p2560s[$n]=${p2560s[$ii]}
                 tmp60s[$n]=${tmp60s[$ii]}
                 hum60s[$n]=${hum60s[$ii]}
+                so_index60s[$n]=${so_index60s[$ii]}
             done
             p1060s[2]=${p10_avg}
             p2560s[2]=${p25_avg}
             tmp60s[2]=$(( tmp_avg + 40 ))
             hum60s[2]=${hum_avg}
+            so_index60s[2]=${so_index}
             p1060s_graph=""
             p2560s_graph=""
             tmp60s_graph=""
             hum60s_graph=""
+            so_index60s_graph=""
             for (( ii=${i60s} ; ii<17 ; ii=ii+1 )) ; do
                 p1060s_graph="${p1060s_graph} ${p1060s[$ii]} ${cdarkgrey2} "
                 p2560s_graph="${p2560s_graph} ${p2560s[$ii]} ${cdarkgrey2} "
                 tmp60s_graph="${tmp60s_graph} ${tmp60s[$ii]} ${cdarkgrey2} "
                 hum60s_graph="${hum60s_graph} ${hum60s[$ii]} ${cdarkgrey2} "
+                if [[ "${so_index60s[$ii]}" -gt 50 ]] ; then
+                    so_index60s_graph="${so_index60s_graph} ${so_index60s[$ii]} ${ctuerkis} "
+                else
+                    so_index60s_graph="${so_index60s_graph} ${so_index60s[$ii]} ${cdarktuerkis} "
+                fi
             done
         fi
 
@@ -172,12 +225,14 @@ p10_avg=0
 p25_avg=0
 tmp_avg=0
 hum_avg=0
+so_index=0
 
 # historic sensor 60-minute interval (16 hours in total)
 declare -a p1060s
 declare -a p2560s
 declare -a tmp60s
 declare -a hum60s
+declare -a so_index60s
 i60s=2                                      # start interval
 ist60s=3600                                 # interval step: 3600s = 60 minutes
 #ist60s=180
@@ -188,15 +243,11 @@ for (( i=${i60s} ; i<17 ; i=i+1 )) ; do
     p2560s[$i]=0
     tmp60s[$i]=0
     hum60s[$i]=0
+    so_index60s[$i]=0
 done
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 while true ; do
-    echo "[DEBUG] p10_a = ${p10_a[@]}, avg = ${p10_avg}"
-    echo "[DEBUG] p25_a = ${p25_a[@]}, avg = ${p25_avg}"
-    echo "[DEBUG] tmp_a = ${tmp_a[@]}, avg = ${tmp_avg}"
-    echo "[DEBUG] hum_a = ${hum_a[@]}, avg = ${hum_avg}"
-
     # wait 20 seconds before first measurement ..
     sleep 20
     get_latest_measurement
@@ -204,15 +255,26 @@ while true ; do
     so_p25="so_p25 ^fg(#${cfont})${p25_avg_f}^fg(#${cdarkfont})P25 ${cdarkgrey} ${p25_graph} ${p2560s_graph}"
     so_tmp="so_tmp ^fg(#${cfont})${tmp_avg_f}^fg(#${cdarkfont})TC ${cdarkgrey} ${tmp_graph} ${tmp60s_graph}"
     so_hum="so_hum ^fg(#${cfont})${hum_avg_f}^fg(#${cdarkfont})RH ${cdarkgrey} ${hum_graph} ${hum60s_graph}"
+    so="so _ ${cdarkgrey} ${so_index_graph} ${so_index60s_graph}"
+    so_value="so_index ^fg(#ffffff)${so_index_f}^fg(#${cfont})SO ${cdarktuerkis} 100 ${ctuerkis}"
     echo "[DEBUG] ${so_p10}"
     echo "[DEBUG] ${so_p25}"
     echo "[DEBUG] ${so_tmp}"
     echo "[DEBUG] ${so_hum}"
+    echo "[DEBUG] ${so}"
+    echo "[DEBUG] ${so_value}"
     [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
     echo "$so_p10" > "$ofifo"
     echo "$so_p25" > "$ofifo"
     echo "$so_tmp" > "$ofifo"
     echo "$so_hum" > "$ofifo"
+    echo "$so" > "$ofifo"
+    echo "$so_value" > "$ofifo"
+
+    echo "[DEBUG] p10_a = ${p10_a[@]}, avg = ${p10_avg}"
+    echo "[DEBUG] p25_a = ${p25_a[@]}, avg = ${p25_avg}"
+    echo "[DEBUG] tmp_a = ${tmp_a[@]}, avg = ${tmp_avg}"
+    echo "[DEBUG] hum_a = ${hum_a[@]}, avg = ${hum_avg}"
 
     # .. and 3 minutes after
     sleep 180

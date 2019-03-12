@@ -214,7 +214,7 @@ get_latest_measurement() {
         so_vpart2="${ctuerkis}"
     else
         echo "[DEBUG] warn: no data received"
-        p10graph="$p10_avg $cgrey"
+        p10_graph="$p10_avg $cgrey"
         p25_graph="$p25_avg $cgrey"
         tmp_graph="$(( tmp_avg + 40 )) $cgrey"
         hum_graph="$hum_avg $cgrey"

@@ -69,6 +69,8 @@ ${OCELOT_PATH}bin/onet &
 ${OCELOT_PATH}bin/ouptime &
 ${OCELOT_PATH}bin/ocputemp &
 ${OCELOT_PATH}bin/omem &
+${OCELOT_PATH}bin/oso &
+    # TODO  start elements based on occurrence in $element_order
 
 # start ocelot desktop
 ${OCELOT_PATH}bin/odesktop

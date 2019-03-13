@@ -72,7 +72,7 @@ ${OCELOT_PATH}bin/ouptime &
 ${OCELOT_PATH}bin/ocputemp &
 ${OCELOT_PATH}bin/omem &
 ${OCELOT_PATH}bin/oso &
-    # TODO  start elements based on new array $elements
+    # TODO  start elements based on new array $elements (maybe reuse $HOOKS)
 
 # start ocelot desktop
 ${OCELOT_PATH}bin/odesktop

@@ -63,14 +63,16 @@ sleep .23
 ${OCELOT_PATH}bin/otime &
 ${OCELOT_PATH}bin/oload &
 ${OCELOT_PATH}bin/obattery &
-${OCELOT_PATH}bin/oupdates &
+#${OCELOT_PATH}bin/oupdates &
+    # FIXME oupdates should not be started here, because it is of type onshot
+    #       and should be started after repositories have been synced
 ${OCELOT_PATH}bin/odisks &
 ${OCELOT_PATH}bin/onet &
 ${OCELOT_PATH}bin/ouptime &
 ${OCELOT_PATH}bin/ocputemp &
 ${OCELOT_PATH}bin/omem &
 ${OCELOT_PATH}bin/oso &
-    # TODO  start elements based on occurrence in $element_order
+    # TODO  start elements based on new array $elements
 
 # start ocelot desktop
 ${OCELOT_PATH}bin/odesktop

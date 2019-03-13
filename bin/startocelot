@@ -55,7 +55,7 @@ for hook in $HOOKS ; do
     sleep .23
 done
 
-# start side-panel (in backgroud)
+# start side-panel (in background)
 ${OCELOT_PATH}bin/ocollector &
 sleep .23
 

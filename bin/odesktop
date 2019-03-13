@@ -12,7 +12,7 @@
 #
 # ocelot by André Klausnitzer, CC0
 
-source ${OCELOT_PATH}bin/outils.sh
+. ${OCELOT_PATH}bin/outils.sh
 OCELOT_PATH=""
 if [[ -f ~/.ocelotrc ]] ; then
     . ~/.ocelotrc
@@ -67,7 +67,7 @@ while read -r reply ; do
         # for every desktop with windows
         if [[ "$w" -gt 0 ]] ; then
             desktopCount=$(( desktopCount+1 ))
-            r+="$(( w*12 )) $f "
+            r="$r $(( w*12 )) $f "
         fi
     done
 
@@ -75,7 +75,7 @@ while read -r reply ; do
         current_d="_${current_d}"
     fi
 
-    desktop="desktop ^fg(#${cfont})_${current_d}^fg(#ffffff)${i} ${cdarkblue} 100 ${cblue}"
+    desktop="desktop ^fg(#ffffff)_${current_d}^fg(#${cfont})${i} ${cdarkblue} 100 ${cblue}"
     desktops="desktops _ ${cdarkgrey} $r"
     echo "[DEBUG] $desktops"
     echo "[DEBUG] $desktop"

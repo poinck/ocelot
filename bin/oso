@@ -25,11 +25,11 @@ round_and_int() {
 }
 
 calculate_so_index() {
-    local p10_index=$(( p10_avg * 25 / 40 ))
+    local p10_index=$(( p10_avg * 25 / 20 ))
     if [[ "${p10_index}" -gt 25 ]] ; then
         p10_index=25
     fi
-    local p25_index=$(( p25_avg * 25 / 20 ))
+    local p25_index=$(( p25_avg * 25 / 10 ))
     if [[ "${p25_index}" -gt 25 ]] ; then
         p25_index=25
     fi
@@ -70,6 +70,9 @@ get_latest_measurement() {
         echo -e "[DEBUG] sensorid_a[#${#sensorid_a[*]}] = ${sensorid_a[@]}"
 
         sensortimes=$( echo "${sensors_json}" | jq '.sensors[].lastMeasurement.createdAt' )
+            # TODO  check whether sensor data is not older than 1 hour,
+            #       otherwise dimm text on side-panel elements
+
         sensorvalues=$( echo "${sensors_json}" | jq '.sensors[].lastMeasurement.value' )
 
         sensortime_ai=(${sensortimes})
@@ -152,11 +155,11 @@ get_latest_measurement() {
             hum_avg_f="${hum_avg}"
         fi
         p10_graph="$p10_avg $cdarktuerkis"
-        if [[ "$p10_avg" -ge 40 ]] ; then
+        if [[ "$p10_avg" -ge 20 ]] ; then
             p10_graph="$p10_avg $corange"
         fi
         p25_graph="$p25_avg $cdarktuerkis"
-        if [[ "$p25_avg" -ge 20 ]] ; then
+        if [[ "$p25_avg" -ge 10 ]] ; then
             p25_graph="$p25_avg $corange"
         fi
         tmp_graph="$(( tmp_avg + 40 )) $cdarktuerkis"

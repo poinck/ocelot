@@ -1,0 +1,317 @@
+#!/bin/bash
+#
+# oso fetches current suspended particulate matter (10, 2.5), temperature and
+# humidity from your sensor at OpenSenseMap.
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
+
+. ${OCELOT_PATH}/bin/outils.sh
+. ~/.ocelotrc
+
+# e - entry
+round_and_int() {
+    local e=$1
+
+    e=${e%.*}
+    e=${e:1}
+
+    echo $e
+}
+
+calculate_so_index() {
+    local p10_index=$(( p10_avg * 25 / 20 ))
+    if [[ "${p10_index}" -gt 25 ]] ; then
+        p10_index=25
+    fi
+    local p25_index=$(( p25_avg * 25 / 10 ))
+    if [[ "${p25_index}" -gt 25 ]] ; then
+        p25_index=25
+    fi
+    local tmp_index=$(( tmp_avg - 23 ))
+    if [[ "${tmp_index}" -lt 0 ]] ; then
+        tmp_index=$(( tmp_index * (-1) ))
+    fi
+    if [[ "${tmp_index}" -gt 25 ]] ; then
+        tmp_index=25
+    fi
+    local hum_index=0
+    if [[ "${hum_avg}" -gt 60 ]] ; then
+        hum_index=$(( (hum_avg - 60) * 25 / 40 ))
+    elif [[ "${hum_avg}" -lt 40 ]] ; then
+        hum_index=$(( (40 - hum_avg) * 25 / 40 ))
+    fi
+
+    so_index=$(( p10_index + p25_index + tmp_index + hum_index ))
+
+    echo "[DEBUG] p10_index = ${p10_index}"
+    echo "[DEBUG] p25_index = ${p25_index}"
+    echo "[DEBUG] tmp_index = ${tmp_index}"
+    echo "[DEBUG] hum_index = ${hum_index}"
+    echo "[DEBUG] so_index = ${so_index}"
+}
+
+get_latest_measurement() {
+    echo "[DEBUG] boxid = ${osm_boxid}"
+    sensors_json=$( curl -s -m 10 "https://api.opensensemap.org/boxes/${osm_boxid}/sensors" )
+
+    # testing
+    #echo "${sensors_json}" > ~/_tmp/latest_measurement.json
+    #sensors_json=$( cat ~/_tmp/latest_measurement.json )
+
+    sensorids=$( echo "${sensors_json}" | jq '.sensors[]._id' )
+    if [[ -n "${sensorids}" ]] ; then
+        sensorid_a=(${sensorids})
+        echo -e "[DEBUG] sensorid_a[#${#sensorid_a[*]}] = ${sensorid_a[@]}"
+
+        sensortimes=$( echo "${sensors_json}" | jq '.sensors[].lastMeasurement.createdAt' )
+            # TODO  check whether sensor data is not older than 1 hour,
+            #       otherwise dimm text on side-panel elements
+
+        sensorvalues=$( echo "${sensors_json}" | jq '.sensors[].lastMeasurement.value' )
+
+        sensortime_ai=(${sensortimes})
+        sensorvalue_ai=(${sensorvalues})
+        for id in ${!sensorid_a[*]} ; do
+            #echo "[DEBUG] $id.${sensorid_a[$id]} = ${sensorvalue_ai[$id]}"
+            if [[ "\"${osm_p10id}\"" == "${sensorid_a[$id]}" ]] ; then
+                p10=${sensorvalue_ai[$id]}
+            elif [[ "\"${osm_p25id}\"" == "${sensorid_a[$id]}" ]] ; then
+                p25=${sensorvalue_ai[$id]}
+            elif [[ "\"${osm_tmpid}\"" == "${sensorid_a[$id]}" ]] ; then
+                tmp=${sensorvalue_ai[$id]}
+            elif [[ "\"${osm_humid}\"" == "${sensorid_a[$id]}" ]] ; then
+                hum=${sensorvalue_ai[$id]}
+            fi
+        done
+
+        echo -e "[DEBUG] p10.${osm_p10id} = $p10"
+        echo -e "[DEBUG] p25.${osm_p25id} = $p25"
+        echo -e "[DEBUG] tmp.${osm_tmpid} = $tmp"
+        echo -e "[DEBUG] hum.${osm_humid} = $hum"
+
+        # rotate array and add entry
+        p10_a[2]=${p10_a[1]}
+        p10_a[1]=${p10_a[0]}
+        e=$( round_and_int "$p10" )
+        p10_a[0]=$e
+        p25_a[2]=${p25_a[1]}
+        p25_a[1]=${p25_a[0]}
+        e=$( round_and_int "$p25" )
+        p25_a[0]=$e
+        tmp_a[2]=${tmp_a[1]}
+        tmp_a[1]=${tmp_a[0]}
+        e=$( round_and_int "$tmp" )
+        tmp_a[0]=$e
+        hum_a[2]=${hum_a[1]}
+        hum_a[1]=${hum_a[0]}
+        e=$( round_and_int "$hum" )
+        hum_a[0]=$e
+
+        if [[ "${a_length}" -lt 3 ]] ; then
+            a_length=$(( a_length + 1 ))
+        fi
+        p10_avg=$(( (p10_a[0] + p10_a[1] + p10_a[2]) / a_length ))
+        p25_avg=$(( (p25_a[0] + p25_a[1] + p25_a[2]) / a_length ))
+        tmp_avg=$(( (tmp_a[0] + tmp_a[1] + tmp_a[2]) / a_length ))
+        hum_avg=$(( (hum_a[0] + hum_a[1] + hum_a[2]) / a_length ))
+
+        # format sensor values
+        if [[ "${p10_avg}" -lt 10 ]] ; then
+            p10_avg_f="__${p10_avg}"
+        elif [[ "${p10_avg}" -lt 100 ]] ; then
+            p10_avg_f="_${p10_avg}"
+        else
+            p10_avg_f="${p10_avg}"
+        fi
+        if [[ "${p25_avg}" -lt 10 ]] ; then
+            p25_avg_f="__${p25_avg}"
+        elif [[ "${p10_avg}" -lt 100 ]] ; then
+            p25_avg_f="_${p25_avg}"
+        else
+            p25_avg_f="${p25_avg}"
+        fi
+        if [[ "${tmp_avg}" -lt -9 ]] ; then
+            tmp_avg_f="${tmp_avg}"
+        elif [[ "${tmp_avg}" -lt 0 ]] ; then
+            tmp_avg_f="_${tmp_avg}"
+        elif [[ "${tmp_avg}" -lt 10 ]] ; then
+            tmp_avg_f="__${tmp_avg}"
+        elif [[ "${tmp_avg}" -lt 100 ]] ; then
+            tmp_avg_f="_${tmp_avg}"
+        else
+            tmp_avg_f="${tmp_avg}"
+        fi
+        if [[ "${hum_avg}" -lt 10 ]] ; then
+            hum_avg_f="__${hum_avg}"
+        elif [[ "${hum_avg}" -lt 100 ]] ; then
+            hum_avg_f="_${hum_avg}"
+        else
+            hum_avg_f="${hum_avg}"
+        fi
+        p10_graph="$p10_avg $cdarktuerkis"
+        if [[ "$p10_avg" -ge 20 ]] ; then
+            p10_graph="$p10_avg $corange"
+        fi
+        p25_graph="$p25_avg $cdarktuerkis"
+        if [[ "$p25_avg" -ge 10 ]] ; then
+            p25_graph="$p25_avg $corange"
+        fi
+        tmp_graph="$(( tmp_avg + 40 )) $cdarktuerkis"
+        hum_graph="$hum_avg $cdarktuerkis"
+
+        calculate_so_index
+        so_index_graph="$so_index $cdarktuerkis"
+        if [[ "${so_index}" -gt 50 ]] ; then
+            so_index_graph="$so_index $corange"
+        fi
+        if [[ "${so_index}" -lt 10 ]] ; then
+            so_index_f="__${so_index}"
+        elif [[ "${so_index}" -lt 100 ]] ; then
+            so_index_f="_${so_index}"
+        else
+            so_index_f="${so_index}"
+        fi
+
+        # generate 60-minute interval graph
+        t_now=$( date '+%s' )
+        if [[ "${ni60s}" -lt "${t_now}" ]] ; then
+            ni60s="$(( $( date '+%s' ) + ist60s ))"
+            for (( ii=15 ; ii>=${i60s} ; ii=ii-1 )) ; do
+                local n=$(( ii+1 ))
+                p1060s[$n]=${p1060s[$ii]}
+                p2560s[$n]=${p2560s[$ii]}
+                tmp60s[$n]=${tmp60s[$ii]}
+                hum60s[$n]=${hum60s[$ii]}
+                so_index60s[$n]=${so_index60s[$ii]}
+            done
+            p1060s[2]=${p10_avg}
+            p2560s[2]=${p25_avg}
+            tmp60s[2]=$(( tmp_avg + 40 ))
+            hum60s[2]=${hum_avg}
+            so_index60s[2]=${so_index}
+            p1060s_graph=""
+            p2560s_graph=""
+            tmp60s_graph=""
+            hum60s_graph=""
+            so_index60s_graph=""
+            for (( ii=${i60s} ; ii<17 ; ii=ii+1 )) ; do
+                p1060s_graph="${p1060s_graph} ${p1060s[$ii]} ${cdarkgrey2} "
+                p2560s_graph="${p2560s_graph} ${p2560s[$ii]} ${cdarkgrey2} "
+                tmp60s_graph="${tmp60s_graph} ${tmp60s[$ii]} ${cdarkgrey2} "
+                hum60s_graph="${hum60s_graph} ${hum60s[$ii]} ${cdarkgrey2} "
+                if [[ "${so_index60s[$ii]}" -gt 50 ]] ; then
+                    so_index60s_graph="${so_index60s_graph} ${so_index60s[$ii]} ${ctuerkis} "
+                else
+                    so_index60s_graph="${so_index60s_graph} ${so_index60s[$ii]} ${cdarktuerkis} "
+                fi
+            done
+        fi
+
+        so_vpart1="so_index ^fg(#ffffff)${so_index_f}^fg(#${cfont})SO ${cdarktuerkis}"
+        so_vpart2="${ctuerkis}"
+    else
+        echo "[DEBUG] warn: no data received"
+        p10_graph="$p10_avg $cgrey"
+        p25_graph="$p25_avg $cgrey"
+        tmp_graph="$(( tmp_avg + 40 )) $cgrey"
+        hum_graph="$hum_avg $cgrey"
+        so_index_graph="$so_index $cgrey"
+
+        so_vpart1="so_index ^fg(#ffffff)${so_index_f}^fg(#${cfont})SO ${cgrey}"
+        so_vpart2="${cdarktuerkis}"
+    fi
+}
+
+# initialize sensor values
+p10=0
+p25=0
+tmp=0
+hum=0
+p10_a=(0 0 0)
+p25_a=(0 0 0)
+tmp_a=(0 0 0)
+hum_a=(0 0 0)
+a_length=0
+p10_avg=0
+p25_avg=0
+tmp_avg=0
+hum_avg=0
+so_index=0
+
+# historic sensor 60-minute interval (16 hours in total)
+declare -a p1060s
+declare -a p2560s
+declare -a tmp60s
+declare -a hum60s
+declare -a so_index60s
+i60s=2                                      # start interval
+ist60s=3600                                 # interval step: 3600s = 60 minutes
+#ist60s=180
+ni60s="$(( $( date '+%s' ) + ist60s ))"     # next interval
+
+for (( i=${i60s} ; i<17 ; i=i+1 )) ; do
+    p1060s[$i]=0
+    p2560s[$i]=0
+    tmp60s[$i]=0
+    hum60s[$i]=0
+    so_index60s[$i]=0
+done
+
+so_countdown=100
+
+# initialize formatted strings
+p10_avg_f="___"
+p25_avg_f="___"
+tmp_avg_f="___"
+hum_avg_f="___"
+so_index_f="___"
+#so_vpart1="so_index ^fg(#ffffff)^fg(#${cfont})___SO ${cgrey}"
+#so_vpart2="${cdarktuerkis}"
+
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
+while true ; do
+    # wait 20 seconds before first measurement ..
+    sleep 20
+    get_latest_measurement
+    so_p10="so_p10 ^fg(#${cfont})${p10_avg_f}^fg(#${cdarkfont})P10 ${cdarkgrey} ${p10_graph} ${p1060s_graph}"
+    so_p25="so_p25 ^fg(#${cfont})${p25_avg_f}^fg(#${cdarkfont})P25 ${cdarkgrey} ${p25_graph} ${p2560s_graph}"
+    so_tmp="so_tmp ^fg(#${cfont})${tmp_avg_f}^fg(#${cdarkfont})TC ${cdarkgrey} ${tmp_graph} ${tmp60s_graph}"
+    so_hum="so_hum ^fg(#${cfont})${hum_avg_f}^fg(#${cdarkfont})RH ${cdarkgrey} ${hum_graph} ${hum60s_graph}"
+    so="so _ ${cdarkgrey} ${so_index_graph} ${so_index60s_graph}"
+    so_value="${so_vpart1} ${so_countdown} ${so_vpart2}"
+    echo "[DEBUG] ${so_p10}"
+    echo "[DEBUG] ${so_p25}"
+    echo "[DEBUG] ${so_tmp}"
+    echo "[DEBUG] ${so_hum}"
+    echo "[DEBUG] ${so}"
+    echo "[DEBUG] ${so_value}"
+    [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
+    echo "$so_p10" > "$ofifo"
+    echo "$so_p25" > "$ofifo"
+    echo "$so_tmp" > "$ofifo"
+    echo "$so_hum" > "$ofifo"
+    echo "$so" > "$ofifo"
+    echo "$so_value" > "$ofifo"
+
+    echo "[DEBUG] p10_a = ${p10_a[@]}, avg = ${p10_avg}"
+    echo "[DEBUG] p25_a = ${p25_a[@]}, avg = ${p25_avg}"
+    echo "[DEBUG] tmp_a = ${tmp_a[@]}, avg = ${tmp_avg}"
+    echo "[DEBUG] hum_a = ${hum_a[@]}, avg = ${hum_avg}"
+
+    # .. and 3 minutes after
+    for (( ci=0 ; ci<10 ; ci=ci+1 )) ; do
+        sleep 18
+        so_countdown=$(( so_countdown - 10 ))
+        so_value="${so_vpart1} ${so_countdown} ${so_vpart2}"
+        echo "[DEBUG] ${so_value}"
+        echo "$so_value" > "$ofifo"
+    done
+    so_countdown=100
+    #sleep 180
+done

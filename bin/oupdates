@@ -46,7 +46,7 @@ else
     elif [[ "${updates_available}" -lt 100 ]] ; then
         updates_available_f="_${updates_available}"
     fi
-    updates_available_f="^fg(#$cfont)${updates_available_f}^fg(#ffffff)SEC ${cgrey} 100 ${corange}"
+    updates_available_f="^fg(#ffffff)${updates_available_f}^fg(#${cfont})SEC ${cgrey} 100 ${corange}"
 fi
 
 if [[ "${updates_available}" -gt 0 ]] ; then

@@ -24,6 +24,7 @@ Following dependencies are required to get the intended look and feel:
 - `xrandr` to guess display height
 - `xsetroot` to set a different default xcursor
 - `jq` if you want to use the suspended particulate matter open sense map side-panel element (see “config/.ocelotrc“ for further configuration)
+- `eix` and `glsa-check` to check for Gentoo world and security updates
 
 Following is *optional*:
 - font recommendations: Monoid L 12px/9pt for terminal and side-panel; Gidole 11pt for everything else
@@ -61,12 +62,29 @@ behavior:
 **`~/.ocelotrc` for general settings:**
 See "config/.ocelotrc" for help adjusting the variables.
 
-**Check for security updates with `oupdates`**
-Currently only Gentoo GLSA is supported. Syncing the portage-tree has to be done seperately.
+**Check for Gentoo world and security updates with `ochup` (check updates)**
+`ochup` handles syncing the portage tree using `eix`. It comes with systemd.timer and .unit for daily checks. Furthermore it uses `glsa-check` to report important security updates. Follow these steps to install as root (this is not yet part of the Makefile):
 
-### side-panel TODOs
-Things to come (order is priority):
-- support more than just "BAT0" from `/proc/sys`, see [#14](https://gitlab.com/poinck/ocelot/issues/14)
+```.sh
+ln -s ${OCELOT_PATH}bin/chup /root/bin/chup
+ln -s ${OCELOT_PATH}bin/ochup /root/bin/ochup
+cp ${OCELOT_PATH}config/systemd/system/chup.* /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable chup.timer
+```
+
+- first start (as root):
+
+```.sh
+systemctl start chup.service
+chup
+```
+
+- check only (as root) after some updates were applied to refresh side-panel elements:
+
+```.sh
+chup checkonly
+```
 
 ### Start ocelot
 The preferred method to start ocelot is to use "~/.xinitrc".

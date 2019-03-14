@@ -63,18 +63,27 @@ behavior:
 See "config/.ocelotrc" for help adjusting the variables.
 
 **Check for Gentoo world and security updates with `ochup` (check updates)**
-`ochup` handles syncing the portage tree using `eix`. It comes with systemd.timer and .unit for daily checks. Furthermore it uses `glsa-check` to report important security updates. Follow these steps to install (is not yet part of the Makefile):
+`ochup` handles syncing the portage tree using `eix`. It comes with systemd.timer and .unit for daily checks. Furthermore it uses `glsa-check` to report important security updates. Follow these steps to install as root (this is not yet part of the Makefile):
 
 ```.sh
-# as root
 ln -s ${OCELOT_PATH}bin/chup /root/bin/chup
 ln -s ${OCELOT_PATH}bin/ochup /root/bin/ochup
 cp ${OCELOT_PATH}config/systemd/system/chup.* /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable chup.timer
-# first run
+```
+
+- first start (as root):
+
+```.sh
 systemctl start chup.service
 chup
+```
+
+- check only (as root) after some updates were applied to refresh side-panel elements:
+
+```.sh
+chup checkonly
 ```
 
 ### Start ocelot

@@ -15,6 +15,34 @@ ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 #echo "[DEBUG] ocelot_path = '$OCELOT_PATH'"
 . ${OCELOT_PATH}bin/outils.sh
 
+wus=0
+wus_diff=0
+wus_f="__0"
+chup_wu=""
+get_wus() {
+    if [[ -f /var/cache/chup.sh ]] ; then
+        . /var/cache/chup.sh
+    fi
+    if [[ "${wus}" -lt 10 ]] ; then
+        wus_f="__${wus}"
+    elif [[ "${wus}" -lt 100 ]] ; then
+        wus_f="_${wus}"
+    else
+        wus_f="${wus}"
+    fi
+
+    if [[ "${wus}" -eq 0 ]] ; then
+        chup_wu="chup_wu ^fg(#${cdarkerfont})___^fg(#${cdarkerfont})WU ${cdarkgrey}"
+    else
+        if [[ "${wus_diff}" -gt 0 ]] ; then
+            chup_wu="chup_wu ^fg(#ffffff)${wus_f}^fg(#${cfont})WU ${cgrey} ${wus} ${cpurple} ${wus_diff} ${cdarkpurple}"
+        else
+            wus_diff=0
+            chup_wu="chup_wu ^fg(#${cfont})${wus_f}^fg(#${cdarkfont})WU ${cdarkgrey} ${wus} ${cdarkpurple}"
+        fi
+    fi
+}
+
 # check security updates for gentoo
 updates_available_list=$( glsa-check -n -q -l affected )
 rc=$?
@@ -49,12 +77,12 @@ fi
 
 chup_sec="chup_sec ${updates_available_f}"
 #echo -e "[DEBUG] updates empty = $updates_available_empty"
-
-echo -e "# available security updates\nsec=${updates_available}" > ~/.oupdates.sh
-    # XXX   remove legacy status
-
 echo -n "${updates_available_list}"
 echo -e "${update_c}${updates_available}${MR} security update(s) available"
 [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
 echo "${chup_sec}" > "$ofifo"
+
+get_wus
+#echo "[DEBUG] ${chup_wu}"
+echo "${chup_wu}" > "$ofifo"
 

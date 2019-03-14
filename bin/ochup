@@ -22,16 +22,8 @@ if [[ "${rc}" -eq 0 ]] ; then
     updates_available=$( echo "$updates_available_list" | wc -l )
     updates_available_empty=$( echo "$updates_available_list" | wc -w )
 else
-    # check security updates for centos
-    updates_available_list=$( yum check-update --security )
-    rc_yum=$?
-    if [[ "${rc_yum}" -gt 0 ]] ; then
-        updates_available=$( echo "$updates_available_list" | wc -l )
-        updates_available_empty=$( echo "$updates_available_list" | wc -w )
-    else
-        updates_available=0
-        updates_available_empty=0
-    fi
+    updates_available=0
+    updates_available_empty=0
 fi
 
 # test
@@ -55,11 +47,14 @@ else
     update_c="${C2}"
 fi
 
-updates="updates ${updates_available_f}"
+chup_sec="chup_sec ${updates_available_f}"
 #echo -e "[DEBUG] updates empty = $updates_available_empty"
-echo -e "# available surity updates\nsec=${updates_available}" > ~/.oupdates.sh
+
+echo -e "# available security updates\nsec=${updates_available}" > ~/.oupdates.sh
+    # XXX   remove legacy status
+
 echo -n "${updates_available_list}"
 echo -e "${update_c}${updates_available}${MR} security update(s) available"
 [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
-echo "$updates" > "$ofifo"
+echo "${chup_sec}" > "$ofifo"
 

@@ -1,0 +1,9 @@
+[Unit]
+Description=check for security and world updates
+
+[Service]
+Environment=OCELOT_PATH='/home/user/gits/ocelot/'
+Environment=HOME='/root'
+#User=portage
+Type=oneshot
+ExecStart=/usr/bin/sleep 23 ; /root/bin/chup sync

@@ -1,0 +1,11 @@
+[Unit]
+Description=check for security and world updates daily
+
+[Timer]
+OnCalendar=daily
+AccuracySec=15min
+Persistent=true
+#OnUnitActiveSec=1d
+
+[Install]
+WantedBy=timers.target

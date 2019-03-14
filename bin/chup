@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# colors
+#             MR:      MB:
+C0='\e[30m' # *color0, *color8,  gray/
+C1='\e[31m' # *color1, *color9,  orange/ (red)
+C2='\e[32m' # *color2, *color10, green/
+C3='\e[33m' # *color3, *color11, yellow/
+C4='\e[34m' # *color4, *color12, blue/
+C5='\e[35m' # *color5, *color13, purple/
+C6='\e[36m' # *color6, *color14, cyan/
+C7='\e[37m' # *color7, *color15, white/
+
+# modifiers
+MR='\e[0m' # reset
+MB='\e[1m' # bold (lighter)
+MI='\e[3m' # italic
+
+debug() {
+    msg="$1"
+
+    echo -e "${C4}${MB}chup:${MR} ${msg}"
+}
+
+sync_and_test() {
+    debug "start ${C7}$( date )${MR}"
+    if [[ "$1" != "checkonly" ]] ; then
+        debug "eix-sync"
+        LC_ALL=C eix-sync -F
+            # -F  force ansi colors for eix
+        echo
+    fi
+    debug "eix -cu --world, ${C2}general updates${MR} (without dependencies)"
+    LC_ALL=C eix -cu --world -F > /tmp/eix_cu__world.log
+    cat /tmp/eix_cu__world.log
+    world_updates=$( grep "Found" /tmp/eix_cu__world.log )
+    wus_a=(${world_updates})
+        # convert into an array of words (works only if "" are ommitted)
+        # very cool and better than using cut
+    wus_diff=0
+    wus_last=0
+    if [[ -f /var/cache/chup.sh ]] ; then
+        . /var/cache/chup.sh
+        if [[ "${wus}" == "" ]] ; then
+            wus=0
+        fi
+    fi
+    wus_last=${wus}
+    wus=${wus_a[1]}
+    wus_diff=$(( wus - wus_last ))
+    echo -e "# available world updates\nwus=${wus}\nwus_last=${wus_last}\nwus_diff=${wus_diff}" > /var/cache/chup.sh
+    echo
+    debug "oupdates, ${C1}security updates${MR}"
+    /root/bin/ochup
+    debug "finished ${C7}$( date )${MR}"
+}
+
+if [[ "$1" == "sync" ]] ; then
+    sync_and_test > /var/cache/chup.log 2>&1
+    cat /var/cache/chup.log
+elif [[ "$1" == "checkonly" ]] ; then
+    sync_and_test checkonly > /var/cache/chup.log 2>&1
+    cat /var/cache/chup.log
+else
+    cat /var/cache/chup.log
+fi
+
+

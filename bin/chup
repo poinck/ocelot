@@ -30,6 +30,7 @@ sync_and_test() {
             # -F  force ansi colors for eix
         echo
     fi
+    debug "user = $( whoami )"
     debug "eix -cu --world, ${C2}general updates${MR} (without dependencies)"
     LC_ALL=C eix -cu --world -F > /tmp/eix_cu__world.log
     cat /tmp/eix_cu__world.log
@@ -50,7 +51,7 @@ sync_and_test() {
     wus_diff=$(( wus - wus_last ))
     echo -e "# available world updates\nwus=${wus}\nwus_last=${wus_last}\nwus_diff=${wus_diff}" > /var/cache/chup.sh
     echo
-    debug "oupdates, ${C1}security updates${MR}"
+    debug "ochup, ${C1}security updates${MR}"
     /root/bin/ochup
     debug "finished ${C7}$( date )${MR}"
 }

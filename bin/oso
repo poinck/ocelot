@@ -56,6 +56,19 @@ calculate_so_index() {
     echo "[DEBUG] so_index = ${so_index}"
 }
 
+get_td() {
+    local sensort=$1
+    local nowts="$2"
+
+    sensort=${sensort//\"/}     # remove '"'
+    local td=0
+
+    local sensorts=$( LC_ALL=C date -u -d "${sensort}" '+%s' )
+    td=$(( nowts - sensorts ))
+
+    echo ${td}
+}
+
 get_latest_measurement() {
     echo "[DEBUG] boxid = ${osm_boxid}"
     sensors_json=$( curl -s -m 10 "https://api.opensensemap.org/boxes/${osm_boxid}/sensors" )
@@ -66,13 +79,11 @@ get_latest_measurement() {
 
     sensorids=$( echo "${sensors_json}" | jq '.sensors[]._id' )
     if [[ -n "${sensorids}" ]] ; then
+        t_now=$( date -u '+%s' )
         sensorid_a=(${sensorids})
         echo -e "[DEBUG] sensorid_a[#${#sensorid_a[*]}] = ${sensorid_a[@]}"
 
         sensortimes=$( echo "${sensors_json}" | jq '.sensors[].lastMeasurement.createdAt' )
-            # TODO  check whether sensor data is not older than 1 hour,
-            #       otherwise dimm text on side-panel elements
-
         sensorvalues=$( echo "${sensors_json}" | jq '.sensors[].lastMeasurement.value' )
 
         sensortime_ai=(${sensortimes})
@@ -81,19 +92,23 @@ get_latest_measurement() {
             #echo "[DEBUG] $id.${sensorid_a[$id]} = ${sensorvalue_ai[$id]}"
             if [[ "\"${osm_p10id}\"" == "${sensorid_a[$id]}" ]] ; then
                 p10=${sensorvalue_ai[$id]}
+                p10_td=$( get_td "${sensortime_ai[$id]}" "${t_now}" )
             elif [[ "\"${osm_p25id}\"" == "${sensorid_a[$id]}" ]] ; then
                 p25=${sensorvalue_ai[$id]}
+                p25_td=$( get_td "${sensortime_ai[$id]}" "${t_now}" )
             elif [[ "\"${osm_tmpid}\"" == "${sensorid_a[$id]}" ]] ; then
                 tmp=${sensorvalue_ai[$id]}
+                tmp_td=$( get_td "${sensortime_ai[$id]}" "${t_now}" )
             elif [[ "\"${osm_humid}\"" == "${sensorid_a[$id]}" ]] ; then
                 hum=${sensorvalue_ai[$id]}
+                hum_td=$( get_td "${sensortime_ai[$id]}" "${t_now}" )
             fi
         done
 
-        echo -e "[DEBUG] p10.${osm_p10id} = $p10"
-        echo -e "[DEBUG] p25.${osm_p25id} = $p25"
-        echo -e "[DEBUG] tmp.${osm_tmpid} = $tmp"
-        echo -e "[DEBUG] hum.${osm_humid} = $hum"
+        echo -e "[DEBUG] p10.${osm_p10id} = $p10, td = ${p10_td}"
+        echo -e "[DEBUG] p25.${osm_p25id} = $p25, td = ${p25_td}"
+        echo -e "[DEBUG] tmp.${osm_tmpid} = $tmp, td = ${tmp_td}"
+        echo -e "[DEBUG] hum.${osm_humid} = $hum, td = ${hum_td}"
 
         # rotate array and add entry
         p10_a[2]=${p10_a[1]}
@@ -179,7 +194,6 @@ get_latest_measurement() {
         fi
 
         # generate 60-minute interval graph
-        t_now=$( date '+%s' )
         if [[ "${ni60s}" -lt "${t_now}" ]] ; then
             ni60s="$(( $( date '+%s' ) + ist60s ))"
             for (( ii=15 ; ii>=${i60s} ; ii=ii-1 )) ; do
@@ -213,7 +227,7 @@ get_latest_measurement() {
             done
         fi
 
-        so_vpart1="so_index ^fg(#ffffff)${so_index_f}^fg(#${cfont})SO ${cdarktuerkis}"
+        so_vpart1="${cdarktuerkis}"
         so_vpart2="${ctuerkis}"
     else
         echo "[DEBUG] warn: no data received"
@@ -223,8 +237,45 @@ get_latest_measurement() {
         hum_graph="$hum_avg $cgrey"
         so_index_graph="$so_index $cgrey"
 
-        so_vpart1="so_index ^fg(#ffffff)${so_index_f}^fg(#${cfont})SO ${cgrey}"
+        so_vpart1="${cgrey}"
         so_vpart2="${cdarktuerkis}"
+    fi
+
+    # dimm value text, when not current (> 1 hour)
+    so_not_current=false
+    p10_value_fg="${cfont}"
+    p10_label_fg="${cdarkfont}"
+    p25_value_fg="${cfont}"
+    p25_label_fg="${cdarkfont}"
+    tmp_value_fg="${cfont}"
+    tmp_label_fg="${cdarkfont}"
+    hum_value_fg="${cfont}"
+    hum_label_fg="${cdarkfont}"
+    so_value_fg="ffffff"
+    so_label_fg="${cfont}"
+    if [[ "${p10_td}" -gt "${max_td}" ]] ; then
+        so_not_current=true
+        p10_value_fg="${cdarkfont}"
+        p10_label_fg="${cdarkerfont}"
+    fi
+    if [[ "${p25_td}" -gt "${max_td}" ]] ; then
+        so_not_current=true
+        p25_value_fg="${cdarkfont}"
+        p25_label_fg="${cdarkerfont}"
+    fi
+    if [[ "${tmp_td}" -gt "${max_td}" ]] ; then
+        so_not_current=true
+        tmp_value_fg="${cdarkfont}"
+        tmp_label_fg="${cdarkerfont}"
+    fi
+    if [[ "${hum_td}" -gt "${max_td}" ]] ; then
+        so_not_current=true
+        hum_value_fg="${cdarkfont}"
+        hum_label_fg="${cdarkerfont}"
+    fi
+    if [[ "${so_not_current}" == true ]] ; then
+        so_value_fg="${cfont}"
+        so_label_fg="${cdarkfont}"
     fi
 }
 
@@ -243,6 +294,24 @@ p25_avg=0
 tmp_avg=0
 hum_avg=0
 so_index=0
+
+# time diffs and defaults
+p10_td=0
+p25_td=0
+tmp_td=0
+hum_td=0
+max_td=3600     # 1 hour in seconds
+#max_td=149      # test
+p10_value_fg="${cfont}"
+p10_label_fg="${cdarkfont}"
+p25_value_fg="${cfont}"
+p25_label_fg="${cdarkfont}"
+tmp_value_fg="${cfont}"
+tmp_label_fg="${cdarkfont}"
+hum_value_fg="${cfont}"
+hum_label_fg="${cdarkfont}"
+so_value_fg="ffffff"
+so_label_fg="${cfont}"
 
 # historic sensor 60-minute interval (16 hours in total)
 declare -a p1060s
@@ -271,20 +340,18 @@ p25_avg_f="___"
 tmp_avg_f="___"
 hum_avg_f="___"
 so_index_f="___"
-#so_vpart1="so_index ^fg(#ffffff)^fg(#${cfont})___SO ${cgrey}"
-#so_vpart2="${cdarktuerkis}"
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
 while true ; do
     # wait 20 seconds before first measurement ..
     sleep 20
     get_latest_measurement
-    so_p10="so_p10 ^fg(#${cfont})${p10_avg_f}^fg(#${cdarkfont})P10 ${cdarkgrey} ${p10_graph} ${p1060s_graph}"
-    so_p25="so_p25 ^fg(#${cfont})${p25_avg_f}^fg(#${cdarkfont})P25 ${cdarkgrey} ${p25_graph} ${p2560s_graph}"
-    so_tmp="so_tmp ^fg(#${cfont})${tmp_avg_f}^fg(#${cdarkfont})TC ${cdarkgrey} ${tmp_graph} ${tmp60s_graph}"
-    so_hum="so_hum ^fg(#${cfont})${hum_avg_f}^fg(#${cdarkfont})RH ${cdarkgrey} ${hum_graph} ${hum60s_graph}"
+    so_p10="so_p10 ^fg(#${p10_value_fg})${p10_avg_f}^fg(#${p10_label_fg})P10 ${cdarkgrey} ${p10_graph} ${p1060s_graph}"
+    so_p25="so_p25 ^fg(#${p25_value_fg})${p25_avg_f}^fg(#${p25_label_fg})P25 ${cdarkgrey} ${p25_graph} ${p2560s_graph}"
+    so_tmp="so_tmp ^fg(#${tmp_value_fg})${tmp_avg_f}^fg(#${tmp_label_fg})TC ${cdarkgrey} ${tmp_graph} ${tmp60s_graph}"
+    so_hum="so_hum ^fg(#${hum_value_fg})${hum_avg_f}^fg(#${hum_label_fg})RH ${cdarkgrey} ${hum_graph} ${hum60s_graph}"
     so="so _ ${cdarkgrey} ${so_index_graph} ${so_index60s_graph}"
-    so_value="${so_vpart1} ${so_countdown} ${so_vpart2}"
+    so_value="so_index ^fg(#${so_value_fg})${so_index_f}^fg(#${so_label_fg})SO ${so_vpart1} ${so_countdown} ${so_vpart2}"
     echo "[DEBUG] ${so_p10}"
     echo "[DEBUG] ${so_p25}"
     echo "[DEBUG] ${so_tmp}"
@@ -308,7 +375,7 @@ while true ; do
     for (( ci=0 ; ci<10 ; ci=ci+1 )) ; do
         sleep 18
         so_countdown=$(( so_countdown - 10 ))
-        so_value="${so_vpart1} ${so_countdown} ${so_vpart2}"
+        so_value="so_index ^fg(#${so_value_fg})${so_index_f}^fg(#${so_label_fg})SO ${so_vpart1} ${so_countdown} ${so_vpart2}"
         echo "[DEBUG] ${so_value}"
         echo "$so_value" > "$ofifo"
     done

@@ -1,6 +1,7 @@
 #!/bin/bash
 #
-# oupdates looks for Gentoo security updates using `glsa-check`
+# ochup looks for Gentoo world and security updates using `eix` and
+# `glsa-check`
 #
 #    ^   ^
 #  +-------+

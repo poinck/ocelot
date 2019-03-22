@@ -56,14 +56,32 @@ sync_and_test() {
     debug "finished ${C7}$( date )${MR}"
 }
 
+sync_failed=""
+
+check_portage_tree() {
+    portage_owner_root=$( find /usr/portage/ -user root | wc -l )
+    if [[ "${portage_owner_root}" -gt 0 ]] ; then
+        echo -e "${MB}${CR}${portage_owner_root}${MR} files are owned by root; portage tree needs repair:"
+        echo "pushd /usr/portage"
+        echo "git fetch origin"
+        echo "git reset --hard origin/master"
+        echo "chown -R portage:portage ."
+        echo "popd"
+    fi
+}
+
 if [[ "$1" == "sync" ]] ; then
     sync_and_test > /var/cache/chup.log 2>&1
     cat /var/cache/chup.log
+    grep -F "returned code = 1" /var/cache/chup.log
+    check_portage_tree
 elif [[ "$1" == "checkonly" ]] ; then
     sync_and_test checkonly > /var/cache/chup.log 2>&1
     cat /var/cache/chup.log
+    check_portage_tree
 else
     cat /var/cache/chup.log
+    check_portage_tree
 fi
 
 

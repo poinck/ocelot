@@ -80,10 +80,12 @@ chup_sec="chup_sec ${updates_available_f}"
 #echo -e "[DEBUG] updates empty = $updates_available_empty"
 echo -n "${updates_available_list}"
 echo -e "${update_c}${updates_available}${MR} security update(s) available"
-[[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
-echo "${chup_sec}" > "$ofifo"
+#[[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
+
+# do not create fifo yourself
+[[ -p $ofifo ]] && echo "${chup_sec}" > "$ofifo"
 
 get_wus
 #echo "[DEBUG] ${chup_wu}"
-echo "${chup_wu}" > "$ofifo"
+[[ -p $ofifo ]] && echo "${chup_wu}" > "$ofifo"
 

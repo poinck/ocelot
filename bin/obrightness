@@ -62,5 +62,7 @@ elif [[ "${current_brightness}" -lt 100 ]] ; then
 fi
 brightness="brightness ^fg(#${cfont})${current_brightness}^fg(#${cdarkfont})BRI ${cdarkgrey} $brightness_graph"
 debug "$brightness"
-[[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
-echo "$brightness" > "$ofifo"
+#[[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
+
+# do not create fifo yourself
+[[ -p $ofifo ]] && echo "$brightness" > "$ofifo"

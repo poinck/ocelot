@@ -68,7 +68,7 @@ ocelot_path="/home/username/gits/ocelot/"
 # startup hooks
 # default: empty
 #hooks=(
-#    "ocomp"
+#    "oterminal"
 #)
 
 # monitor suspended particulate matter (spm) data from your luftdaten.info

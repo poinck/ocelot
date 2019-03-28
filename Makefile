@@ -5,6 +5,8 @@
 VERSION = 1.0.3
 WMNAME  = ocelot
 
+SCALE ?= 1
+
 PREFIX ?= /usr/local
 BINDIR ?= ${PREFIX}/bin
 MANPREFIX = ${PREFIX}/share/man
@@ -51,6 +53,12 @@ ${WMNAME}: ${OBJ}
 
 clean:
 	rm -fv ${WMNAME} ${OBJ}
+
+${HOME}/.ocelot.h:
+	cp config_scale${SCALE}.h ${HOME}/.ocelot.h
+
+config.h: ${HOME}/.ocelot.h
+	ln -sf ${HOME}/.ocelot.h config.h
 
 local_install: all
 	ln -sf ${PWD}/${WMNAME} ${SCRIPTS_DEST}/${WMNAME}

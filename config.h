@@ -1,1 +1,0 @@
-config_scale2.h

@@ -3,7 +3,7 @@
 - *"monsterwm" is similar to [catwm](https://github.com/pyknite/catwm) and was forked from "dwm"*
 
 **ocelot:**
-"ocelot" is a minimal tiling window manager bundle forked from "monsterwm" with a customized "config.h" and a side-panel instead of a top-panel.
+"ocelot" is a minimal tiling window manager bundle forked from "monsterwm" with a customized "config_scale1.h"/"config_scale2.h" with HiDPI-support and a side-panel instead of a top-panel. Furthermore it has extra features for Gentoo-users.
 
 ![ocelot](/ocelot3.png)
 
@@ -43,8 +43,10 @@ mkdir gits
 cd gits
 git clone https://gitlab.com/poinck/ocelot.git
 cd ocelot
-vim config.h  # look, (change) and :wq
-make
+SCALE=2 make    # omit SCALE-var if ocelot-wm should not scale for HiDPI; has
+                # no effect if ~/.ocelot.h already exists
+vim config.h    # look, (change) and :wq (config.h is a symlink to ~/.ocelot.h)
+make            # if you have changed config.h
 ```
 
 ## Local Install
@@ -53,7 +55,6 @@ make
 ```.sh
 make local_install
 ```
-- additionally you should configure `OCELOT_PATH` in "~/.ocelotrc"
 
 ## Configuration
 "ocelot" has one user config-file; create it if you want to change default
@@ -61,6 +62,9 @@ behavior:
 
 **`~/.ocelotrc` for general settings:**
 See "config/.ocelotrc" for help adjusting the variables.
+
+- set `ocelot_path` to /home/$USER/gits/ocelot (location of the git-repository)
+- set `scale=2` if you compiled ocelot with "`SCALE=2 make`"
 
 **Check for Gentoo world and security updates with `ochup` (check updates)**
 `ochup` handles syncing the portage tree using `eix`. It comes with systemd.timer and .unit for daily checks. Furthermore it uses `glsa-check` to report important security updates. Follow these steps to install as root (this is not yet part of the Makefile):
@@ -170,8 +174,7 @@ xrandr --output HDMI2 --mode 1366x768 --same-as LVDS1 # --dryrun
 ```
 
 ## License
-All new files added after the fork are licensed under **CC0**. Changed and unchanged files are still licensed under the MIT/X Consortium License, see [LICENSE][law] file for more
-copyright and license information.
+All new files added after the fork are licensed under **CC0**. Changed and unchanged files are still licensed under the MIT/X Consortium License, see [LICENSE][law] file for more copyright and license information.
 
   [law]: https://raw.github.com/c00kiemon5ter/monsterwm/master/LICENSE
 

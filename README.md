@@ -25,6 +25,7 @@ Following dependencies are required to get the intended look and feel:
 - `xsetroot` to set a different default xcursor
 - `jq` if you want to use the suspended particulate matter open sense map side-panel element (see “config/.ocelotrc“ for further configuration)
 - `eix` and `glsa-check` to check for Gentoo world and security updates
+- `battery.sh` if you want to check battery on a PocketChip (see below)
 
 Following is *optional*:
 - font recommendations: Monoid L 12px/9pt for terminal and side-panel; Gidole 11pt for everything else
@@ -88,6 +89,23 @@ chup
 
 ```.sh
 chup checkonly
+```
+
+**check battery on a PocketChip**
+Checking the battery status on this arm device is different, so `ochipbattery` is used as root instead of `obattery`. Install as root:
+
+```.sh
+# backup and override existing version of "battery.sh"
+cp /usr/bin/battery.sh /usr/bin/battery_bak.sh
+cd ${OCELOT_PATH}
+cp config/bin/battery.sh /usr/bin/
+ln -s ${OCELOT_PATH}bin/ochipbattery /root/bin/ochipbattery
+ln -s ${OCELOT_PATH}bin/ochipbattery /root/bin/ochipbattery
+cp config/systemd/system/chipbattery.service /etc/systemd/system/
+vim /etc/systemd/system/chipbattery.service  # adjust OCELOT_PATH here
+systemctl daemon-reload
+systemctl enable chipbattery
+systemctl start chipbattery
 ```
 
 ### Start ocelot

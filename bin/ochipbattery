@@ -1,0 +1,77 @@
+#!/bin/bash
+#
+# ochipbattery uses battery-information from pocketchip's battery.sh script
+#
+#    ^   ^
+#  +-------+
+#  |  o_O  |
+#  |  >.<  |__/
+#  +-------+
+#
+# ocelot by André Klausnitzer, CC0
+
+source ${OCELOT_PATH}bin/outils.sh
+
+get_battery() {
+    bat_percent=0
+    battery.sh > /tmp/battery.out
+    . /tmp/battery.out
+    bat_now=${bat_vol%.*}
+    #bat_now=$(cat /sys/class/power_supply/BAT0/energy_now)
+    bat_status="BAT"
+    bat_full=900  # 4200mV - 3300mV
+    bat_now=$(( bat_now - 3300 ))
+    bat_percent=$(( bat_now*100/bat_full ))
+    bat_now_mAh=$(( bat_now/10000 ))
+    bat_graph=$cdarkblue
+    bgcolor=$cdarkgrey
+    bat_font=${cfont}
+    bat_percent2=${bat_percent}
+    bat_status2="BAT"
+    if [[ "$bat_status" == "Charging" ]] ; then
+        bat_status2="CRG"
+    elif [[ "$bat_status" == "Unknown" ]] ; then
+        bat_status2="PWR"
+    elif [[ "$bat_status" == "Full" ]] ; then
+        bat_status2="BAT"
+    else
+        bat_status2="BAT"
+    fi
+
+    blink=0
+    if [[ "$bat_percent" -lt 15 ]] ; then
+        bgcolor=$cgrey
+        bat_graph=${corange}
+        bat_percent2=100
+        blink=1
+    fi
+}
+
+ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
+blinked=0
+while true ; do
+    get_battery
+
+    if [[ "${bat_percent}" -lt 10 ]] ; then
+        bat_percent="__${bat_percent}"
+    elif [[ "${bat_percent}" -lt 100 ]] ; then
+        bat_percent="_${bat_percent}"
+    fi
+
+    battery="battery ^fg(#${cfont})${bat_percent}^fg(#${cdarkfont})${bat_status2} ${bgcolor} ${bat_percent2} ${bat_graph}"
+    if [[ "$blink" -eq 1 ]] && [[ "$blinked" -eq 0 ]]; then
+        blinked=1
+        [[ -p $ofifo ]] && echo "$battery" > "$ofifo"
+        sleep 30
+    elif [[ "$blink" -eq 1 ]] && [[ "$blinked" -eq 1 ]] ; then
+        blinked=0
+        battery="battery ^fg(#ffffff)${bat_percent}^fg(#${cfont})${bat_status2} ${bgcolor} ${bat_percent2} ${bat_graph}"
+        echo "[DEBUG] $battery"
+        [[ -p $ofifo ]] && echo "$battery" > "$ofifo"
+        sleep 1
+    else
+        echo "[DEBUG] $battery"
+        [[ -p $ofifo ]] && echo "$battery" > "$ofifo"
+        sleep 60
+    fi
+done

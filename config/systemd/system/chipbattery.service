@@ -1,9 +1,9 @@
 [Unit]
-Description=check battery statis of pocket chip
+Description=check battery status of pocket chip
 
 [Service]
-Environment=OCELOT_PATH='/home/user/gits/ocelot/'
-Environment=HOME='/root'
+Environment=OCELOT_PATH=/home/user/gits/ocelot/
+Environment=HOME=/root
 Type=simple
 ExecStart=/root/bin/ochipbattery
 

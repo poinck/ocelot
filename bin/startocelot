@@ -51,7 +51,7 @@ sleep .23
 ${OCELOT_PATH}bin/olocker
 
 for hook in $HOOKS ; do
-    ( ${hook} )
+    ( ${hook} ) &
     sleep .23
 done
 

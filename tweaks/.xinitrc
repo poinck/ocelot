@@ -47,6 +47,12 @@ xset r rate 300 45
 # - works for QT-applications like QGIS
 #export QT_SCALE_FACTOR=2
 
+# start dbus and export variables for other programs
+if [[ -z "${DBUS_SESSION_BUS_ADDRESS}" ]]; then
+    eval `dbus-launch --sh-syntax --exit-with-session`
+    echo "dbus session address = $DBUS_SESSION_BUS_ADDRESS"
+fi
+
 # start ocelot
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 exec /home/poinck/gits/ocelot/bin/startocelot

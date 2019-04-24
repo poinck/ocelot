@@ -71,7 +71,7 @@ get_td() {
 
 get_latest_measurement() {
     echo "[DEBUG] boxid = ${osm_boxid}"
-    sensors_json=$( curl -s -m 10 "https://api.opensensemap.org/boxes/${osm_boxid}/sensors" )
+    sensors_json=$( curl -s -m 80 "https://api.opensensemap.org/boxes/${osm_boxid}/sensors" )
 
     # testing
     #echo "${sensors_json}" > ~/_tmp/latest_measurement.json

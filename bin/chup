@@ -70,12 +70,12 @@ check_portage_tree() {
     fi
 }
 
-if [[ "$1" == "sync" ]] ; then
+if [[ "$1" == "sync" ]] || [[ "$1" == "-s" ]] ; then
     sync_and_test > /var/cache/chup.log 2>&1
     cat /var/cache/chup.log
     grep -F "returned code = 1" /var/cache/chup.log
     check_portage_tree
-elif [[ "$1" == "checkonly" ]] ; then
+elif [[ "$1" == "checkonly" ]] || [[ "$1" == "-c" ]] ; then
     sync_and_test checkonly > /var/cache/chup.log 2>&1
     cat /var/cache/chup.log
     check_portage_tree

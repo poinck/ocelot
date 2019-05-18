@@ -30,7 +30,8 @@ elif [[ "$1" == "mute" ]] ; then
     omixer=$( amixer set $VOLUME_MASTER toggle )
 fi
 
-_tmp_master_volume=$( echo "$omixer" | grep "Front Left: Playback" )
+#_tmp_master_volume=$( echo "$omixer" | grep "Front Left: Playback" )
+_tmp_master_volume=$( echo "$omixer" | tail -1 )
 _tmp2_mavo=${_tmp_master_volume#*[}
 omixer_master_volume=${_tmp2_mavo%%%]*}
 muted=0

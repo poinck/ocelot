@@ -10,7 +10,7 @@
 #
 # ocelot by André Klausnitzer, CC0
 
-source ${OCELOT_PATH}bin/outils.sh
+. ${OCELOT_PATH}bin/outils.sh
 
 VOLUME_MASTER="Master"
 if [[ -f ~/.ocelotrc ]] ; then
@@ -55,7 +55,7 @@ fi
 volume_graph=""
 for (( i=volume_tmp-6 ; i>=6 ; i=$i-6 )) ; do
     #echo "[DEBUG] i = $i"
-    volume_graph+="100 ${volume_graph2_color} "
+    volume_graph="${volume_graph}100 ${volume_graph2_color} "
 done
 
 

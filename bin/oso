@@ -69,6 +69,18 @@ get_td() {
     echo ${td}
 }
 
+calculate_dewpoint() {
+    # valid for t_dry from -30°C until 70°C
+    local t_dry=$1
+    local rh=$2
+
+    local t_dew=0
+    t_dew=$( echo "(241.2*l(${rh}/100)+((4222.03716*${t_dry})/(241.2+${t_dry})))/(17.5043-l(${rh}/100)-((17.5043*${t_dry})/(241.2+${t_dry})))" | bc -l )
+    t_dew=$( echo "scale=0; ${t_dew}/1" | bc -l )
+
+    echo "${t_dew}"
+}
+
 # initialize last measurement time
 t_last=$( date -u '+%s' )
 
@@ -164,6 +176,8 @@ get_latest_measurement() {
         p25_avg=$(( (p25_a[0] + p25_a[1] + p25_a[2]) / a_length ))
         tmp_avg=$(( (tmp_a[0] + tmp_a[1] + tmp_a[2]) / a_length ))
         hum_avg=$(( (hum_a[0] + hum_a[1] + hum_a[2]) / a_length ))
+        dew_avg=$( calculate_dewpoint "${tmp_avg}" "${hum_avg}" )
+        echo "[DEBUG] dew = ${dew_avg}"
 
         # format sensor values
         if [[ "${p10_avg}" -lt 10 ]] ; then
@@ -198,6 +212,13 @@ get_latest_measurement() {
         else
             hum_avg_f="${hum_avg}"
         fi
+        if [[ "${dew_avg}" -lt 10 ]] ; then
+            dew_avg_f="__${dew_avg}"
+        elif [[ "${dew_avg}" -lt 100 ]] ; then
+            dew_avg_f="_${dew_avg}"
+        else
+            dew_avg_f="${dew_avg}"
+        fi
         p10_graph="$p10_avg $cdarktuerkis"
         if [[ "$p10_avg" -ge 20 ]] ; then
             p10_graph="$p10_avg $corange"
@@ -208,6 +229,7 @@ get_latest_measurement() {
         fi
         tmp_graph="$(( tmp_avg + 40 )) $cdarktuerkis"
         hum_graph="$hum_avg $cdarktuerkis"
+        dew_graph="$(( dew_avg + 40 )) $cdarktuerkis"
 
         calculate_so_index
         so_index_graph="$so_index $cdarktuerkis"
@@ -231,22 +253,26 @@ get_latest_measurement() {
                 p2560s[$n]=${p2560s[$ii]}
                 tmp60s[$n]=${tmp60s[$ii]}
                 hum60s[$n]=${hum60s[$ii]}
+                dew60s[$n]=${dew60s[$ii]}
                 so_index60s[$n]=${so_index60s[$ii]}
             done
             p1060s[2]=${p10_avg}
             p2560s[2]=${p25_avg}
             tmp60s[2]=$(( tmp_avg + 40 ))
             hum60s[2]=${hum_avg}
+            dew60s[2]=$(( dew_avg + 40 ))
             so_index60s[2]=${so_index}
             p1060s_graph=""
             p2560s_graph=""
             tmp60s_graph=""
             hum60s_graph=""
+            dew60s_graph=""
             so_index60s_graph=""
             for (( ii=${i60s} ; ii<17 ; ii=ii+1 )) ; do
                 p1060s_graph="${p1060s_graph} ${p1060s[$ii]} ${cdarkgrey2} "
                 p2560s_graph="${p2560s_graph} ${p2560s[$ii]} ${cdarkgrey2} "
                 tmp60s_graph="${tmp60s_graph} ${tmp60s[$ii]} ${cdarkgrey2} "
+                dew60s_graph="${dew60s_graph} ${dew60s[$ii]} ${cdarkgrey2} "
                 hum60s_graph="${hum60s_graph} ${hum60s[$ii]} ${cdarkgrey2} "
                 if [[ "${so_index60s[$ii]}" -gt 50 ]] ; then
                     so_index60s_graph="${so_index60s_graph} ${so_index60s[$ii]} ${cgrey} "
@@ -264,6 +290,7 @@ get_latest_measurement() {
         p25_graph="$p25_avg $cgrey"
         tmp_graph="$(( tmp_avg + 40 )) $cgrey"
         hum_graph="$hum_avg $cgrey"
+        dew_graph="$(( dew_avg + 40 )) $cgrey"
         so_index_graph="$so_index $cgrey"
 
         so_vpart1="${cgrey}"
@@ -322,6 +349,7 @@ p10_avg=0
 p25_avg=0
 tmp_avg=0
 hum_avg=0
+dew_avg=0
 so_index=0
 
 # time diffs and defaults
@@ -339,6 +367,8 @@ tmp_value_fg="${cfont}"
 tmp_label_fg="${cdarkfont}"
 hum_value_fg="${cfont}"
 hum_label_fg="${cdarkfont}"
+dew_value_fg="${cfont}"
+dew_label_fg="${cdarkfont}"
 so_value_fg="ffffff"
 so_label_fg="${cfont}"
 
@@ -347,6 +377,7 @@ declare -a p1060s
 declare -a p2560s
 declare -a tmp60s
 declare -a hum60s
+declare -a dew60s
 declare -a so_index60s
 i60s=2                                      # start interval
 ist60s=3600                                 # interval step: 3600s = 60 minutes
@@ -358,6 +389,7 @@ for (( i=${i60s} ; i<17 ; i=i+1 )) ; do
     p2560s[$i]=0
     tmp60s[$i]=0
     hum60s[$i]=0
+    dew60s[$i]=0
     so_index60s[$i]=0
 done
 
@@ -368,6 +400,7 @@ p10_avg_f="___"
 p25_avg_f="___"
 tmp_avg_f="___"
 hum_avg_f="___"
+dew_avg_f="___"
 so_index_f="___"
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
@@ -379,12 +412,14 @@ while true ; do
     so_p25="so_p25 ^fg(#${p25_value_fg})${p25_avg_f}^fg(#${p25_label_fg})P25 ${cdarkgrey} ${p25_graph} ${p2560s_graph}"
     so_tmp="so_tmp ^fg(#${tmp_value_fg})${tmp_avg_f}^fg(#${tmp_label_fg})TC ${cdarkgrey} ${tmp_graph} ${tmp60s_graph}"
     so_hum="so_hum ^fg(#${hum_value_fg})${hum_avg_f}^fg(#${hum_label_fg})RH ${cdarkgrey} ${hum_graph} ${hum60s_graph}"
+    so_dew="so_dew ^fg(#${dew_value_fg})${dew_avg_f}^fg(#${dew_label_fg})DEW ${cdarkgrey} ${dew_graph} ${dew60s_graph}"
     so="so _ ${cdarkgrey} ${so_index_graph} ${so_index60s_graph}"
     so_value="so_index ^fg(#${so_value_fg})${so_index_f}^fg(#${so_label_fg})SO ${so_vpart1} ${so_countdown} ${so_vpart2}"
     echo "[DEBUG] ${so_p10}"
     echo "[DEBUG] ${so_p25}"
     echo "[DEBUG] ${so_tmp}"
     echo "[DEBUG] ${so_hum}"
+    echo "[DEBUG] ${so_dew}"
     echo "[DEBUG] ${so}"
     echo "[DEBUG] ${so_value}"
     [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
@@ -392,6 +427,7 @@ while true ; do
     echo "$so_p25" > "$ofifo"
     echo "$so_tmp" > "$ofifo"
     echo "$so_hum" > "$ofifo"
+    echo "$so_dew" > "$ofifo"
     echo "$so" > "$ofifo"
     echo "$so_value" > "$ofifo"
 

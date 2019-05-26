@@ -69,6 +69,9 @@ get_td() {
     echo ${td}
 }
 
+# initialize last measurement time
+t_last=$( date -u '+%s' )
+
 get_latest_measurement() {
     echo "[DEBUG] boxid = ${osm_boxid}"
     sensors_json=$( curl -s -m 80 "https://api.opensensemap.org/boxes/${osm_boxid}/sensors" )
@@ -80,6 +83,11 @@ get_latest_measurement() {
     sensorids=$( echo "${sensors_json}" | jq '.sensors[]._id' )
     if [[ -n "${sensorids}" ]] ; then
         t_now=$( date -u '+%s' )
+        t_range=$(( 3600 + t_last ))
+        is_old=0
+        if [[ "${t_range}" -lt "${t_now}" ]] ; then
+            is_old=1  # older than 1 hour
+        fi
         sensorid_a=(${sensorids})
         echo -e "[DEBUG] sensorid_a[#${#sensorid_a[*]}] = ${sensorid_a[@]}"
 
@@ -110,23 +118,44 @@ get_latest_measurement() {
         echo -e "[DEBUG] tmp.${osm_tmpid} = $tmp, td = ${tmp_td}"
         echo -e "[DEBUG] hum.${osm_humid} = $hum, td = ${hum_td}"
 
-        # rotate array and add entry
-        p10_a[2]=${p10_a[1]}
-        p10_a[1]=${p10_a[0]}
-        e=$( round_and_int "$p10" )
-        p10_a[0]=$e
-        p25_a[2]=${p25_a[1]}
-        p25_a[1]=${p25_a[0]}
-        e=$( round_and_int "$p25" )
-        p25_a[0]=$e
-        tmp_a[2]=${tmp_a[1]}
-        tmp_a[1]=${tmp_a[0]}
-        e=$( round_and_int "$tmp" )
-        tmp_a[0]=$e
-        hum_a[2]=${hum_a[1]}
-        hum_a[1]=${hum_a[0]}
-        e=$( round_and_int "$hum" )
-        hum_a[0]=$e
+        if [[ "${is_old}" -eq 0 ]] ; then
+            # rotate array and add entry
+            p10_a[2]=${p10_a[1]}
+            p10_a[1]=${p10_a[0]}
+            e=$( round_and_int "$p10" )
+            p10_a[0]=$e
+            p25_a[2]=${p25_a[1]}
+            p25_a[1]=${p25_a[0]}
+            e=$( round_and_int "$p25" )
+            p25_a[0]=$e
+            tmp_a[2]=${tmp_a[1]}
+            tmp_a[1]=${tmp_a[0]}
+            e=$( round_and_int "$tmp" )
+            tmp_a[0]=$e
+            hum_a[2]=${hum_a[1]}
+            hum_a[1]=${hum_a[0]}
+            e=$( round_and_int "$hum" )
+            hum_a[0]=$e
+        else
+            # reset array, if earlier measurements older than 1 hour
+            p10_a[2]=0
+            p10_a[1]=0
+            e=$( round_and_int "$p10" )
+            p10_a[0]=$e
+            p25_a[2]=0
+            p25_a[1]=0
+            e=$( round_and_int "$p25" )
+            p25_a[0]=$e
+            tmp_a[2]=0
+            tmp_a[1]=0
+            e=$( round_and_int "$tmp" )
+            tmp_a[0]=$e
+            hum_a[2]=0
+            hum_a[1]=0
+            e=$( round_and_int "$hum" )
+            hum_a[0]=$e
+            a_length=0
+        fi
 
         if [[ "${a_length}" -lt 3 ]] ; then
             a_length=$(( a_length + 1 ))

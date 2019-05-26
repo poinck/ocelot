@@ -442,7 +442,7 @@ while true ; do
     so_tmp="so_tmp ^fg(#${tmp_value_fg})${tmp_avg_f}^fg(#${tmp_label_fg})TC ${cdarkgrey} ${tmp_graph} ${tmp60s_graph}"
     so_hum="so_hum ^fg(#${hum_value_fg})${hum_avg_f}^fg(#${hum_label_fg})RH ${cdarkgrey} ${hum_graph} ${hum60s_graph}"
     so_dew="so_dew ^fg(#${dew_value_fg})${dew_avg_f}^fg(#${dew_label_fg})DEW ${cdarkgrey} ${dew_graph} ${dew60s_graph}"
-    so_clt="so_clt ^fg(#${clt_value_fg})${clt_avg_f}^fg(#${clt_label_fg})M00 ${cdarkgrey}"
+    so_clt="so_clt ^fg(#${clt_value_fg})${clt_avg_f}^fg(#${clt_label_fg})00M ${cdarkgrey}"
     so="so _ ${cdarkgrey} ${so_index_graph} ${so_index60s_graph}"
     so_value="so_index ^fg(#${so_value_fg})${so_index_f}^fg(#${so_label_fg})SO ${so_vpart1} ${so_countdown} ${so_vpart2}"
     echo "[DEBUG] ${so_p10}"

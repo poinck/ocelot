@@ -70,6 +70,7 @@ get_td() {
 }
 
 calculate_dewpoint() {
+    # https://www.chemie.de/lexikon/Taupunkt.html#Berechnung_von_Taupunkt_und_Frostpunkt
     # valid for t_dry from -30°C until 70°C
     local t_dry=$1
     local rh=$2
@@ -79,6 +80,17 @@ calculate_dewpoint() {
     t_dew=$( echo "scale=0; ${t_dew}/1" | bc -l )
 
     echo "${t_dew}"
+}
+
+calculate_cloud_altitude() {
+    # in 100 meters above ground
+    local t_dry=$1
+    local t_dew=$2
+
+    local c_alt=0
+    c_alt=$(( (t_dry-t_dew) ))
+
+    echo "${c_alt}"
 }
 
 # initialize last measurement time
@@ -178,6 +190,8 @@ get_latest_measurement() {
         hum_avg=$(( (hum_a[0] + hum_a[1] + hum_a[2]) / a_length ))
         dew_avg=$( calculate_dewpoint "${tmp_avg}" "${hum_avg}" )
         echo "[DEBUG] dew = ${dew_avg}"
+        clt_avg=$( calculate_cloud_altitude "${tmp_avg}" "${dew_avg}" )
+        echo "[DEBUG] clt = ${clt_avg}"
 
         # format sensor values
         if [[ "${p10_avg}" -lt 10 ]] ; then
@@ -212,12 +226,23 @@ get_latest_measurement() {
         else
             hum_avg_f="${hum_avg}"
         fi
-        if [[ "${dew_avg}" -lt 10 ]] ; then
+        if [[ "${dew_avg}" -lt -9 ]] ; then
+            dew_avg_f="${dew_avg}"
+        elif [[ "${dew_avg}" -lt 0 ]] ; then
+            dew_avg_f="_${tmp_avg}"
+        elif [[ "${dew_avg}" -lt 10 ]] ; then
             dew_avg_f="__${dew_avg}"
         elif [[ "${dew_avg}" -lt 100 ]] ; then
             dew_avg_f="_${dew_avg}"
         else
             dew_avg_f="${dew_avg}"
+        fi
+        if [[ "${clt_avg}" -lt 10 ]] ; then
+            clt_avg_f="__${clt_avg}"
+        elif [[ "${clt_avg}" -lt 100 ]] ; then
+            clt_avg_f="_${clt_avg}"
+        else
+            clt_avg_f="${clt_avg}"
         fi
         p10_graph="$p10_avg $cdarktuerkis"
         if [[ "$p10_avg" -ge 20 ]] ; then
@@ -350,6 +375,7 @@ p25_avg=0
 tmp_avg=0
 hum_avg=0
 dew_avg=0
+clt_avg=0
 so_index=0
 
 # time diffs and defaults
@@ -369,6 +395,8 @@ hum_value_fg="${cfont}"
 hum_label_fg="${cdarkfont}"
 dew_value_fg="${cfont}"
 dew_label_fg="${cdarkfont}"
+clt_value_fg="${cfont}"
+clt_label_fg="${cdarkfont}"
 so_value_fg="ffffff"
 so_label_fg="${cfont}"
 
@@ -401,6 +429,7 @@ p25_avg_f="___"
 tmp_avg_f="___"
 hum_avg_f="___"
 dew_avg_f="___"
+clt_avg_f="___"
 so_index_f="___"
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
@@ -413,6 +442,7 @@ while true ; do
     so_tmp="so_tmp ^fg(#${tmp_value_fg})${tmp_avg_f}^fg(#${tmp_label_fg})TC ${cdarkgrey} ${tmp_graph} ${tmp60s_graph}"
     so_hum="so_hum ^fg(#${hum_value_fg})${hum_avg_f}^fg(#${hum_label_fg})RH ${cdarkgrey} ${hum_graph} ${hum60s_graph}"
     so_dew="so_dew ^fg(#${dew_value_fg})${dew_avg_f}^fg(#${dew_label_fg})DEW ${cdarkgrey} ${dew_graph} ${dew60s_graph}"
+    so_clt="so_clt ^fg(#${clt_value_fg})${clt_avg_f}^fg(#${clt_label_fg})M00 ${cdarkgrey}"
     so="so _ ${cdarkgrey} ${so_index_graph} ${so_index60s_graph}"
     so_value="so_index ^fg(#${so_value_fg})${so_index_f}^fg(#${so_label_fg})SO ${so_vpart1} ${so_countdown} ${so_vpart2}"
     echo "[DEBUG] ${so_p10}"
@@ -420,6 +450,7 @@ while true ; do
     echo "[DEBUG] ${so_tmp}"
     echo "[DEBUG] ${so_hum}"
     echo "[DEBUG] ${so_dew}"
+    echo "[DEBUG] ${so_clt}"
     echo "[DEBUG] ${so}"
     echo "[DEBUG] ${so_value}"
     [[ -p $ofifo ]] || mkfifo -m 600 "$ofifo"
@@ -428,6 +459,7 @@ while true ; do
     echo "$so_tmp" > "$ofifo"
     echo "$so_hum" > "$ofifo"
     echo "$so_dew" > "$ofifo"
+    echo "$so_clt" > "$ofifo"
     echo "$so" > "$ofifo"
     echo "$so_value" > "$ofifo"
 

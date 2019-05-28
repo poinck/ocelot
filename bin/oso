@@ -197,9 +197,9 @@ get_latest_measurement() {
         hum_avg=$(( (hum_a[0] + hum_a[1] + hum_a[2]) / a_length ))
         dew=$( calculate_dewpoint "${tmp}" "${hum}" )
         echo "[DEBUG] dew = ${dew}"
-        clt_avg=$( calculate_cloud_altitude "${tmp}" "${dew}" )
+        clt=$( calculate_cloud_altitude "${tmp}" "${dew}" )
         dew=$( echo "scale=0; ${dew}/1" | bc -l )
-        echo "[DEBUG] clt = ${clt_avg}"
+        echo "[DEBUG] clt = ${clt}"
 
         # format sensor values
         if [[ "${p10_avg}" -lt 10 ]] ; then
@@ -245,12 +245,12 @@ get_latest_measurement() {
         else
             dew_f="${dew}"
         fi
-        if [[ "${clt_avg}" -lt 1000 ]] ; then
-            clt_avg_f="__${clt_avg}"
-        elif [[ "${clt_avg}" -lt 10000 ]] ; then
-            clt_avg_f="_${clt_avg}"
+        if [[ "${clt}" -lt 1000 ]] ; then
+            clt_f="__${clt}"
+        elif [[ "${clt}" -lt 10000 ]] ; then
+            clt_f="_${clt}"
         else
-            clt_avg_f="${clt_avg}"
+            clt_avg_f="${clt}"
         fi
         p10_graph="$p10_avg $cdarktuerkis"
         if [[ "$p10_avg" -ge 20 ]] ; then
@@ -263,6 +263,7 @@ get_latest_measurement() {
         tmp_graph="$(( tmp_avg + 40 )) $cdarktuerkis"
         hum_graph="$hum_avg $cdarktuerkis"
         dew_graph="$(( dew + 40 )) $cdarktuerkis"
+        clt_graph="$(( (100 - clt / 25) / 2 + hum_avg / 2 )) $cdarktuerkis"
 
         calculate_so_index
         so_index_graph="$so_index $cdarktuerkis"
@@ -287,6 +288,7 @@ get_latest_measurement() {
                 tmp60s[$n]=${tmp60s[$ii]}
                 hum60s[$n]=${hum60s[$ii]}
                 dew60s[$n]=${dew60s[$ii]}
+                clt60s[$n]=${clt60s[$ii]}
                 so_index60s[$n]=${so_index60s[$ii]}
             done
             p1060s[2]=${p10_avg}
@@ -294,6 +296,7 @@ get_latest_measurement() {
             tmp60s[2]=$(( tmp_avg + 40 ))
             hum60s[2]=${hum_avg}
             dew60s[2]=$(( dew + 40 ))
+            clt60s[2]=$(( 100 - clt / 100 ))
             so_index60s[2]=${so_index}
             p1060s_graph=""
             p2560s_graph=""
@@ -305,8 +308,9 @@ get_latest_measurement() {
                 p1060s_graph="${p1060s_graph} ${p1060s[$ii]} ${cdarkgrey2} "
                 p2560s_graph="${p2560s_graph} ${p2560s[$ii]} ${cdarkgrey2} "
                 tmp60s_graph="${tmp60s_graph} ${tmp60s[$ii]} ${cdarkgrey2} "
-                dew60s_graph="${dew60s_graph} ${dew60s[$ii]} ${cdarkgrey2} "
                 hum60s_graph="${hum60s_graph} ${hum60s[$ii]} ${cdarkgrey2} "
+                dew60s_graph="${dew60s_graph} ${dew60s[$ii]} ${cdarkgrey2} "
+                clt60s_graph="${clt60s_graph} ${clt60s[$ii]} ${cdarkgrey2} "
                 if [[ "${so_index60s[$ii]}" -gt 50 ]] ; then
                     so_index60s_graph="${so_index60s_graph} ${so_index60s[$ii]} ${cgrey} "
                 else
@@ -324,6 +328,7 @@ get_latest_measurement() {
         tmp_graph="$(( tmp_avg + 40 )) $cgrey"
         hum_graph="$hum_avg $cgrey"
         dew_graph="$(( dew + 40 )) $cgrey"
+        clt_graph="$(( 100 - clt / 100 )) $cgrey"
         so_index_graph="$so_index $cgrey"
 
         so_vpart1="${cgrey}"
@@ -383,7 +388,7 @@ p25_avg=0
 tmp_avg=0
 hum_avg=0
 dew=0
-clt_avg=0
+clt=0
 so_index=0
 
 # time diffs and defaults
@@ -414,6 +419,7 @@ declare -a p2560s
 declare -a tmp60s
 declare -a hum60s
 declare -a dew60s
+declare -a clt60s
 declare -a so_index60s
 i60s=2                                      # start interval
 ist60s=3600                                 # interval step: 3600s = 60 minutes
@@ -426,6 +432,7 @@ for (( i=${i60s} ; i<17 ; i=i+1 )) ; do
     tmp60s[$i]=0
     hum60s[$i]=0
     dew60s[$i]=0
+    clt60s[$i]=0
     so_index60s[$i]=0
 done
 
@@ -437,7 +444,7 @@ p25_avg_f="___"
 tmp_avg_f="___"
 hum_avg_f="___"
 dew_f="___"
-clt_avg_f="___"
+clt_f="___"
 so_index_f="___"
 
 ofifo="/tmp/ocollector.fifo$OCELOT_INSTANCE"
@@ -450,7 +457,7 @@ while true ; do
     so_tmp="so_tmp ^fg(#${tmp_value_fg})${tmp_avg_f}^fg(#${tmp_label_fg})TC ${cdarkgrey} ${tmp_graph} ${tmp60s_graph}"
     so_hum="so_hum ^fg(#${hum_value_fg})${hum_avg_f}^fg(#${hum_label_fg})RH ${cdarkgrey} ${hum_graph} ${hum60s_graph}"
     so_dew="so_dew ^fg(#${dew_value_fg})${dew_f}^fg(#${dew_label_fg})DEW ${cdarkgrey} ${dew_graph} ${dew60s_graph}"
-    so_clt="so_clt ^fg(#${clt_value_fg})${clt_avg_f}^fg(#${clt_label_fg})M ${cdarkgrey}"
+    so_clt="so_clt ^fg(#${clt_value_fg})${clt_f}^fg(#${clt_label_fg})M ${cdarkgrey} ${clt_graph} ${clt60s_graph}"
     so="so _ ${cdarkgrey} ${so_index_graph} ${so_index60s_graph}"
     so_value="so_index ^fg(#${so_value_fg})${so_index_f}^fg(#${so_label_fg})SO ${so_vpart1} ${so_countdown} ${so_vpart2}"
     echo "[DEBUG] ${so_p10}"

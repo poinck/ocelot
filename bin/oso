@@ -115,6 +115,7 @@ get_latest_measurement() {
     if [[ -n "${sensorids}" ]] ; then
         t_now=$( date -u '+%s' )
         t_range=$(( 3600 + t_last ))
+        t_last=${t_now}
         is_old=0
         if [[ "${t_range}" -lt "${t_now}" ]] ; then
             is_old=1  # older than 1 hour

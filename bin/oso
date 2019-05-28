@@ -255,21 +255,21 @@ get_latest_measurement() {
         fi
         p10_graph="$p10_avg $cdarktuerkis"
         if [[ "$p10_avg" -ge 20 ]] ; then
-            p10_graph="$p10_avg $corange"
+            p10_graph="$p10_avg $cpurpur"
         fi
         p25_graph="$p25_avg $cdarktuerkis"
         if [[ "$p25_avg" -ge 10 ]] ; then
-            p25_graph="$p25_avg $corange"
+            p25_graph="$p25_avg $cpurpur"
         fi
         tmp_graph="$(( tmp_avg + 40 )) $cdarktuerkis"
         hum_graph="$hum_avg $cdarktuerkis"
-        dew_graph="$(( dew + 40 )) $cdarktuerkis"
-        clt_graph="$(( (100 - clt / 25) / 2 + hum_avg / 2 )) $cdarktuerkis"
+        dew_graph="$(( dew + 40 )) $cdarkpurpur"
+        clt_graph="$(( (100 - clt / 25) / 2 + hum_avg / 2 )) $cdarkpurpur"
 
         calculate_so_index
         so_index_graph="$so_index $cdarktuerkis"
         if [[ "${so_index}" -gt 50 ]] ; then
-            so_index_graph="$so_index $corange"
+            so_index_graph="$so_index $cpurpur"
         fi
         if [[ "${so_index}" -lt 10 ]] ; then
             so_index_f="__${so_index}"

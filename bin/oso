@@ -18,8 +18,11 @@
 round_and_int() {
     local e=$1
 
-    e=${e%.*}
-    e=${e:1}
+    e=${e//\"}
+    e=$( echo "scale=0; (${e}+0.5)/1" | bc -l )
+    if [[ "${e}" -lt 0 ]] ; then
+        e=$(( e - 1 ))
+    fi
 
     echo $e
 }
@@ -92,10 +95,9 @@ calculate_cloud_altitude() {
     t_dry=${t_dry//\"}
 
     local c_alt=0
-    #c_alt=$(( (t_dry-t_dew) ))
     # constant temperature change: 100 m / 0.976°C
-    c_alt=$( echo "(${t_dry}-${t_dew})*102.459" | bc -l )
-    c_alt=$( echo "scale=0; ${c_alt}/1" | bc -l )
+    c_alt=$( echo "(${t_dry}-(${t_dew}))*102.459" | bc -l )
+    c_alt=$( round_and_int "${c_alt}" )
 
     echo "${c_alt}"
 }
@@ -144,6 +146,9 @@ get_latest_measurement() {
                 hum_td=$( get_td "${sensortime_ai[$id]}" "${t_now}" )
             fi
         done
+
+        # test
+        #tmp="-12.4"
 
         echo -e "[DEBUG] p10.${osm_p10id} = $p10, td = ${p10_td}"
         echo -e "[DEBUG] p25.${osm_p25id} = $p25, td = ${p25_td}"
@@ -196,10 +201,11 @@ get_latest_measurement() {
         p25_avg=$(( (p25_a[0] + p25_a[1] + p25_a[2]) / a_length ))
         tmp_avg=$(( (tmp_a[0] + tmp_a[1] + tmp_a[2]) / a_length ))
         hum_avg=$(( (hum_a[0] + hum_a[1] + hum_a[2]) / a_length ))
+
         dew=$( calculate_dewpoint "${tmp}" "${hum}" )
         echo "[DEBUG] dew = ${dew}"
         clt=$( calculate_cloud_altitude "${tmp}" "${dew}" )
-        dew=$( echo "scale=0; ${dew}/1" | bc -l )
+        dew=$( round_and_int "${dew}" )
         echo "[DEBUG] clt = ${clt}"
 
         # format sensor values
@@ -495,5 +501,4 @@ while true ; do
         echo "$so_value" > "$ofifo"
     done
     so_countdown=100
-    #sleep 180
 done

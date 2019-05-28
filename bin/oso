@@ -296,7 +296,7 @@ get_latest_measurement() {
             tmp60s[2]=$(( tmp_avg + 40 ))
             hum60s[2]=${hum_avg}
             dew60s[2]=$(( dew + 40 ))
-            clt60s[2]=$(( 100 - clt / 100 ))
+            clt60s[2]=$(( (100 - clt / 25) / 2 + hum_avg / 2 ))
             so_index60s[2]=${so_index}
             p1060s_graph=""
             p2560s_graph=""

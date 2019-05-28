@@ -75,20 +75,27 @@ calculate_dewpoint() {
     local t_dry=$1
     local rh=$2
 
+    rh=${rh//\"}
+    t_dry=${t_dry//\"}
+
     local t_dew=0
     t_dew=$( echo "(241.2*l(${rh}/100)+((4222.03716*${t_dry})/(241.2+${t_dry})))/(17.5043-l(${rh}/100)-((17.5043*${t_dry})/(241.2+${t_dry})))" | bc -l )
-    t_dew=$( echo "scale=0; ${t_dew}/1" | bc -l )
 
     echo "${t_dew}"
 }
 
 calculate_cloud_altitude() {
-    # in 100 meters above ground
+    # in meters above ground
     local t_dry=$1
     local t_dew=$2
 
+    t_dry=${t_dry//\"}
+
     local c_alt=0
-    c_alt=$(( (t_dry-t_dew) ))
+    #c_alt=$(( (t_dry-t_dew) ))
+    # constant temperature change: 100 m / 0.976°C
+    c_alt=$( echo "(${t_dry}-${t_dew})*102.459" | bc -l )
+    c_alt=$( echo "scale=0; ${c_alt}/1" | bc -l )
 
     echo "${c_alt}"
 }
@@ -188,9 +195,10 @@ get_latest_measurement() {
         p25_avg=$(( (p25_a[0] + p25_a[1] + p25_a[2]) / a_length ))
         tmp_avg=$(( (tmp_a[0] + tmp_a[1] + tmp_a[2]) / a_length ))
         hum_avg=$(( (hum_a[0] + hum_a[1] + hum_a[2]) / a_length ))
-        dew_avg=$( calculate_dewpoint "${tmp_avg}" "${hum_avg}" )
-        echo "[DEBUG] dew = ${dew_avg}"
-        clt_avg=$( calculate_cloud_altitude "${tmp_avg}" "${dew_avg}" )
+        dew=$( calculate_dewpoint "${tmp}" "${hum}" )
+        echo "[DEBUG] dew = ${dew}"
+        clt_avg=$( calculate_cloud_altitude "${tmp}" "${dew}" )
+        dew=$( echo "scale=0; ${dew}/1" | bc -l )
         echo "[DEBUG] clt = ${clt_avg}"
 
         # format sensor values
@@ -226,20 +234,20 @@ get_latest_measurement() {
         else
             hum_avg_f="${hum_avg}"
         fi
-        if [[ "${dew_avg}" -lt -9 ]] ; then
-            dew_avg_f="${dew_avg}"
-        elif [[ "${dew_avg}" -lt 0 ]] ; then
-            dew_avg_f="_${tmp_avg}"
-        elif [[ "${dew_avg}" -lt 10 ]] ; then
-            dew_avg_f="__${dew_avg}"
-        elif [[ "${dew_avg}" -lt 100 ]] ; then
-            dew_avg_f="_${dew_avg}"
+        if [[ "${dew}" -lt -9 ]] ; then
+            dew_f="${dew}"
+        elif [[ "${dew}" -lt 0 ]] ; then
+            dew_f="_${tmp_avg}"
+        elif [[ "${dew}" -lt 10 ]] ; then
+            dew_f="__${dew}"
+        elif [[ "${dew}" -lt 100 ]] ; then
+            dew_f="_${dew}"
         else
-            dew_avg_f="${dew_avg}"
+            dew_f="${dew}"
         fi
-        if [[ "${clt_avg}" -lt 10 ]] ; then
+        if [[ "${clt_avg}" -lt 1000 ]] ; then
             clt_avg_f="__${clt_avg}"
-        elif [[ "${clt_avg}" -lt 100 ]] ; then
+        elif [[ "${clt_avg}" -lt 10000 ]] ; then
             clt_avg_f="_${clt_avg}"
         else
             clt_avg_f="${clt_avg}"
@@ -254,7 +262,7 @@ get_latest_measurement() {
         fi
         tmp_graph="$(( tmp_avg + 40 )) $cdarktuerkis"
         hum_graph="$hum_avg $cdarktuerkis"
-        dew_graph="$(( dew_avg + 40 )) $cdarktuerkis"
+        dew_graph="$(( dew + 40 )) $cdarktuerkis"
 
         calculate_so_index
         so_index_graph="$so_index $cdarktuerkis"
@@ -285,7 +293,7 @@ get_latest_measurement() {
             p2560s[2]=${p25_avg}
             tmp60s[2]=$(( tmp_avg + 40 ))
             hum60s[2]=${hum_avg}
-            dew60s[2]=$(( dew_avg + 40 ))
+            dew60s[2]=$(( dew + 40 ))
             so_index60s[2]=${so_index}
             p1060s_graph=""
             p2560s_graph=""
@@ -315,7 +323,7 @@ get_latest_measurement() {
         p25_graph="$p25_avg $cgrey"
         tmp_graph="$(( tmp_avg + 40 )) $cgrey"
         hum_graph="$hum_avg $cgrey"
-        dew_graph="$(( dew_avg + 40 )) $cgrey"
+        dew_graph="$(( dew + 40 )) $cgrey"
         so_index_graph="$so_index $cgrey"
 
         so_vpart1="${cgrey}"
@@ -374,7 +382,7 @@ p10_avg=0
 p25_avg=0
 tmp_avg=0
 hum_avg=0
-dew_avg=0
+dew=0
 clt_avg=0
 so_index=0
 
@@ -428,7 +436,7 @@ p10_avg_f="___"
 p25_avg_f="___"
 tmp_avg_f="___"
 hum_avg_f="___"
-dew_avg_f="___"
+dew_f="___"
 clt_avg_f="___"
 so_index_f="___"
 
@@ -441,8 +449,8 @@ while true ; do
     so_p25="so_p25 ^fg(#${p25_value_fg})${p25_avg_f}^fg(#${p25_label_fg})P25 ${cdarkgrey} ${p25_graph} ${p2560s_graph}"
     so_tmp="so_tmp ^fg(#${tmp_value_fg})${tmp_avg_f}^fg(#${tmp_label_fg})TC ${cdarkgrey} ${tmp_graph} ${tmp60s_graph}"
     so_hum="so_hum ^fg(#${hum_value_fg})${hum_avg_f}^fg(#${hum_label_fg})RH ${cdarkgrey} ${hum_graph} ${hum60s_graph}"
-    so_dew="so_dew ^fg(#${dew_value_fg})${dew_avg_f}^fg(#${dew_label_fg})DEW ${cdarkgrey} ${dew_graph} ${dew60s_graph}"
-    so_clt="so_clt ^fg(#${clt_value_fg})${clt_avg_f}^fg(#${clt_label_fg})00M ${cdarkgrey}"
+    so_dew="so_dew ^fg(#${dew_value_fg})${dew_f}^fg(#${dew_label_fg})DEW ${cdarkgrey} ${dew_graph} ${dew60s_graph}"
+    so_clt="so_clt ^fg(#${clt_value_fg})${clt_avg_f}^fg(#${clt_label_fg})M ${cdarkgrey}"
     so="so _ ${cdarkgrey} ${so_index_graph} ${so_index60s_graph}"
     so_value="so_index ^fg(#${so_value_fg})${so_index_f}^fg(#${so_label_fg})SO ${so_vpart1} ${so_countdown} ${so_vpart2}"
     echo "[DEBUG] ${so_p10}"

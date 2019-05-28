@@ -88,4 +88,4 @@ ocelot_path="/home/username/gits/ocelot/"
 
 # removing and reordering elements is currently not supported during runtime,
 # but you can however add new elements during runtime.
-#element_order=("time" "weekday" "date" "year" "volume" "brightness" "desktops" "desktop" "window" "load" "battery" "chup_sec" "chup_wu" "net_3" "memory_ram" "memory_swap" "disk_rt" "disk_hme" "uptime" "cputemp" "ram" "swap" "so" "so_index" "so_p10" "so_p25" "so_tmp" "so_hum" "so_dew" "so_clt" "nolock" "lock")
+#element_order=("time" "weekday" "date" "year" "volume" "brightness" "desktops" "desktop" "window" "load" "battery" "chup_sec" "chup_wu" "net_3" "memory_ram" "memory_swap" "disk_rt" "disk_hme" "uptime" "cputemp" "ram" "swap" "so_dew" "so_clt" "so" "so_index" "so_p10" "so_p25" "so_tmp" "so_hum" "nolock" "lock")

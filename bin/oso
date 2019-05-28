@@ -246,12 +246,12 @@ get_latest_measurement() {
         else
             dew_f="${dew}"
         fi
-        if [[ "${clt}" -lt 1000 ]] ; then
+        if [[ "${clt}" -lt 10 ]] ; then
             clt_f="__${clt}"
-        elif [[ "${clt}" -lt 10000 ]] ; then
+        elif [[ "${clt}" -lt 100 ]] ; then
             clt_f="_${clt}"
         else
-            clt_avg_f="${clt}"
+            clt_f="${clt}"
         fi
         p10_graph="$p10_avg $cdarktuerkis"
         if [[ "$p10_avg" -ge 20 ]] ; then
@@ -267,9 +267,13 @@ get_latest_measurement() {
         clt_graph="$(( (100 - clt / 25) / 2 + hum_avg / 2 )) $cdarkpurpur"
 
         calculate_so_index
+        so_vpart1="${cdarktuerkis}"
+        so_vpart2="${ctuerkis}"
         so_index_graph="$so_index $cdarktuerkis"
         if [[ "${so_index}" -gt 50 ]] ; then
             so_index_graph="$so_index $cpurpur"
+            so_vpart1="${cdarkpurpur}"
+            so_vpart2="${cpurpur}"
         fi
         if [[ "${so_index}" -lt 10 ]] ; then
             so_index_f="__${so_index}"
@@ -320,8 +324,6 @@ get_latest_measurement() {
             done
         fi
 
-        so_vpart1="${cdarktuerkis}"
-        so_vpart2="${ctuerkis}"
     else
         echo "[DEBUG] warn: no data received"
         p10_graph="$p10_avg $cgrey"

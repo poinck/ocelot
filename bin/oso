@@ -328,7 +328,7 @@ get_latest_measurement() {
         tmp_graph="$(( tmp_avg + 40 )) $cgrey"
         hum_graph="$hum_avg $cgrey"
         dew_graph="$(( dew + 40 )) $cgrey"
-        clt_graph="$(( 100 - clt / 100 )) $cgrey"
+        clt_graph="$(( (100 - clt / 25) / 2 + hum_avg / 2 )) $cgrey"
         so_index_graph="$so_index $cgrey"
 
         so_vpart1="${cgrey}"

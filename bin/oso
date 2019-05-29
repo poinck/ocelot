@@ -270,7 +270,8 @@ get_latest_measurement() {
         tmp_graph="$(( tmp_avg + 40 )) $cdarktuerkis"
         hum_graph="$hum_avg $cdarktuerkis"
         dew_graph="$(( dew + 40 )) $cdarkpurpur"
-        clt_graph="$(( (100 - clt / 25) / 2 + hum_avg / 2 )) $cdarkpurpur"
+        hum=$( round_and_int "${hum}" )
+        clt_graph="$(( (100 - clt / 25) / 2 + hum / 2 )) $cdarkpurpur"
 
         calculate_so_index
         so_vpart1="${cdarktuerkis}"
@@ -307,13 +308,14 @@ get_latest_measurement() {
             tmp60s[2]=$(( tmp_avg + 40 ))
             hum60s[2]=${hum_avg}
             dew60s[2]=$(( dew + 40 ))
-            clt60s[2]=$(( (100 - clt / 25) / 2 + hum_avg / 2 ))
+            clt60s[2]=$(( (100 - clt / 25) / 2 + hum / 2 ))
             so_index60s[2]=${so_index}
             p1060s_graph=""
             p2560s_graph=""
             tmp60s_graph=""
             hum60s_graph=""
             dew60s_graph=""
+            clt60s_graph=""
             so_index60s_graph=""
             for (( ii=${i60s} ; ii<17 ; ii=ii+1 )) ; do
                 p1060s_graph="${p1060s_graph} ${p1060s[$ii]} ${cdarkgrey2} "
@@ -432,7 +434,7 @@ declare -a clt60s
 declare -a so_index60s
 i60s=2                                      # start interval
 ist60s=3600                                 # interval step: 3600s = 60 minutes
-#ist60s=180
+#ist60s=180                                 # test
 ni60s="$(( $( date '+%s' ) + ist60s ))"     # next interval
 
 for (( i=${i60s} ; i<17 ; i=i+1 )) ; do

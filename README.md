@@ -152,6 +152,10 @@ Copy "tweaks/gtk-3.0/gtk.css" to "~/.config/gtk-3.0/" or add it's content to you
 **slock colors**
 If you want a ocelot color theme for your lock screen, you can use the config from “tweaks/slock-1.4_config.h“.
 
+**sxiv config**
+If you want a ocelot theme for your sxiv, you can use the config from “tweaks/sxiv-24_config.h“ as a template or inspiration.
+
+
 ## Keys
 How to use `ocelot`? All keyboard-shortcuts can be changed in `config.h` (needs recompile and restart):
 

@@ -10,6 +10,9 @@
 "  |  >.<  |__/
 "  +-------+
 
+" never prefer settings the original author of a file has choosen
+set modelines=0
+
 set tabstop=4 softtabstop=4 expandtab
 set noautoindent
 set hlsearch
@@ -71,5 +74,3 @@ hi CsvComma cterm=NONE cterm=NONE ctermfg=30
 " shortcut to erase bad whitepaces and tabs
 ca ebw EraseBadWhitespace
 
-" always prefer settings the original author of a file has choosen
-setglobal modeline

@@ -40,7 +40,7 @@ calculate_so_index() {
     if [[ "${tmp_index}" -lt 0 ]] ; then
         tmp_index=$(( tmp_index * (-1) ))
     else
-        tmp_index=$(( tmp_index * tmp_index ))
+        tmp_index=$(( tmp_index * 2 ))
     fi
     if [[ "${tmp_index}" -gt 25 ]] ; then
         tmp_index=25

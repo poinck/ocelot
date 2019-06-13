@@ -36,9 +36,11 @@ calculate_so_index() {
     if [[ "${p25_index}" -gt 25 ]] ; then
         p25_index=25
     fi
-    local tmp_index=$(( tmp_avg - 23 ))
+    local tmp_index=$(( tmp_avg - 19 ))
     if [[ "${tmp_index}" -lt 0 ]] ; then
         tmp_index=$(( tmp_index * (-1) ))
+    else
+        tmp_index=$(( tmp_index * tmp_index ))
     fi
     if [[ "${tmp_index}" -gt 25 ]] ; then
         tmp_index=25

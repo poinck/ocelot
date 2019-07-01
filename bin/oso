@@ -28,38 +28,62 @@ round_and_int() {
 }
 
 calculate_so_index() {
-    local p10_index=$(( p10_avg * 25 / 20 ))
-    if [[ "${p10_index}" -gt 25 ]] ; then
-        p10_index=25
+    local p25_index=$(( p25_avg * 50 / 10 ))
+    if [[ "${p25_index}" -gt 50 ]] ; then
+        p25_index=50
     fi
-    local p25_index=$(( p25_avg * 25 / 10 ))
-    if [[ "${p25_index}" -gt 25 ]] ; then
-        p25_index=25
+    local dew=$( calculate_dewpoint "${tmp_avg}" "${hum_avg}" )
+    dew=$( round_and_int "${dew}" )
+    local dew_index=${dew}
+    if [[ "${dew_index}" -lt 0 ]] ; then
+        dew_index=$(( dew_index * (-1) ))
     fi
-    local tmp_index=$(( tmp_avg - 19 ))
-    if [[ "${tmp_index}" -lt 0 ]] ; then
-        tmp_index=$(( tmp_index * (-1) ))
-    else
-        tmp_index=$(( tmp_index * 2 ))
-    fi
-    if [[ "${tmp_index}" -gt 25 ]] ; then
-        tmp_index=25
-    fi
-    local hum_index=0
-    if [[ "${hum_avg}" -gt 60 ]] ; then
-        hum_index=$(( (hum_avg - 60) * 25 / 40 ))
-    elif [[ "${hum_avg}" -lt 40 ]] ; then
-        hum_index=$(( (40 - hum_avg) * 25 / 40 ))
+    dew_index=$(( dew_index * 50 / 20 ))
+    if [[ "${dew_index}" -gt 50 ]] ; then
+        dew_index=50
     fi
 
-    so_index=$(( p10_index + p25_index + tmp_index + hum_index ))
+    so_index=$(( p25_index + dew_index ))
 
-    echo "[DEBUG] p10_index = ${p10_index}"
     echo "[DEBUG] p25_index = ${p25_index}"
-    echo "[DEBUG] tmp_index = ${tmp_index}"
-    echo "[DEBUG] hum_index = ${hum_index}"
+    echo "[DEBUG] dew_index = ${dew_index}"
     echo "[DEBUG] so_index = ${so_index}"
 }
+
+#calculate_so_index() {
+#    local p10_index=$(( p10_avg * 25 / 20 ))
+#    if [[ "${p10_index}" -gt 25 ]] ; then
+#        p10_index=25
+#    fi
+#    local p25_index=$(( p25_avg * 25 / 10 ))
+#    if [[ "${p25_index}" -gt 25 ]] ; then
+#        p25_index=25
+#    fi
+#    local tmp_index=$(( tmp_avg - 19 ))
+#    if [[ "${tmp_index}" -lt 0 ]] ; then
+#        tmp_index=$(( tmp_index * (-1) ))
+#    else
+#        tmp_index=$(( tmp_index * 2 ))
+#    fi
+#    if [[ "${tmp_index}" -gt 25 ]] ; then
+#        tmp_index=25
+#    fi
+#    local hum_index=0
+#    if [[ "${hum_avg}" -gt 60 ]] ; then
+#        hum_index=$(( (hum_avg - 60) * 25 / 40 ))
+#    elif [[ "${hum_avg}" -lt 40 ]] ; then
+#        hum_index=$(( (40 - hum_avg) * 25 / 40 ))
+#    fi
+#
+#    so_index=$(( p10_index + p25_index + tmp_index + hum_index ))
+#
+#    echo "[DEBUG] p10_index = ${p10_index}"
+#    echo "[DEBUG] p25_index = ${p25_index}"
+#    echo "[DEBUG] tmp_index = ${tmp_index}"
+#    echo "[DEBUG] hum_index = ${hum_index}"
+#    echo "[DEBUG] so_index = ${so_index}"
+#}
+    # XXX   keep at least until autumn for comparison
 
 get_td() {
     local sensort=$1

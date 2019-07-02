@@ -27,63 +27,35 @@ round_and_int() {
     echo $e
 }
 
-calculate_so_index() {
-    local p25_index=$(( p25_avg * 50 / 10 ))
-    if [[ "${p25_index}" -gt 50 ]] ; then
-        p25_index=50
-    fi
-    local dew=$( calculate_dewpoint "${tmp_avg}" "${hum_avg}" )
+calculate_soi() {
+    local tmpp=$1
+    local hump=$2
+    local p25p=$3
+    local soi=50
+
+    tmpp=${tmpp//\"}
+    hump=${hump//\"}
+    p25p=${p25p//\"}
+
+    local p25_index=$( echo "${p25p}*100/20" | bc -l )
+    local p25_index_r=$( round_and_int "${p25_index}" )
+
+    local dew=$( calculate_dewpoint "${tmpp}" "${hump}" )
     dew=$( round_and_int "${dew}" )
     local dew_index=${dew}
     if [[ "${dew_index}" -lt 0 ]] ; then
         dew_index=$(( dew_index * (-1) ))
     fi
-    dew_index=$(( dew_index * 50 / 20 ))
-    if [[ "${dew_index}" -gt 50 ]] ; then
-        dew_index=50
+    dew_index=$( echo "${dew_index}*100/60" | bc -l )
+    local dew_index_r=$( round_and_int "${dew_index}" )
+
+    soi=$(( p25_index_r + dew_index_r ))
+    if [[ "${soi}" -gt 100 ]] ; then
+        soi=100
     fi
 
-    so_index=$(( p25_index + dew_index ))
-
-    echo "[DEBUG] p25_index = ${p25_index}"
-    echo "[DEBUG] dew_index = ${dew_index}"
-    echo "[DEBUG] so_index = ${so_index}"
+    echo $soi
 }
-
-#calculate_so_index() {
-#    local p10_index=$(( p10_avg * 25 / 20 ))
-#    if [[ "${p10_index}" -gt 25 ]] ; then
-#        p10_index=25
-#    fi
-#    local p25_index=$(( p25_avg * 25 / 10 ))
-#    if [[ "${p25_index}" -gt 25 ]] ; then
-#        p25_index=25
-#    fi
-#    local tmp_index=$(( tmp_avg - 19 ))
-#    if [[ "${tmp_index}" -lt 0 ]] ; then
-#        tmp_index=$(( tmp_index * (-1) ))
-#    else
-#        tmp_index=$(( tmp_index * 2 ))
-#    fi
-#    if [[ "${tmp_index}" -gt 25 ]] ; then
-#        tmp_index=25
-#    fi
-#    local hum_index=0
-#    if [[ "${hum_avg}" -gt 60 ]] ; then
-#        hum_index=$(( (hum_avg - 60) * 25 / 40 ))
-#    elif [[ "${hum_avg}" -lt 40 ]] ; then
-#        hum_index=$(( (40 - hum_avg) * 25 / 40 ))
-#    fi
-#
-#    so_index=$(( p10_index + p25_index + tmp_index + hum_index ))
-#
-#    echo "[DEBUG] p10_index = ${p10_index}"
-#    echo "[DEBUG] p25_index = ${p25_index}"
-#    echo "[DEBUG] tmp_index = ${tmp_index}"
-#    echo "[DEBUG] hum_index = ${hum_index}"
-#    echo "[DEBUG] so_index = ${so_index}"
-#}
-    # XXX   keep at least until autumn for comparison
 
 get_td() {
     local sensort=$1
@@ -181,96 +153,55 @@ get_latest_measurement() {
         echo -e "[DEBUG] tmp.${osm_tmpid} = $tmp, td = ${tmp_td}"
         echo -e "[DEBUG] hum.${osm_humid} = $hum, td = ${hum_td}"
 
-        if [[ "${is_old}" -eq 0 ]] ; then
-            # rotate array and add entry
-            p10_a[2]=${p10_a[1]}
-            p10_a[1]=${p10_a[0]}
-            e=$( round_and_int "$p10" )
-            p10_a[0]=$e
-            p25_a[2]=${p25_a[1]}
-            p25_a[1]=${p25_a[0]}
-            e=$( round_and_int "$p25" )
-            p25_a[0]=$e
-            tmp_a[2]=${tmp_a[1]}
-            tmp_a[1]=${tmp_a[0]}
-            e=$( round_and_int "$tmp" )
-            tmp_a[0]=$e
-            hum_a[2]=${hum_a[1]}
-            hum_a[1]=${hum_a[0]}
-            e=$( round_and_int "$hum" )
-            hum_a[0]=$e
-        else
-            # reset array, if earlier measurements older than 1 hour
-            p10_a[2]=0
-            p10_a[1]=0
-            e=$( round_and_int "$p10" )
-            p10_a[0]=$e
-            p25_a[2]=0
-            p25_a[1]=0
-            e=$( round_and_int "$p25" )
-            p25_a[0]=$e
-            tmp_a[2]=0
-            tmp_a[1]=0
-            e=$( round_and_int "$tmp" )
-            tmp_a[0]=$e
-            hum_a[2]=0
-            hum_a[1]=0
-            e=$( round_and_int "$hum" )
-            hum_a[0]=$e
-            a_length=0
-        fi
-
-        if [[ "${a_length}" -lt 3 ]] ; then
-            a_length=$(( a_length + 1 ))
-        fi
-        p10_avg=$(( (p10_a[0] + p10_a[1] + p10_a[2]) / a_length ))
-        p25_avg=$(( (p25_a[0] + p25_a[1] + p25_a[2]) / a_length ))
-        tmp_avg=$(( (tmp_a[0] + tmp_a[1] + tmp_a[2]) / a_length ))
-        hum_avg=$(( (hum_a[0] + hum_a[1] + hum_a[2]) / a_length ))
-
         dew=$( calculate_dewpoint "${tmp}" "${hum}" )
         echo "[DEBUG] dew = ${dew}"
         clt=$( calculate_cloud_altitude "${tmp}" "${dew}" )
         dew=$( round_and_int "${dew}" )
         echo "[DEBUG] clt = ${clt}"
+        so_index=$( calculate_soi "${tmp}" "${hum}" "${p25}" )
+        echo "[DEBUG] so_index = ${so_index}"
 
         # format sensor values
-        if [[ "${p10_avg}" -lt 10 ]] ; then
-            p10_avg_f="__${p10_avg}"
-        elif [[ "${p10_avg}" -lt 100 ]] ; then
-            p10_avg_f="_${p10_avg}"
+        p10=$( round_and_int "${p10}" )
+        p25=$( round_and_int "${p25}" )
+        tmp=$( round_and_int "${tmp}" )
+        hum=$( round_and_int "${hum}" )
+        if [[ "${p10}" -lt 10 ]] ; then
+            p10_avg_f="__${p10}"
+        elif [[ "${p10}" -lt 100 ]] ; then
+            p10_avg_f="_${p10}"
         else
-            p10_avg_f="${p10_avg}"
+            p10_avg_f="${p10}"
         fi
-        if [[ "${p25_avg}" -lt 10 ]] ; then
-            p25_avg_f="__${p25_avg}"
-        elif [[ "${p10_avg}" -lt 100 ]] ; then
-            p25_avg_f="_${p25_avg}"
+        if [[ "${p25}" -lt 10 ]] ; then
+            p25_avg_f="__${p25}"
+        elif [[ "${p10}" -lt 100 ]] ; then
+            p25_avg_f="_${p25}"
         else
-            p25_avg_f="${p25_avg}"
+            p25_avg_f="${p25}"
         fi
-        if [[ "${tmp_avg}" -lt -9 ]] ; then
-            tmp_avg_f="${tmp_avg}"
-        elif [[ "${tmp_avg}" -lt 0 ]] ; then
-            tmp_avg_f="_${tmp_avg}"
-        elif [[ "${tmp_avg}" -lt 10 ]] ; then
-            tmp_avg_f="__${tmp_avg}"
-        elif [[ "${tmp_avg}" -lt 100 ]] ; then
-            tmp_avg_f="_${tmp_avg}"
+        if [[ "${tmp}" -lt -9 ]] ; then
+            tmp_avg_f="${tmp}"
+        elif [[ "${tmp}" -lt 0 ]] ; then
+            tmp_avg_f="_${tmp}"
+        elif [[ "${tmp}" -lt 10 ]] ; then
+            tmp_avg_f="__${tmp}"
+        elif [[ "${tmp}" -lt 100 ]] ; then
+            tmp_avg_f="_${tmp}"
         else
-            tmp_avg_f="${tmp_avg}"
+            tmp_avg_f="${tmp}"
         fi
-        if [[ "${hum_avg}" -lt 10 ]] ; then
-            hum_avg_f="__${hum_avg}"
-        elif [[ "${hum_avg}" -lt 100 ]] ; then
-            hum_avg_f="_${hum_avg}"
+        if [[ "${hum}" -lt 10 ]] ; then
+            hum_avg_f="__${hum}"
+        elif [[ "${hum}" -lt 100 ]] ; then
+            hum_avg_f="_${hum}"
         else
-            hum_avg_f="${hum_avg}"
+            hum_avg_f="${hum}"
         fi
         if [[ "${dew}" -lt -9 ]] ; then
             dew_f="${dew}"
         elif [[ "${dew}" -lt 0 ]] ; then
-            dew_f="_${tmp_avg}"
+            dew_f="_${tmp}"
         elif [[ "${dew}" -lt 10 ]] ; then
             dew_f="__${dew}"
         elif [[ "${dew}" -lt 100 ]] ; then
@@ -285,21 +216,20 @@ get_latest_measurement() {
         else
             clt_f="${clt}"
         fi
-        p10_graph="$p10_avg $cdarktuerkis"
-        if [[ "$p10_avg" -ge 20 ]] ; then
-            p10_graph="$p10_avg $cpurpur"
+        p10_graph="$p10 $cdarktuerkis"
+        if [[ "$p10" -ge 20 ]] ; then
+            p10_graph="$p10 $cpurpur"
         fi
-        p25_graph="$p25_avg $cdarktuerkis"
-        if [[ "$p25_avg" -ge 10 ]] ; then
-            p25_graph="$p25_avg $cpurpur"
+        p25_graph="$p25 $cdarktuerkis"
+        if [[ "$p25" -ge 10 ]] ; then
+            p25_graph="$p25 $cpurpur"
         fi
-        tmp_graph="$(( tmp_avg + 40 )) $cdarktuerkis"
-        hum_graph="$hum_avg $cdarktuerkis"
+        tmp_graph="$(( tmp + 40 )) $cdarktuerkis"
+        hum_graph="$hum $cdarktuerkis"
         dew_graph="$(( dew + 40 )) $cdarkpurpur"
         hum=$( round_and_int "${hum}" )
         clt_graph="$(( (100 - clt / 25) / 2 + hum / 2 )) $cdarkpurpur"
 
-        calculate_so_index
         so_vpart1="${cdarktuerkis}"
         so_vpart2="${ctuerkis}"
         so_index_graph="$so_index $cdarktuerkis"
@@ -329,10 +259,10 @@ get_latest_measurement() {
                 clt60s[$n]=${clt60s[$ii]}
                 so_index60s[$n]=${so_index60s[$ii]}
             done
-            p1060s[2]=${p10_avg}
-            p2560s[2]=${p25_avg}
-            tmp60s[2]=$(( tmp_avg + 40 ))
-            hum60s[2]=${hum_avg}
+            p1060s[2]=${p10}
+            p2560s[2]=${p25}
+            tmp60s[2]=$(( tmp + 40 ))
+            hum60s[2]=${hum}
             dew60s[2]=$(( dew + 40 ))
             clt60s[2]=$(( (100 - clt / 25) / 2 + hum / 2 ))
             so_index60s[2]=${so_index}
@@ -360,12 +290,12 @@ get_latest_measurement() {
 
     else
         echo "[DEBUG] warn: no data received"
-        p10_graph="$p10_avg $cgrey"
-        p25_graph="$p25_avg $cgrey"
-        tmp_graph="$(( tmp_avg + 40 )) $cgrey"
-        hum_graph="$hum_avg $cgrey"
+        p10_graph="$p10 $cgrey"
+        p25_graph="$p25 $cgrey"
+        tmp_graph="$(( tmp + 40 )) $cgrey"
+        hum_graph="$hum $cgrey"
         dew_graph="$(( dew + 40 )) $cgrey"
-        clt_graph="$(( (100 - clt / 25) / 2 + hum_avg / 2 )) $cgrey"
+        clt_graph="$(( (100 - clt / 25) / 2 + hum / 2 )) $cgrey"
         so_index_graph="$so_index $cgrey"
 
         so_vpart1="${cgrey}"
@@ -420,10 +350,6 @@ p25_a=(0 0 0)
 tmp_a=(0 0 0)
 hum_a=(0 0 0)
 a_length=0
-p10_avg=0
-p25_avg=0
-tmp_avg=0
-hum_avg=0
 dew=0
 clt=0
 so_index=0
@@ -514,11 +440,6 @@ while true ; do
     echo "$so_clt" > "$ofifo"
     echo "$so" > "$ofifo"
     echo "$so_value" > "$ofifo"
-
-    echo "[DEBUG] p10_a = ${p10_a[@]}, avg = ${p10_avg}"
-    echo "[DEBUG] p25_a = ${p25_a[@]}, avg = ${p25_avg}"
-    echo "[DEBUG] tmp_a = ${tmp_a[@]}, avg = ${tmp_avg}"
-    echo "[DEBUG] hum_a = ${hum_a[@]}, avg = ${hum_avg}"
 
     # .. and 3 minutes after
     for (( ci=0 ; ci<10 ; ci=ci+1 )) ; do

@@ -41,12 +41,11 @@ calculate_soi() {
     local p25_index_r=$( round_and_int "${p25_index}" )
 
     local dew=$( calculate_dewpoint "${tmpp}" "${hump}" )
-    dew=$( round_and_int "${dew}" )
-    local dew_index=${dew}
-    if [[ "${dew_index}" -lt 0 ]] ; then
-        dew_index=$(( dew_index * (-1) ))
+    local dew_r=$( round_and_int "${dew}" )
+    if [[ "${dew_r}" -lt 0 ]] ; then
+        dew=$( echo "${dew}*(-1)" | bc -l )
     fi
-    dew_index=$( echo "${dew_index}*100/60" | bc -l )
+    dew_index=$( echo "(${dew}-10)*100/40" | bc -l )
     local dew_index_r=$( round_and_int "${dew_index}" )
 
     soi=$(( p25_index_r + dew_index_r ))

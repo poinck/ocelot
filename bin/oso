@@ -45,7 +45,7 @@ calculate_soi() {
     if [[ "${dew_r}" -lt 0 ]] ; then
         dew=$( echo "${dew}*(-1)" | bc -l )
     fi
-    dew_index=$( echo "(${dew}-10)*100/40" | bc -l )
+    dew_index=$( echo "(${dew}-10)*100/30" | bc -l )
     local dew_index_r=$( round_and_int "${dew_index}" )
 
     soi=$(( p25_index_r + dew_index_r ))

@@ -93,7 +93,8 @@ calculate_cloud_altitude() {
 
     local c_alt=0
     # constant temperature change: 100 m / 0.976°C
-    c_alt=$( echo "(${t_dry}-(${t_dew}))*102.459" | bc -l )
+    # but using henning-approximation: 0.0082 K / 1 m
+    c_alt=$( echo "(${t_dry}-(${t_dew}))/0.0082" | bc -l )
     c_alt=$( round_and_int "${c_alt}" )
 
     echo "${c_alt}"

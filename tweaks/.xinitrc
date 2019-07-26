@@ -29,9 +29,7 @@
 #xcalib -d :0 /usr/share/color/icc/colord/Gamma5500K.icc
 
 # set a different default X_cursor
-# - parameters: <file> <size>
-# - set <size> to 48 if you're on a hiDPI display
-xsetroot -xcf /usr/share/icons/Vanilla-DMZ/cursors/X_cursor 48
+xsetroot -cursor_name x_cursor
 
 # improve keyboard rate
 xset r rate 300 45

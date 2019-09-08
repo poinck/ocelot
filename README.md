@@ -5,9 +5,9 @@
 **ocelot:**
 "ocelot" is a minimal tiling window manager bundle forked from "monsterwm" with a customized "config_scale1.h"/"config_scale2.h" with HiDPI-support and a side-panel instead of a top-panel. Furthermore it has extra features for Gentoo-users.
 
-![ocelot](/ocelot3.png)
-
 ![ocelot2](/ocelot2.png)
+
+![ocelot](/ocelot3.png)
 
 ## Dependencies
 - X11-header files to compile ocelot

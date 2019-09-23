@@ -19,10 +19,10 @@ else
 fi
 
 if [[ -n "$OYAY" ]] ; then
-    vurl=$( youtube-dl -f mp4 -g "$OYAY" )
+    #vurl=$( youtube-dl -f mp4 -g "$OYAY" )
 
     # start omxplayer with black background and audio output on hdmi and
     # analog jack
-    omxplayer -b -o both "$vurl"
+    mpv "$OYAY"
 fi
 

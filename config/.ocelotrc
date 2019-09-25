@@ -80,12 +80,14 @@ ocelot_path="/home/username/gits/ocelot/"
 # - so_p25 (pm2.5)
 # - so_tmp (temperature)
 # - so_hum (humidity)
+# - so_hpa (air pressure)
 #osm_boxid=""
 #osm_p10id=""
 #osm_p25id=""
 #osm_tmpid=""
 #osm_humid=""
+#osm_hpaid=""
 
 # removing and reordering elements is currently not supported during runtime,
 # but you can however add new elements during runtime.
-#element_order=("time" "weekday" "date" "year" "volume" "brightness" "desktops" "desktop" "window" "load" "battery" "chup_sec" "chup_wu" "net_3" "memory_ram" "memory_swap" "disk_rt" "disk_hme" "uptime" "cputemp" "ram" "swap" "nolock" "lock" "so" "so_index" "so_p10" "so_p25" "so_tmp" "so_hum" "so_dew" "so_clt")
+#element_order=("time" "weekday" "date" "year" "volume" "brightness" "desktops" "desktop" "window" "load" "battery" "chup_sec" "chup_wu" "net_3" "memory_ram" "memory_swap" "disk_rt" "disk_hme" "uptime" "cputemp" "ram" "swap" "nolock" "lock" "so" "so_index" "so_p10" "so_p25" "so_tmp" "so_hum" "so_dew" "so_hpa" "so_clt")

@@ -15,7 +15,7 @@
 . ${OCELOT_PATH}bin/outils.sh
 
 # element order
-ELEMENT_ORDER=("time" "weekday" "date" "year" "volume" "brightness" "desktops" "desktop" "window" "load" "battery" "chup_sec" "chup_wu" "net_3" "memory_ram" "memory_swap" "disk_a3" "disk_a5" "uptime" "cputemp" "ram" "swap" "nolock" "lock" "so" "so_index" "so_p10" "so_p25" "so_tmp" "so_hum" "so_dew" "so_clt")
+ELEMENT_ORDER=("time" "weekday" "date" "year" "volume" "brightness" "desktops" "desktop" "window" "load" "battery" "chup_sec" "chup_wu" "net_3" "memory_ram" "memory_swap" "disk_a3" "disk_a5" "uptime" "cputemp" "ram" "swap" "nolock" "lock" "so" "so_index" "so_p10" "so_p25" "so_tmp" "so_hum" "so_dew" "so_hpa" "so_clt")
 
 refresh_element_order() {
     if [[ -f ~/.ocelotrc ]] ; then

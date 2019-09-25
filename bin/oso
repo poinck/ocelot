@@ -142,6 +142,9 @@ get_latest_measurement() {
             elif [[ "\"${osm_humid}\"" == "${sensorid_a[$id]}" ]] ; then
                 hum=${sensorvalue_ai[$id]}
                 hum_td=$( get_td "${sensortime_ai[$id]}" "${t_now}" )
+            elif [[ "\"${osm_hpaid}\"" == "${sensorid_a[$id]}" ]] ; then
+                hpa=${sensorvalue_ai[$id]}
+                hpa_td=$( get_td "${sensortime_ai[$id]}" "${t_now}" )
             fi
         done
 
@@ -152,6 +155,7 @@ get_latest_measurement() {
         echo -e "[DEBUG] p25.${osm_p25id} = $p25, td = ${p25_td}"
         echo -e "[DEBUG] tmp.${osm_tmpid} = $tmp, td = ${tmp_td}"
         echo -e "[DEBUG] hum.${osm_humid} = $hum, td = ${hum_td}"
+        echo -e "[DEBUG] hpa.${osm_hpaid} = $hpa, td = ${hpa_td}"
 
         dew=$( calculate_dewpoint "${tmp}" "${hum}" )
         echo "[DEBUG] dew = ${dew}"
@@ -166,6 +170,8 @@ get_latest_measurement() {
         p25=$( round_and_int "${p25}" )
         tmp=$( round_and_int "${tmp}" )
         hum=$( round_and_int "${hum}" )
+        hpa=$( round_and_int "${hpa}" )
+        hpa_f=$(( hpa / 100 ))
         if [[ "${p10}" -lt 10 ]] ; then
             p10_avg_f="__${p10}"
         elif [[ "${p10}" -lt 100 ]] ; then
@@ -226,9 +232,9 @@ get_latest_measurement() {
         fi
         tmp_graph="$(( tmp + 40 )) $cdarktuerkis"
         hum_graph="$hum $cdarktuerkis"
-        dew_graph="$(( dew + 40 )) $cdarkpurpur"
+        dew_graph="$(( dew + 40 )) $cdarktuerkis"
         hum=$( round_and_int "${hum}" )
-        clt_graph="$(( (100 - clt / 25) / 2 + hum / 2 )) $cdarkpurpur"
+        clt_graph="$(( (100 - clt / 25) / 2 + hum / 2 )) $cdarktuerkis"
 
         so_vpart1="${cdarktuerkis}"
         so_vpart2="${ctuerkis}"
@@ -312,6 +318,8 @@ get_latest_measurement() {
     tmp_label_fg="${cdarkfont}"
     hum_value_fg="${cfont}"
     hum_label_fg="${cdarkfont}"
+    hpa_value_fg="${cfont}"
+    hpa_label_fg="${cdarkfont}"
     so_value_fg="ffffff"
     so_label_fg="${cfont}"
     if [[ "${p10_td}" -gt "${max_td}" ]] ; then
@@ -334,6 +342,11 @@ get_latest_measurement() {
         hum_value_fg="${cdarkfont}"
         hum_label_fg="${cdarkerfont}"
     fi
+    if [[ "${hpa_td}" -gt "${max_td}" ]] ; then
+        so_not_current=true
+        hpa_value_fg="${cdarkfont}"
+        hpa_label_fg="${cdarkerfont}"
+    fi
     if [[ "${so_not_current}" == true ]] ; then
         so_value_fg="${cfont}"
         so_label_fg="${cdarkfont}"
@@ -345,10 +358,12 @@ p10=0
 p25=0
 tmp=0
 hum=0
+hpa=0
 p10_a=(0 0 0)
 p25_a=(0 0 0)
 tmp_a=(0 0 0)
 hum_a=(0 0 0)
+hpa_a=(0 0 0)
 a_length=0
 dew=0
 clt=0
@@ -359,6 +374,7 @@ p10_td=0
 p25_td=0
 tmp_td=0
 hum_td=0
+hpa_td=0
 max_td=3600     # 1 hour in seconds
 #max_td=149      # test
 p10_value_fg="${cfont}"
@@ -369,6 +385,8 @@ tmp_value_fg="${cfont}"
 tmp_label_fg="${cdarkfont}"
 hum_value_fg="${cfont}"
 hum_label_fg="${cdarkfont}"
+hpa_value_fg="${cfont}"
+hpa_label_fg="${cdarkfont}"
 dew_value_fg="${cfont}"
 dew_label_fg="${cdarkfont}"
 clt_value_fg="${cfont}"
@@ -420,6 +438,7 @@ while true ; do
     so_tmp="so_tmp ^fg(#${tmp_value_fg})${tmp_avg_f}^fg(#${tmp_label_fg})TC ${cdarkgrey} ${tmp_graph} ${tmp60s_graph}"
     so_hum="so_hum ^fg(#${hum_value_fg})${hum_avg_f}^fg(#${hum_label_fg})RH ${cdarkgrey} ${hum_graph} ${hum60s_graph}"
     so_dew="so_dew ^fg(#${dew_value_fg})${dew_f}^fg(#${dew_label_fg})DEW ${cdarkgrey} ${dew_graph} ${dew60s_graph}"
+    so_hpa="so_hpa ^fg(#${hpa_value_fg})${hpa_f}^fg(#${hpa_label_fg})P ${cdarkgrey}"
     so_clt="so_clt ^fg(#${clt_value_fg})${clt_f}^fg(#${clt_label_fg})M ${cdarkgrey} ${clt_graph} ${clt60s_graph}"
     so="so _ ${cdarkgrey} ${so_index_graph} ${so_index60s_graph}"
     so_value="so_index ^fg(#${so_value_fg})${so_index_f}^fg(#${so_label_fg})SO ${so_vpart1} ${so_countdown} ${so_vpart2}"
@@ -427,6 +446,7 @@ while true ; do
     echo "[DEBUG] ${so_p25}"
     echo "[DEBUG] ${so_tmp}"
     echo "[DEBUG] ${so_hum}"
+    echo "[DEBUG] ${so_hpa}"
     echo "[DEBUG] ${so_dew}"
     echo "[DEBUG] ${so_clt}"
     echo "[DEBUG] ${so}"
@@ -436,6 +456,7 @@ while true ; do
     echo "$so_p25" > "$ofifo"
     echo "$so_tmp" > "$ofifo"
     echo "$so_hum" > "$ofifo"
+    echo "$so_hpa" > "$ofifo"
     echo "$so_dew" > "$ofifo"
     echo "$so_clt" > "$ofifo"
     echo "$so" > "$ofifo"

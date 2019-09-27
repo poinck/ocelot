@@ -470,7 +470,7 @@ while true ; do
     for (( ci=0 ; ci<10 ; ci=ci+1 )) ; do
         sleep 18
         so_countdown=$(( so_countdown - 10 ))
-        so_value="so_index ^fg(#${so_value_fg})${so_index_f}^fg(#${so_label_fg})SO ${so_vpart1} ${so_countdown} ${so_vpart2}"
+        so_value="so_index ^fg(#${so_value_fg})${so_index_f}^fg(#${so_label_fg})${index_name} ${so_vpart1} ${so_countdown} ${so_vpart2}"
         echo "[DEBUG] ${so_value}"
         echo "$so_value" > "$ofifo"
     done

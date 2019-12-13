@@ -78,6 +78,21 @@ get_td() {
     echo ${td}
 }
 
+calculate_corrected_pm() {
+    # relative humidity correction of particulate matter
+    # based on paper: Antonio et al. 2018 "sensors (basel)"
+    local pm=$1
+    local hum=$2
+
+    pm=${pm//\"}
+    hum=${hum//\"}
+
+    local r=0
+    r=$( echo "${pm}/(1+((0.4/1.65)/(-1+(1/(${hum}/100)))))" | bc -l )
+
+    echo "${r}"
+}
+
 calculate_dewpoint() {
     # https://www.chemie.de/lexikon/Taupunkt.html#Berechnung_von_Taupunkt_und_Frostpunkt
     # valid for t_dry from -30°C until 70°C
@@ -171,6 +186,11 @@ get_latest_measurement() {
         clt=$( calculate_cloud_altitude "${tmp}" "${dew}" )
         dew=$( round_and_int "${dew}" )
         echo "[DEBUG] clt = ${clt}"
+
+        # correct PM values for relative humidity
+        p10=$( calculate_corrected_pm "${p10}" "${hum}" )
+        p25=$( calculate_corrected_pm "${p25}" "${hum}" )
+
         so_index=$( calculate_soi "${tmp}" "${hum}" "${p25}" )
         echo "[DEBUG] so_index = ${so_index}"
 
@@ -181,6 +201,7 @@ get_latest_measurement() {
         hum=$( round_and_int "${hum}" )
         hpa=$( round_and_int "${hpa}" )
         hpa_f=$(( hpa / 100 ))
+
         if [[ "${p10}" -lt 10 ]] ; then
             p10_avg_f="__${p10}"
         elif [[ "${p10}" -lt 100 ]] ; then

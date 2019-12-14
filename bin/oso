@@ -87,6 +87,11 @@ calculate_corrected_pm() {
     pm=${pm//\"}
     hum=${hum//\"}
 
+    if [[ "${hum}" == "100.00" ]] ; then
+        # avoid devision by zero
+        hum="99.99"
+    fi
+
     local r=0
     r=$( echo "${pm}/(1+((0.4/1.65)/(-1+(1/(${hum}/100)))))" | bc -l )
 

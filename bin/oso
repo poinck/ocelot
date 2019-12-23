@@ -13,6 +13,9 @@
 
 . ${OCELOT_PATH}/bin/outils.sh
 . ~/.ocelotrc
+if [[ ! -n "${rh_offset}" ]] ; then
+    rh_offset=0
+fi
 
 # e - entry
 round_and_int() {
@@ -113,6 +116,17 @@ calculate_dewpoint() {
     echo "${t_dew}"
 }
 
+offset() {
+    local v=$1
+    local o=$2
+
+    v=${v//\"}
+    o=${o//\"}
+    r=$( echo "${v}+${o}" | bc -l )
+
+    echo "${r}"
+}
+
 calculate_cloud_altitude() {
     # in meters above ground
     local t_dry=$1
@@ -185,6 +199,9 @@ get_latest_measurement() {
         echo -e "[DEBUG] tmp.${osm_tmpid} = $tmp, td = ${tmp_td}"
         echo -e "[DEBUG] hum.${osm_humid} = $hum, td = ${hum_td}"
         echo -e "[DEBUG] hpa.${osm_hpaid} = $hpa, td = ${hpa_td}"
+
+        # rh offset
+        hum=$( offset "${hum}" "${rh_offset}")
 
         dew=$( calculate_dewpoint "${tmp}" "${hum}" )
         echo "[DEBUG] dew = ${dew}"

@@ -259,7 +259,7 @@ get_latest_measurement() {
         if [[ "${dew}" -lt -9 ]] ; then
             dew_f="${dew}"
         elif [[ "${dew}" -lt 0 ]] ; then
-            dew_f="_${tmp}"
+            dew_f="_${dew}"
         elif [[ "${dew}" -lt 10 ]] ; then
             dew_f="__${dew}"
         elif [[ "${dew}" -lt 100 ]] ; then

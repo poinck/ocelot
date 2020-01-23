@@ -1,0 +1,31 @@
+GIMP Palette
+Name: Ocelot
+Columns: 1
+#
+255 255 255	FFFFFF
+191 191 191	BFBFBF
+128 128 128	808080
+ 64  64  64	404040
+  0   0   0	000000
+170 170 170 aaaaaa cfont
+119 119 119 777777 cdarkfont
+ 85  85  85 555555 cdarkerfont
+ 51  51  51 333333 cgrey
+ 41  41  41 292929 cdargrey2
+ 28  28  28 1c1c1c cdarkgrey
+ 63  63 116 3f3f74 cdarkblue
+103 103 161 6767a1 cblue
+ 69  40  60 45283c cdarkpurple
+110  94 105 6e5e69 cpurple
+251 242  54 fbf236 cyellow
+128 123  28 807b1c cdarkyellow
+203 219 252 cbdbfc cblueishgray
+155 173 183 9badb7 cblueisdarkgrey
+255 104  61 ff683d corange
+255  45  45 ff2d2d cred
+ 23  69  27 17451b cdarkgreen
+ 23  67  69 174345 cdarktuerkis
+ 34 100 103 226467 ctuerkis
+ 69  23  23 451717 cdarkpurpur
+103  34  34 672222 cpurpur
+
